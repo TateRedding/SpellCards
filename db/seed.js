@@ -31,7 +31,7 @@ const createTables = async () => {
 
             CREATE TABLE spells (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(128) NOT NULL,
+                name VARCHAR(128) UNIQUE NOT NULL,
                 level INTEGER NOT NULL,
                 school VARCHAR(32) NOT NULL,
                 "castingTimeInt" INTEGER,
@@ -57,7 +57,7 @@ const createTables = async () => {
 
             CREATE TABLE features (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(128),
+                name VARCHAR(128) UNIQUE NOT NULL,
                 species VARCHAR(32),
                 class VARCHAR(32),
                 level INTEGER,
