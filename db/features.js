@@ -47,6 +47,18 @@ const deleteFeature = async (id) => {
     };
 };
 
+const getAllFeatures = async () => {
+    try {
+        const { rows: features } = await client.query(`
+            SELECT *
+            FORM features;
+        `);
+        return features
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 const getFeatureById = async (id) => {
     try {
         const { rows: [feature] } = await client.query(`
@@ -92,6 +104,7 @@ module.exports = {
     createFeature,
     updateFeature,
     deleteFeature,
+    getAllFeatures,
     getFeatureById,
     getFeatureByName,
     getFeaturesByPlayerId

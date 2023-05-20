@@ -47,6 +47,18 @@ const deleteSpell = async (id) => {
     };
 };
 
+const getAllSpells = async () => {
+    try {
+        const { rows: spells } = await client.query(`
+            SELECT *
+            FORM spells;
+        `);
+        return spells
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 const getSpellById = async (id) => {
     try {
         const { rows: [spell] } = await client.query(`
@@ -92,6 +104,7 @@ module.exports = {
     createSpell,
     updateSpell,
     deleteSpell,
+    getAllSpells,
     getSpellById,
     getSpellByName,
     getSpellsByPlayerId
