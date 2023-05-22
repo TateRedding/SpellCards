@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const NewSpell = ({ schools }) => {
+const EditSpell = ({ schools }) => {
+    const [spell, setSpell] = useState({});
     const [name, setName] = useState('');
     const [level, setLevel] = useState(0);
     const [school, setSchool] = useState('');
@@ -15,10 +17,40 @@ const NewSpell = ({ schools }) => {
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
 
-    const createNewSpell = async (event) => {
-        event.preventDefault();
+    const { spellId } = useParams();
 
-        const newSpellData = {
+    const getSpellData = async () => {
+        try {
+            const response = await axios.get(`/api/spells/${spellId}`);
+            setSpell(response.data);
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
+    const setValues = () => {
+        if (Object.keys(spell).length) {
+            setName(spell.name);
+            setLevel(spell.level);
+            setSchool(spell.school);
+            setCastingTime(spell.castingTime);
+            setRange(spell.range);
+            setVerbal(spell.verbal);
+            setSomatic(spell.somatic);
+            setMaterial(spell.material);
+            setConcentration(spell.concentration);
+            setDuration(spell.duration);
+            setDescription(spell.description);
+
+            if (spell.materialComponents) {
+                setMaterialComponents(spell.materialComponents);
+            };
+        };
+    };
+
+    const updateSpell = async (event) => {
+        event.preventDefault();
+        const updatedSpellData = {
             name,
             level,
             school,
@@ -33,33 +65,32 @@ const NewSpell = ({ schools }) => {
         };
 
         if (materialComponents) {
-            newSpellData.materialComponents = materialComponents;
+            updatedSpellData.materialComponents = materialComponents;
         };
 
         try {
-            const newSpell = await axios.post("/api/spells", newSpellData);
-            if (newSpell.data) {
-                setName('');
-                setLevel(0);
-                setSchool('');
-                setCastingTime('');
-                setRange('');
-                setVerbal(false);
-                setSomatic(false);
-                setMaterial(false);
-                setMaterialComponents('');
-                setConcentration(false);
-                setDuration('');
-                setDescription('');
+            const response = await axios.patch(`/api/spells/${spellId}`, updatedSpellData);
+            if (response.data) {
+                getSpellData();
+                setValues();
             };
         } catch (error) {
             console.error(error);
         };
     };
 
+    useEffect(() => {
+        getSpellData();
+        setValues();
+    }, []);
+
+    useEffect(() => {
+        setValues();
+    }, [spell]);
+
     return (
-        <form onSubmit={createNewSpell} className="spell-form" autoComplete="off">
-            <h2>New Spell</h2>
+        <form onSubmit={updateSpell} className="spell-form" autoComplete="off">
+            <h2>Update Spell</h2>
             <div className="form-floating mb-3">
                 <input
                     className="form-control"
@@ -90,6 +121,7 @@ const NewSpell = ({ schools }) => {
                 <select
                     className="form-select"
                     id="spell-school"
+                    value={school}
                     required
                     onChange={(event) => setSchool(event.target.value)}
                 >
@@ -197,9 +229,9 @@ const NewSpell = ({ schools }) => {
                 />
                 <label htmlFor="spell-description">Description</label>
             </div>
-            <button type="submit" className="btn btn-success">Add</button>
+            <button type="submit" className="btn btn-success">Update</button>
         </form>
     );
 };
 
-export default NewSpell;
+export default EditSpell

@@ -105,7 +105,7 @@ const createInitialSpells = async () => {
         spells.push(await createSpell({
             name: "Hellish Rebuke",
             level: 1,
-            school: "evocation",
+            school: "Evocation",
             castingTime: "1 reaction which you take in response to being damaged by a creature within 60 feet of you that you can see",
             range: "60 feet",
             verbal: true,
@@ -117,7 +117,7 @@ const createInitialSpells = async () => {
         spells.push(await createSpell({
             name: "Phantasmal Force",
             level: 2,
-            school: "illusion",
+            school: "Illusion",
             castingTime: "1 action",
             range: "60 feet",
             verbal: true,
@@ -132,7 +132,7 @@ const createInitialSpells = async () => {
         spells.push(await createSpell({
             name: "Sunbeam",
             level: 6,
-            school: "evocation",
+            school: "Evocation",
             castingTime: "1 action",
             range: "Self, (60-foot line)",
             verbal: true,
