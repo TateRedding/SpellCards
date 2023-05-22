@@ -28,7 +28,7 @@ const AllSpells = () => {
             <div className="form-floating mb-3">
                 <input
                     className="form-control"
-                    id="searchInput"
+                    id="searchInput-spells"
                     value={searchTerm}
                     placeholder="Search"
                     onChange={(event) => setSearchTerm(event.target.value)}
