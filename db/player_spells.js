@@ -16,7 +16,7 @@ const createPlayerSpell = async (playerId, spellId) => {
 const deletePlayerSpell = async (id) => {
     try {
         const { rows: [playerSpell] } = await client.query(`
-            DELETE FROM player_spells,
+            DELETE FROM player_spells
             WHERE id=${id}
             RETURNING *;
         `);
@@ -26,7 +26,21 @@ const deletePlayerSpell = async (id) => {
     };
 };
 
+const deletePlayerSpellsBySpellId = async (spellId) => {
+    try {
+        const { rows: playerSpells } = await client.query(`
+            DELETE FROM player_spells
+            WHERE "spellId"=${spellId}
+            RETURNING *;
+        `);
+        return playerSpells;
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 module.exports = {
     createPlayerSpell,
-    deletePlayerSpell
+    deletePlayerSpell,
+    deletePlayerSpellsBySpellId
 };

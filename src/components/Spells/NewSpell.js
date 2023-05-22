@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const NewSpell = () => {
     const [name, setName] = useState('');
@@ -27,6 +28,44 @@ const NewSpell = () => {
 
     const createNewSpell = async (event) => {
         event.preventDefault();
+
+        const newSpellData = {
+            name,
+            level,
+            school,
+            castingTime,
+            range,
+            verbal,
+            somatic,
+            material,
+            concentration,
+            duration,
+            description
+        };
+
+        if (materialComponents) {
+            newSpellData.materialComponents = materialComponents;
+        };
+
+        try {
+            const newSpell = await axios.post("/api/spells", newSpellData);
+            if (newSpell.data) {
+                setName('');
+                setLevel(0);
+                setSchool('');
+                setCastingTime('');
+                setRange('');
+                setVerbal(false);
+                setSomatic(false);
+                setMaterial(false);
+                setMaterialComponents('');
+                setConcentration(false);
+                setDuration('');
+                setDescription('');
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return (
@@ -151,6 +190,7 @@ const NewSpell = () => {
                     className="form-control"
                     id="spell-duration"
                     value={duration}
+                    required
                     placeholder="Duration"
                     onChange={(event) => setDuration(event.target.value)}
                 />
@@ -168,6 +208,7 @@ const NewSpell = () => {
                 />
                 <label htmlFor="spell-description">Description</label>
             </div>
+            <button type="submit" className="btn btn-success">Add</button>
         </form>
     );
 };

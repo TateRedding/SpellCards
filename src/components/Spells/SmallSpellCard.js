@@ -1,11 +1,19 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const SmallSpellCard = ({ spell }) => {
+const SmallSpellCard = ({ spell, getSpells }) => {
     const navigate = useNavigate();
 
     const deleteSpell = async () => {
-        console.log('delete spell');
+        try {
+            const response = await axios.delete(`/api/spells/${spell.id}`);
+            if (response.data) {
+                getSpells();
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return(

@@ -10,11 +10,12 @@ const AllSpells = () => {
 
     const navigate = useNavigate();
 
+    const getSpells = async () => {
+        const response = await axios.get("/api/spells");
+        setSpells(response.data);
+    };
+
     useEffect(() => {
-        const getSpells = async () => {
-            const response = await axios.get("/api/spells");
-            setSpells(response.data);
-        };
         getSpells();
     }, []);
 
@@ -28,7 +29,7 @@ const AllSpells = () => {
 
     return (
         <>
-        <button className="btn btn-success" onClick={() => navigate("/spells/new")}>New Spell</button>
+            <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
             <div className="form-floating mb-3">
                 <input
                     className="form-control"
@@ -40,7 +41,13 @@ const AllSpells = () => {
                 <label htmlFor="searchInput" className="form-label">Search</label>
             </div>
             {
-                filteredSpells.map(spell => <SmallSpellCard spell={spell} key={spell.id} />)
+                filteredSpells.map(spell => {
+                    return <SmallSpellCard
+                        spell={spell}
+                        getSpells={getSpells}
+                        key={spell.id}
+                    />
+                })
             }
         </>
     );
