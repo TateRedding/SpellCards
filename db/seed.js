@@ -59,8 +59,7 @@ const createTables = async () => {
             CREATE TABLE features (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
-                species VARCHAR(32),
-                class VARCHAR(32),
+                origin VARCHAR(128),
                 description TEXT NOT NULL
             );
 
@@ -183,22 +182,22 @@ const createInitialFeatures = async () => {
         const features = [];
         features.push(await createFeature({
             name: "Channel Divinity: Turn Undead",
-            class: "Cleric",
+            origin: "Cleric",
             description: "As an action, you present your holy symbol...",
         }));
         features.push(await createFeature({
             name: "Darkvision",
-            species: "multiple",
+            origin: "Species",
             description: "You have superior vision in dark and dim condictions.",
         }));
         features.push(await createFeature({
             name: "Reckless Attack",
-            class: "Barbarian",
+            origin: "Barbarian",
             description: "Starting at 2nd level, you can throw aside all concern for defense...",
         }));
         features.push(await createFeature({
             name: "Lay On Hands",
-            class: "Paladin",
+            origin: "Paladin",
             description: "Your blessed touch can heal wounds.",
         }));
         console.log(features);

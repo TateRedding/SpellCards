@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SmallSpellCard from "./SmallSpellCard";
 
@@ -6,6 +7,8 @@ const AllSpells = () => {
     const [spells, setSpells] = useState([]);
     const [filteredSpells, setFilteredSpells] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getSpells = async () => {
@@ -25,6 +28,7 @@ const AllSpells = () => {
 
     return (
         <>
+        <button className="btn btn-success" onClick={() => navigate("/spells/new")}>New Spell</button>
             <div className="form-floating mb-3">
                 <input
                     className="form-control"
