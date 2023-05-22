@@ -13,6 +13,18 @@ const createPlayer = async (name) => {
     };
 };
 
+const getAllPlayers = async () => {
+    try {
+        const { rows: players } = await client.query(`
+            SELECT *
+            FROM players;
+        `);
+        return players;
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 const getPlayerById = async (id) => {
     try {
         const { rows: [player] } = await client.query(`
@@ -41,6 +53,7 @@ const getPlayerByName = async (name) => {
 
 module.exports = {
     createPlayer,
+    getAllPlayers,
     getPlayerById,
     getPlayerByName
 };
