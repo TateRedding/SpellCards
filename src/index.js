@@ -1,7 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
+import AllSpells from "./components/Spells/AllSpells";
 import Header from "./components/Header";
 
 const App = () => {
@@ -9,7 +10,9 @@ const App = () => {
         <>
             <Header />
             <main>
-
+                <Routes>
+                    <Route path="/spells" element={<AllSpells />} />
+                </Routes>
             </main>
         </>
     );
@@ -18,7 +21,7 @@ const App = () => {
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-    <BrowserRouter>
+    <HashRouter>
         <App />
-    </BrowserRouter>
+    </HashRouter>
 );

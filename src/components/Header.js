@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Header = () => {
     const [players, setPlayers] = useState([]);
@@ -8,7 +9,6 @@ const Header = () => {
         const getPlayerNames = async () => {
             try {
                 const response = await axios.get("/api/players");
-                console.log(response.data);
                 setPlayers(response.data);
             } catch (error) {
                 console.error(error);
@@ -30,11 +30,17 @@ const Header = () => {
                                 players.map((player) => {
                                     return (
                                         <li className="nav-item" key={player.id}>
-                                            <a className="nav-link" href={`/${player.name}`}>{player.name}</a>
+                                            <Link className="nav-link" to={`/${player.name.toLowerCase()}`}>{player.name}</Link>
                                         </li>
                                     );
                                 })
                             }
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/spells">Spells</Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/features">Features</Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

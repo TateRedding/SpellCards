@@ -51,9 +51,9 @@ const getAllSpells = async () => {
     try {
         const { rows: spells } = await client.query(`
             SELECT *
-            FORM spells;
+            FROM spells;
         `);
-        return spells
+        return spells;
     } catch (error) {
         console.error(error);
     };

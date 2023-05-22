@@ -84,10 +84,10 @@ const createPlayers = async () => {
         console.log("Filling players table...");
 
         const players = [];
-        players.push(await createPlayer("Khirun of the S.C."));
-        players.push(await createPlayer("Sir Mona LoneLeaf"));
-        players.push(await createPlayer("Robi Xenon Li"));
-        players.push(await createPlayer("Thrall Frostskin"));
+        players.push(await createPlayer("Khirun"));
+        players.push(await createPlayer("Mona"));
+        players.push(await createPlayer("Robi"));
+        players.push(await createPlayer("Thrall"));
         players.push(await createPlayer("Torment"));
 
         console.log(players);

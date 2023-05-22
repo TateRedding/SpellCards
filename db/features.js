@@ -51,7 +51,7 @@ const getAllFeatures = async () => {
     try {
         const { rows: features } = await client.query(`
             SELECT *
-            FORM features;
+            FROM features;
         `);
         return features
     } catch (error) {
