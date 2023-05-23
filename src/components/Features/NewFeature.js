@@ -35,7 +35,7 @@ const NewFeature = () => {
     return (
         <>
             <h2>New Feature</h2>
-            <form onSubmit={createNewFeature} className="spell-form" autoComplete="off">
+            <form onSubmit={createNewFeature} autoComplete="off">
                 <div className="form-floating">
                     <input
                         className={(nameTaken) ? "form-control is-invalid" : "form-control"}

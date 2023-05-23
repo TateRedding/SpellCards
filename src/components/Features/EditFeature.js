@@ -63,7 +63,7 @@ const EditFeature = () => {
     return (
         <>
             <h2>Update Feature</h2>
-            <form onSubmit={updateFeature} className="spell-form" autoComplete="off">
+            <form onSubmit={updateFeature} autoComplete="off">
                 <div className="form-floating">
                     <input
                         className={(nameTaken) ? "form-control is-invalid" : "form-control"}

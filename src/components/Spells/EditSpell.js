@@ -96,7 +96,7 @@ const EditSpell = ({ schools }) => {
     return (
         <>
             <h2>Update Spell</h2>
-            <form onSubmit={updateSpell} className="spell-form" autoComplete="off">
+            <form onSubmit={updateSpell} autoComplete="off">
                 <div className="form-floating">
                     <input
                         className={(nameTaken) ? "form-control is-invalid" : "form-control"}

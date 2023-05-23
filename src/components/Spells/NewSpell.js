@@ -65,7 +65,7 @@ const NewSpell = ({ schools }) => {
     return (
         <>
             <h2>New Spell</h2>
-            <form onSubmit={createNewSpell} className="spell-form" autoComplete="off">
+            <form onSubmit={createNewSpell} autoComplete="off">
                 <div className="form-floating">
                     <input
                         className={(nameTaken) ? "form-control is-invalid" : "form-control"}

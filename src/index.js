@@ -14,6 +14,7 @@ import PlayerPage from "./components/PlayerPage";
 
 const App = () => {
     const [players, setPlayers] = useState([]);
+    const [spells, setSpells] = useState([]);
 
     const schools = [
         "Abjuration",
@@ -26,16 +27,23 @@ const App = () => {
         "Transmutation"
     ];
 
-    useEffect(() => {
-        const getPlayers = async () => {
-            try {
-                const response = await axios.get("/api/players");
-                setPlayers(response.data);
-            } catch (error) {
-                console.error(error);
-            };
+    const getPlayers = async () => {
+        try {
+            const response = await axios.get("/api/players");
+            setPlayers(response.data);
+        } catch (error) {
+            console.error(error);
         };
+    };
+
+    const getSpells = async () => {
+        const response = await axios.get("/api/spells");
+        setSpells(response.data);
+    };
+
+    useEffect(() => {
         getPlayers();
+        getSpells();
     }, []);
 
     return (
@@ -46,7 +54,11 @@ const App = () => {
                     <Route path="/features" element={<AllFeatures />} />
                     <Route path="/features/new" element={<NewFeature />} />
                     <Route path="/features/edit/:featureId" element={<EditFeature />} />
-                    <Route path="/spells" element={<AllSpells />} />
+                    <Route path="/spells" element={
+                        <AllSpells
+                            spells={spells}
+                            getSpells={getSpells}
+                        />} />
                     <Route path="/spells/new" element={
                         <NewSpell
                             schools={schools}
@@ -56,7 +68,16 @@ const App = () => {
                             schools={schools}
                         />} />
                     {
-                        players.map(player => <Route path={`/${player.name}`} element={<PlayerPage player={player} />} key={player.id} />)
+                        players.map(player => <Route
+                            path={`/${player.name}`}
+                            element={
+                                <PlayerPage
+                                    player={player}
+                                    allSpells={spells}
+                                />
+                            }
+                            key={player.id} />
+                        )
                     }
                 </Routes>
             </main>

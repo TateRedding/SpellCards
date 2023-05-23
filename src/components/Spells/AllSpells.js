@@ -3,21 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SmallSpellCard from "./SmallSpellCard";
 
-const AllSpells = () => {
-    const [spells, setSpells] = useState([]);
+const AllSpells = ({ spells, getSpells }) => {
     const [filteredSpells, setFilteredSpells] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     const navigate = useNavigate();
-
-    const getSpells = async () => {
-        const response = await axios.get("/api/spells");
-        setSpells(response.data);
-    };
-
-    useEffect(() => {
-        getSpells();
-    }, []);
 
     useEffect(() => {
         setFilteredSpells(spells);

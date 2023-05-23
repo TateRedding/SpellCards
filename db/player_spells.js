@@ -39,8 +39,23 @@ const deletePlayerSpellsBySpellId = async (spellId) => {
     };
 };
 
+const getPlayerSpellByPlayerIdAndSpellId = async (playerId, spellId) => {
+    try {
+        const { rows: [playerSpell] } = await client.query(`
+        SELECT *
+        FROM player_spells
+        WHERE "playerId"=${playerId}
+        AND "spellId"=${spellId};
+    `);
+    return playerSpell;
+    } catch (error) {
+        console.error(error);
+    };
+}
+
 module.exports = {
     createPlayerSpell,
     deletePlayerSpell,
-    deletePlayerSpellsBySpellId
+    deletePlayerSpellsBySpellId,
+    getPlayerSpellByPlayerIdAndSpellId
 };
