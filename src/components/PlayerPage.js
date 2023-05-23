@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import SpellDetails from "./Spells/SpellDetails";
+
 const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [tab, setTab] = useState("spells");
     const [playerSpells, setPlayerSpells] = useState([]);
@@ -118,7 +120,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                     <>
                         <ul>
                             {
-                                playerSpells.map(spell => <li key={spell.id}>{spell.name}</li>)
+                                playerSpells.map(spell => <SpellDetails spell={spell} key={spell.id} />)
                             }
                         </ul>
                         {
