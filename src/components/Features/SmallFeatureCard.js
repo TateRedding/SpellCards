@@ -1,11 +1,20 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const SmallFeatureCard = ({ feature }) => {
+const SmallFeatureCard = ({ feature, getFeatures }) => {
     const navigate = useNavigate();
 
     const deleteFeature = async () => {
-        console.log('delete feature');
+        try {
+            const response = await axios.delete(`/api/features/${feature.id}`);
+            console.log(response.data);
+            if (response.data) {
+                getFeatures();
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return(

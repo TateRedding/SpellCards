@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SmallFeatureCard from "./SmallFeatureCard";
 
@@ -7,11 +8,14 @@ const AllFeatures = () => {
     const [filteredFeatures, setFilteredFeatures] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
+    const navigate = useNavigate();
+
+    const getFeatures = async () => {
+        const response = await axios.get("/api/features");
+        setFeatures(response.data);
+    };
+
     useEffect(() => {
-        const getFeatures = async () => {
-            const response = await axios.get("/api/features");
-            setFeatures(response.data);
-        };
         getFeatures();
     }, []);
 
@@ -25,6 +29,7 @@ const AllFeatures = () => {
 
     return (
         <>
+            <button className="btn btn-success mb-3" onClick={() => navigate("/features/new")}>New Feature</button>
             <div className="form-floating mb-3">
                 <input
                     className="form-control"
@@ -36,7 +41,13 @@ const AllFeatures = () => {
                 <label htmlFor="searchInput" className="form-label">Search</label>
             </div>
             {
-                filteredFeatures.map(feature => <SmallFeatureCard feature={feature} key={feature.id} />)
+                filteredFeatures.map(feature => {
+                    return <SmallFeatureCard
+                        feature={feature}
+                        getFeatures={getFeatures}
+                        key={feature.id}
+                    />
+                })
             }
         </>
     );

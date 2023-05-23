@@ -16,7 +16,7 @@ const EditSpell = ({ schools }) => {
     const [concentration, setConcentration] = useState(false);
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
-    const [nameTaken, setNameTaken] = useState('');
+    const [nameTaken, setNameTaken] = useState(false);
 
     const { spellId } = useParams();
 
@@ -73,7 +73,7 @@ const EditSpell = ({ schools }) => {
         try {
             const response = await axios.patch(`/api/spells/${spellId}`, updatedSpellData);
             if (response.data) {
-                if (response.data.name === 'NameTakenError') {
+                if (response.data.name === "NameTakenError") {
                     setNameTaken(true);
                 } else {
                     getSpellData();
@@ -87,7 +87,6 @@ const EditSpell = ({ schools }) => {
 
     useEffect(() => {
         getSpellData();
-        setValues();
     }, []);
 
     useEffect(() => {
@@ -110,7 +109,7 @@ const EditSpell = ({ schools }) => {
                     />
                     <label htmlFor="spell-name">Name</label>
                 </div>
-                <div className="form-text mb-3" id="name-taken-edit">
+                <div className="form-text mb-3" id="name-taken">
                     {
                         (nameTaken) ?
                             `Can't change the name ${name}, that spell already exists!` :

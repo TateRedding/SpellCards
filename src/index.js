@@ -4,8 +4,10 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 
 import AllFeatures from "./components/Features/AllFeatures";
 import AllSpells from "./components/Spells/AllSpells";
+import EditFeature from "./components/Features/EditFeature"
 import EditSpell from "./components/Spells/EditSpell";
 import Header from "./components/Header";
+import NewFeature from "./components/Features/NewFeature";
 import NewSpell from "./components/Spells/NewSpell";
 
 const App = () => {
@@ -27,6 +29,8 @@ const App = () => {
             <main className="w-75 mx-auto">
                 <Routes>
                     <Route path="/features" element={<AllFeatures />} />
+                    <Route path="/features/new" element={<NewFeature />} />
+                    <Route path="/features/edit/:featureId" element={<EditFeature />} />
                     <Route path="/spells" element={<AllSpells />} />
                     <Route path="/spells/new" element={
                         <NewSpell

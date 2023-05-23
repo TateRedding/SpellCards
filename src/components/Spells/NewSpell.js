@@ -14,7 +14,7 @@ const NewSpell = ({ schools }) => {
     const [concentration, setConcentration] = useState(false);
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
-    const [nameTaken, setNameTaken] = useState('');
+    const [nameTaken, setNameTaken] = useState(false);
 
     const createNewSpell = async (event) => {
         event.preventDefault();
@@ -40,7 +40,7 @@ const NewSpell = ({ schools }) => {
         try {
             const response = await axios.post("/api/spells", newSpellData);
             if (response.data) {
-                if (response.data.name === 'NameTakenError') {
+                if (response.data.name === "NameTakenError") {
                     setNameTaken(true);
                 } else {
                     setName('');
@@ -78,7 +78,7 @@ const NewSpell = ({ schools }) => {
                     />
                     <label htmlFor="spell-name">Name</label>
                 </div>
-                <div className="form-text mb-3" id="name-taken-edit">
+                <div className="form-text mb-3" id="name-taken">
                     {
                         (nameTaken) ?
                             `Can't use the name ${name}, that spell already exists!` :

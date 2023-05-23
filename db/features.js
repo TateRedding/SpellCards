@@ -23,7 +23,7 @@ const updateFeature = async (id, fields) => {
     };
     try {
         const { rows: [feature] } = await client.query(`
-            UPDATE spells
+            UPDATE features
             SET ${setString}
             WHERE id=${id}
             RETURNING *;

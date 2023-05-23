@@ -26,7 +26,21 @@ const deletePlayerFeature = async (id) => {
     };
 };
 
+const deletePlayerFeaturesByFeatureId = async (featureId) => {
+    try {
+        const { rows: playerFeatures } = await client.query(`
+            DELETE FROM player_features
+            WHERE "featureId"=${featureId}
+            RETURNING *;
+        `);
+        return playerFeatures;
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 module.exports = {
     createPlayerFeature,
-    deletePlayerFeature
+    deletePlayerFeature,
+    deletePlayerFeaturesByFeatureId
 };
