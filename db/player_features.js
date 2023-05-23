@@ -39,8 +39,23 @@ const deletePlayerFeaturesByFeatureId = async (featureId) => {
     };
 };
 
+const getPlayerFeatureByPlayerIdAndFeatureId = async (playerId, featureId) => {
+    try {
+        const { rows: [playerFeature] } = await client.query(`
+            SELECT *
+            FROM player_features
+            WHERE "playerId"=${playerId}
+            AND "featureId"=${featureId};
+        `);
+    return playerFeature;
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 module.exports = {
     createPlayerFeature,
     deletePlayerFeature,
-    deletePlayerFeaturesByFeatureId
+    deletePlayerFeaturesByFeatureId,
+    getPlayerFeatureByPlayerIdAndFeatureId
 };

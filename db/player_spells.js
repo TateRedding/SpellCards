@@ -51,7 +51,7 @@ const getPlayerSpellByPlayerIdAndSpellId = async (playerId, spellId) => {
     } catch (error) {
         console.error(error);
     };
-}
+};
 
 module.exports = {
     createPlayerSpell,

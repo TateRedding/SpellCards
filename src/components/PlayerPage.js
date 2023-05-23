@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const PlayerPage = ({ player, allSpells }) => {
+const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [tab, setTab] = useState("spells");
     const [playerSpells, setPlayerSpells] = useState([]);
     const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
     const [playerFeatures, setPlayerFeatures] = useState([]);
+    const [showFeatureSelect, setShowFeatureSelect] = useState(false);
+    const [selectedFeatureId, setSelectedFeatureId] = useState('');
+    const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
 
     const getPlayerSpells = async () => {
         try {
@@ -49,6 +52,28 @@ const PlayerPage = ({ player, allSpells }) => {
         };
     };
 
+    const addFeature = async (event) => {
+        event.preventDefault();
+        setFeatureAlreadyOnList(false);
+        try {
+            const response = await axios.post("/api/player_features", {
+                playerId: player.id,
+                featureId: selectedFeatureId
+            });
+            if (response.data) {
+                if (response.data.name === "PlayerFeatureAlreadyExists") {
+                    setFeatureAlreadyOnList(true);
+                } else {
+                    setSelectedFeatureId('');
+                    setShowFeatureSelect(false);
+                    getPlayerFeatures();
+                };
+            };
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
     useEffect(() => {
         getPlayerSpells();
         getPlayerFeatures();
@@ -57,6 +82,12 @@ const PlayerPage = ({ player, allSpells }) => {
     useEffect(() => {
         getPlayerSpells();
         getPlayerFeatures();
+        setShowSpellSelect(false);
+        setShowFeatureSelect(false);
+        setSelectedSpellId('');
+        setSelectedFeatureId('');
+        setSpellAlreadyOnList(false);
+        setFeatureAlreadyOnList(false);
     }, [player])
 
     return (
@@ -129,16 +160,55 @@ const PlayerPage = ({ player, allSpells }) => {
                                 <button className="btn btn-success" onClick={() => setShowSpellSelect(true)}>Add Spell</button>
                         }
                     </> :
-
                     null
             }
             {
                 (tab === "features") ?
-                    <ul>
+                    <>
+                        <ul>
+                            {
+                                playerFeatures.map(feature => <li key={feature.id}>{feature.name}</li>)
+                            }
+                        </ul>
                         {
-                            playerFeatures.map(feature => <li key={feature.id}>{feature.name}</li>)
+                            (showFeatureSelect) ?
+                                <form onSubmit={addFeature} autoComplete="off">
+                                    <div className="d-flex mb-3">
+                                        <button className="btn btn-primary me-2" onClick={() => {
+                                            setShowFeatureSelect(false);
+                                            setSelectedFeatureId('');
+                                            setFeatureAlreadyOnList(false);
+                                        }
+                                        }>Back</button>
+                                        <button className="btn btn-success" type="submit">Confirm Add</button>
+                                    </div>
+                                    <select
+                                        className={
+                                            (featureAlreadyOnList) ?
+                                                "form-select is-invalid" :
+                                                "form-select"
+                                        }
+                                        aria-labelledby="feature-on-list-text"
+                                        value={selectedFeatureId}
+                                        required
+                                        onChange={(event) => setSelectedFeatureId(event.target.value)}
+                                    >
+                                        <option value="">Select Feature</option>
+                                        {
+                                            allFeatures.map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
+                                        }
+                                    </select>
+                                    <div className="form-text" id="feature-on-list-text">
+                                        {
+                                            (featureAlreadyOnList) ?
+                                                "This feature is already on your list!" :
+                                                null
+                                        }
+                                    </div>
+                                </form> :
+                                <button className="btn btn-success" onClick={() => setShowFeatureSelect(true)}>Add Feature</button>
                         }
-                    </ul> :
+                    </> :
                     null
             }
         </>

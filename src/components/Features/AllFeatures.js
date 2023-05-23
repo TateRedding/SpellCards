@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import SmallFeatureCard from "./SmallFeatureCard";
 
-const AllFeatures = () => {
-    const [features, setFeatures] = useState([]);
+const AllFeatures = ({ features, getFeatures }) => {
     const [filteredFeatures, setFilteredFeatures] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     const navigate = useNavigate();
-
-    const getFeatures = async () => {
-        const response = await axios.get("/api/features");
-        setFeatures(response.data);
-    };
-
-    useEffect(() => {
-        getFeatures();
-    }, []);
 
     useEffect(() => {
         setFilteredFeatures(features);

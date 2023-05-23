@@ -5,7 +5,6 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
     const { playerId, spellId } = req.body;
     try {
-        const test = await getPlayerSpellByPlayerIdAndSpellId(playerId, spellId);
         if (await getPlayerSpellByPlayerIdAndSpellId(playerId, spellId)) {
             res.send({
                 name: "PlayerSpellAlreadyExists",

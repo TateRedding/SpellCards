@@ -13,6 +13,7 @@ import NewSpell from "./components/Spells/NewSpell";
 import PlayerPage from "./components/PlayerPage";
 
 const App = () => {
+    const [features, setFeatures] = useState([]);
     const [players, setPlayers] = useState([]);
     const [spells, setSpells] = useState([]);
 
@@ -41,9 +42,15 @@ const App = () => {
         setSpells(response.data);
     };
 
+    const getFeatures = async () => {
+        const response = await axios.get("/api/features");
+        setFeatures(response.data);
+    };
+
     useEffect(() => {
         getPlayers();
         getSpells();
+        getFeatures();
     }, []);
 
     return (
@@ -51,7 +58,11 @@ const App = () => {
             <Header players={players} />
             <main className="w-75 mx-auto">
                 <Routes>
-                    <Route path="/features" element={<AllFeatures />} />
+                    <Route path="/features" element={
+                        <AllFeatures
+                            features={features}
+                            getFeatures={getFeatures}
+                        />} />
                     <Route path="/features/new" element={<NewFeature />} />
                     <Route path="/features/edit/:featureId" element={<EditFeature />} />
                     <Route path="/spells" element={
@@ -74,6 +85,7 @@ const App = () => {
                                 <PlayerPage
                                     player={player}
                                     allSpells={spells}
+                                    allFeatures={features}
                                 />
                             }
                             key={player.id} />
