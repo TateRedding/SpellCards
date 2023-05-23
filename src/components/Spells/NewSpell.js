@@ -81,7 +81,7 @@ const NewSpell = ({ schools }) => {
                 <div className="form-text mb-3" id="name-taken-edit">
                     {
                         (nameTaken) ?
-                            `Can't use the name to ${name}, that spell already exists!` :
+                            `Can't use the name ${name}, that spell already exists!` :
                             null
                     }
                 </div>
