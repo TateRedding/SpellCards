@@ -7,6 +7,7 @@ const {
     getAllSpells,
     getSpellById,
     getSpellByName,
+    getSpellsByPlayerId,
     deletePlayerSpellsBySpellId,
 } = require('../db');
 
@@ -23,6 +24,15 @@ router.get("/:spellId", async (req, res, next) => {
     try {
         const spell = await getSpellById(req.params.spellId);
         res.send(spell);
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+router.get("/player/:playerId", async (req, res, next) => {
+    try {
+        const spells = await getSpellsByPlayerId(req.params.playerId);
+        res.send(spells);
     } catch ({ name, message }) {
         next({ name, message });
     };

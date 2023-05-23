@@ -43,7 +43,7 @@ const getPlayerByName = async (name) => {
         const { rows: [player] } = await client.query(`
             SELECT *
             FROM players
-            WHERE name=${name};
+            WHERE name='${name}';
         `);
         return player;
     } catch (error) {

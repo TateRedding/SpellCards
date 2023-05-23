@@ -1,21 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const Header = () => {
-    const [players, setPlayers] = useState([]);
-
-    useEffect(() => {
-        const getPlayerNames = async () => {
-            try {
-                const response = await axios.get("/api/players");
-                setPlayers(response.data);
-            } catch (error) {
-                console.error(error);
-            };
-        };
-        getPlayerNames();
-    }, []);
+const Header = ({ players }) => {
 
     return (
         <header>

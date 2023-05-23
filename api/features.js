@@ -7,6 +7,7 @@ const {
     getAllFeatures,
     getFeatureById,
     getFeatureByName,
+    getFeaturesByPlayerId,
     deletePlayerFeaturesByFeatureId
 } = require('../db');
 
@@ -23,6 +24,15 @@ router.get("/:featureId", async (req, res, next) => {
     try {
         const feature = await getFeatureById(req.params.featureId);
         res.send(feature);
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+router.get("/player/:playerId", async (req, res, next) => {
+    try {
+        const features = await getFeaturesByPlayerId(req.params.playerId);
+        res.send(features);
     } catch ({ name, message }) {
         next({ name, message });
     };
