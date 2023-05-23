@@ -77,7 +77,7 @@ const getSpellByName = async (name) => {
         const { rows: [spell] } = await client.query(`
             SELECT *
             FROM spells
-            WHERE name=${name}
+            WHERE name='${name}'
         `);
         return spell;
     } catch (error) {

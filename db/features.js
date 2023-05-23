@@ -77,7 +77,7 @@ const getFeatureByName = async (name) => {
         const { rows: [feature] } = await client.query(`
             SELECT *
             FROM features
-            WHERE name=${name};
+            WHERE name='${name}';
         `);
         return feature;
     } catch (error) {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createSpell, getAllSpells, getSpellById, deleteSpell, deletePlayerSpellsBySpellId, updateSpell } = require('../db');
+const { createSpell, getAllSpells, getSpellById, deleteSpell, deletePlayerSpellsBySpellId, updateSpell, getSpellByName } = require('../db');
 
 router.get("/", async (req, res, next) => {
     try {
@@ -21,19 +21,36 @@ router.get("/:spellId", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
+    const { name } = req.body;
     try {
-        const spell = await createSpell(req.body);
-        res.send(spell);
+        if (await getSpellByName(name)) {
+            res.send({
+                name: "NameTakenError",
+                message: `Cannot add spell ${name}, ${name} already exists!`
+            });
+        } else {
+            const spell = await createSpell(req.body);
+            res.send(spell);
+        };
     } catch ({ name, message }) {
         next({ name, message });
     };
 });
 
-router.patch ("/:spellId", async (req, res, next) => {
+router.patch("/:spellId", async (req, res, next) => {
     const { spellId } = req.params;
+    const { name } = req.body;
     try {
-        const spell = await updateSpell(spellId, req.body);
-        res.send(spell);
+        const spell = await getSpellById(spellId);
+        if (spell.name !== name && await getSpellByName(name)) {
+            res.send({
+                name: "NameTakenError",
+                message: `Cannot use spell name to ${name}, ${name} already exists!`
+            });
+        } else {
+            const updatedSpell = await updateSpell(spellId, req.body);
+            res.send(updatedSpell);
+        };
     } catch ({ name, message }) {
         next({ name, message });
     };
