@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const NewSpell = ({ schools }) => {
+const NewSpell = ({ schools, getSpells }) => {
     const [name, setName] = useState('');
     const [level, setLevel] = useState(0);
     const [school, setSchool] = useState('');
@@ -55,6 +55,7 @@ const NewSpell = ({ schools }) => {
                     setConcentration(false);
                     setDuration('');
                     setDescription('');
+                    getSpells();
                 };
             };
         } catch (error) {

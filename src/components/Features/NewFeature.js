@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const NewFeature = () => {
+const NewFeature = ({ getFeatures }) => {
     const [name, setName] = useState('');
     const [origin, setOrigin] = useState('');
     const [description, setDescription] = useState('');
@@ -25,6 +25,7 @@ const NewFeature = () => {
                     setName('');
                     setOrigin('');
                     setDescription('');
+                    getFeatures();
                 };
             };
         } catch (error) {

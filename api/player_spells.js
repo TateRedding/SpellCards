@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPlayerSpell, getPlayerSpellByPlayerIdAndSpellId } = require('../db');
+const { createPlayerSpell, getPlayerSpellByPlayerIdAndSpellId, deletePlayerSpell } = require('../db');
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
@@ -19,10 +19,10 @@ router.post("/", async (req, res, next) => {
     };
 });
 
-router.delete("/:playerFeatureId", async (req, res, next) => {
-    const { playerFeatureId } = req.params;
+router.delete("/:playerSpellId", async (req, res, next) => {
     try {
-
+        const playerSpell = await deletePlayerSpell(req.params.playerSpellId);
+        res.send(playerSpell);
     } catch ({ name, message }) {
         next({ name, message });
     };

@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const FeatureDetails = ({ feature, getPlayerFeatures }) => {
+const FeatureDetails = ({ feature, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeFeature = async () => {
-        console.log("remove feature");
+        try {
+            const response = await axios.delete(`/api/player_features/${feature.playerFeatureId}`);
+            if (response.data) {
+                getPlayerData();
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return (

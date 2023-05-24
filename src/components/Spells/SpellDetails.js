@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios";
 
-const SpellDetails = ({ spell, getPlayerSpells }) => {
+const SpellDetails = ({ spell, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
 
     const componentsArr = [];
@@ -26,7 +27,14 @@ const SpellDetails = ({ spell, getPlayerSpells }) => {
     };
 
     const removeSpell = async () => {
-        console.log("remove spell");
+        try {
+            const response = await axios.delete(`/api/player_spells/${spell.playerSpellId}`);
+            if (response.data) {
+                getPlayerData();
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return (

@@ -1,5 +1,5 @@
 const express = require('express');
-const { createPlayerFeature, getPlayerFeatureByPlayerIdAndFeatureId } = require('../db');
+const { createPlayerFeature, getPlayerFeatureByPlayerIdAndFeatureId, deletePlayerFeature } = require('../db');
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
@@ -14,6 +14,15 @@ router.post("/", async (req, res, next) => {
             const playerFeature = await createPlayerFeature(playerId, featureId);
             res.send(playerFeature);
         };
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
+router.delete("/:playerFeatureId", async (req, res, next) => {
+    try {
+        const playerFeature = await deletePlayerFeature(req.params.playerFeatureId);
+        res.send(playerFeature);
     } catch ({ name, message }) {
         next({ name, message });
     };

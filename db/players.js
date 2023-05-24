@@ -1,4 +1,6 @@
 const client = require("./client");
+const { getSpellsByPlayerId } = require("./spells");
+const { getFeaturesByPlayerId } = require("./features");
 
 const createPlayer = async (name) => {
     try {
@@ -32,6 +34,10 @@ const getPlayerById = async (id) => {
             FROM players
             WHERE id=${id};
         `);
+        if (player) {
+            player.spells = await getSpellsByPlayerId(player.id);
+            player.features = await getFeaturesByPlayerId(player.id)
+        };
         return player;
     } catch (error) {
         console.error(error);

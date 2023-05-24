@@ -88,7 +88,7 @@ const getFeatureByName = async (name) => {
 const getFeaturesByPlayerId = async (playerId) => {
     try {
         const { rows: spells } = await client.query(`
-            SELECT features.*
+            SELECT features.*, player_features.id as "playerFeatureId"
             FROM features
             JOIN player_features
                 ON player_features."featureId"=features.id

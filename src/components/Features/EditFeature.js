@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const EditFeature = () => {
+const EditFeature = ({ getFeatures }) => {
     const [feature, setFeature] = useState({});
     const [name, setName] = useState('');
     const [origin, setOrigin] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const { featureId } = useParams();
 
@@ -45,6 +46,8 @@ const EditFeature = () => {
                 } else {
                     getFeatureData();
                     setValues();
+                    setSuccess(true);
+                    getFeatures();
                 };
             };
         } catch (error) {
@@ -59,6 +62,13 @@ const EditFeature = () => {
     useEffect(() => {
         setValues();
     }, [feature]);
+
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => setSuccess(false), 3000);
+            return () => clearTimeout(timer);
+        };
+    }, [success]);
 
     return (
         <>
@@ -112,6 +122,12 @@ const EditFeature = () => {
                 </div>
                 <button type="submit" className="btn btn-success">Update</button>
             </form>
+            {
+                (success) ?
+                    <p>Successfully updated {feature.name}!</p>
+                    :
+                    null
+            }
         </>
     );
 };

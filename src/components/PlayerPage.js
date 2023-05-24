@@ -6,28 +6,18 @@ import SpellDetails from "./Spells/SpellDetails";
 
 const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [tab, setTab] = useState("spells");
-    const [playerSpells, setPlayerSpells] = useState([]);
+    const [playerData, setPlayerData] = useState({});
     const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
-    const [playerFeatures, setPlayerFeatures] = useState([]);
     const [showFeatureSelect, setShowFeatureSelect] = useState(false);
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
 
-    const getPlayerSpells = async () => {
+    const getPlayerData = async () => {
         try {
-            const response = await axios.get(`/api/spells/player/${player.id}`);
-            setPlayerSpells(response.data);
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
-    const getPlayerFeatures = async () => {
-        try {
-            const response = await axios.get(`/api/features/player/${player.id}`);
-            setPlayerFeatures(response.data);
+            const response = await axios.get(`/api/players/${player.id}`);
+            setPlayerData(response.data);
         } catch (error) {
             console.error(error);
         };
@@ -38,7 +28,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
         setSpellAlreadyOnList(false);
         try {
             const response = await axios.post("/api/player_spells", {
-                playerId: player.id,
+                playerId: playerData.id,
                 spellId: selectedSpellId
             });
             if (response.data) {
@@ -47,7 +37,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                 } else {
                     setSelectedSpellId('');
                     setShowSpellSelect(false);
-                    getPlayerSpells();
+                    getPlayerData();
                 };
             };
         } catch (error) {
@@ -60,7 +50,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
         setFeatureAlreadyOnList(false);
         try {
             const response = await axios.post("/api/player_features", {
-                playerId: player.id,
+                playerId: playerData.id,
                 featureId: selectedFeatureId
             });
             if (response.data) {
@@ -69,7 +59,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                 } else {
                     setSelectedFeatureId('');
                     setShowFeatureSelect(false);
-                    getPlayerFeatures();
+                    getPlayerData();
                 };
             };
         } catch (error) {
@@ -78,24 +68,30 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
     };
 
     useEffect(() => {
-        getPlayerSpells();
-        getPlayerFeatures();
+        getPlayerData();
     }, []);
 
     useEffect(() => {
-        getPlayerSpells();
-        getPlayerFeatures();
+        getPlayerData();
         setShowSpellSelect(false);
         setShowFeatureSelect(false);
         setSelectedSpellId('');
         setSelectedFeatureId('');
         setSpellAlreadyOnList(false);
         setFeatureAlreadyOnList(false);
-    }, [player])
+    }, [player]);
+
+    useEffect(() => {
+        setSpellAlreadyOnList(false);
+    }, [selectedSpellId]);
+
+    useEffect(() => {
+        setFeatureAlreadyOnList(false);
+    }, [selectedFeatureId]);
 
     return (
         <>
-            <h2>{player.name}</h2>
+            <h2>{playerData.name}</h2>
             <ul className="nav nav-tabs mb-3">
                 <li className="nav-item">
                     <button
@@ -121,13 +117,16 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                     <>
                         <ul>
                             {
-                                playerSpells.map(spell => {
-                                    return <SpellDetails
-                                        spell={spell}
-                                        getPlayerSpells={getPlayerSpells}
-                                        key={spell.id}
-                                    />
-                                })
+                                (Object.keys(playerData).length) ?
+                                    playerData.spells.map(spell => {
+                                        return <SpellDetails
+                                            spell={spell}
+                                            getPlayerData={getPlayerData}
+                                            key={spell.id}
+                                        />
+                                    })
+                                    :
+                                    null
                             }
                         </ul>
                         {
@@ -176,7 +175,16 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                     <>
                         <ul>
                             {
-                                playerFeatures.map(feature => <FeatureDetails feature={feature} key={feature.id} />)
+                                (Object.keys(playerData).length) ?
+                                    playerData.features.map(feature => {
+                                        return <FeatureDetails
+                                            feature={feature}
+                                            getPlayerData={getPlayerData}
+                                            key={feature.id}
+                                        />
+                                    })
+                                    :
+                                    null
                             }
                         </ul>
                         {

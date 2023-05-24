@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const EditSpell = ({ schools }) => {
+const EditSpell = ({ schools, getSpells }) => {
     const [spell, setSpell] = useState({});
     const [name, setName] = useState('');
     const [level, setLevel] = useState(0);
@@ -17,6 +17,7 @@ const EditSpell = ({ schools }) => {
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const { spellId } = useParams();
 
@@ -78,6 +79,8 @@ const EditSpell = ({ schools }) => {
                 } else {
                     getSpellData();
                     setValues();
+                    setSuccess(true);
+                    getSpells();
                 };
             };
         } catch (error) {
@@ -92,6 +95,13 @@ const EditSpell = ({ schools }) => {
     useEffect(() => {
         setValues();
     }, [spell]);
+
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => setSuccess(false), 3000);
+            return () => clearTimeout(timer);
+        };
+    }, [success]);
 
     return (
         <>
@@ -245,6 +255,12 @@ const EditSpell = ({ schools }) => {
                 </div>
                 <button type="submit" className="btn btn-success">Update</button>
             </form>
+            {
+                (success) ?
+                    <p>Successfully updated {spell.name}!</p>
+                    :
+                    null
+            }
         </>
     );
 };

@@ -65,8 +65,14 @@ const App = () => {
                             features={features}
                             getFeatures={getFeatures}
                         />} />
-                    <Route path="/features/new" element={<NewFeature />} />
-                    <Route path="/features/edit/:featureId" element={<EditFeature />} />
+                    <Route path="/features/new" element={
+                        <NewFeature
+                            getFeatures={getFeatures}
+                        />} />
+                    <Route path="/features/edit/:featureId" element={
+                        <EditFeature
+                            getFeatures={getFeatures}
+                        />} />
                     <Route path="/spells" element={
                         <AllSpells
                             spells={spells}
@@ -75,10 +81,12 @@ const App = () => {
                     <Route path="/spells/new" element={
                         <NewSpell
                             schools={schools}
+                            getSpells={getSpells}
                         />} />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
                             schools={schools}
+                            getSpells={getSpells}
                         />} />
                     {
                         players.map(player => <Route
