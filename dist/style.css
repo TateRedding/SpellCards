@@ -1,3 +1,10 @@
 main {
-    margin-top: 4em;
+    width: 80vw;
+    margin: 4em auto 0 auto;
+}
+
+@media (max-width: 480px) {
+    main {
+        width: 95vw;
+    }
 }

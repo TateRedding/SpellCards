@@ -57,7 +57,7 @@ const App = () => {
     return (
         <>
             <Header players={players} />
-            <main className="w-75 mx-auto">
+            <main>
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/features" element={
