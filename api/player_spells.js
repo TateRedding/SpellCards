@@ -19,4 +19,13 @@ router.post("/", async (req, res, next) => {
     };
 });
 
+router.delete("/:playerFeatureId", async (req, res, next) => {
+    const { playerFeatureId } = req.params;
+    try {
+
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
 module.exports = router;

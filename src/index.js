@@ -8,6 +8,7 @@ import AllSpells from "./components/Spells/AllSpells";
 import EditFeature from "./components/Features/EditFeature"
 import EditSpell from "./components/Spells/EditSpell";
 import Header from "./components/Header";
+import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
 import NewSpell from "./components/Spells/NewSpell";
 import PlayerPage from "./components/PlayerPage";
@@ -58,6 +59,7 @@ const App = () => {
             <Header players={players} />
             <main className="w-75 mx-auto">
                 <Routes>
+                    <Route path="/" element={<Home />} />
                     <Route path="/features" element={
                         <AllFeatures
                             features={features}

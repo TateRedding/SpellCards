@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+import FeatureDetails from "./Features/FeatureDetails";
 import SpellDetails from "./Spells/SpellDetails";
 
 const PlayerPage = ({ player, allSpells, allFeatures }) => {
@@ -120,7 +121,13 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                     <>
                         <ul>
                             {
-                                playerSpells.map(spell => <SpellDetails spell={spell} key={spell.id} />)
+                                playerSpells.map(spell => {
+                                    return <SpellDetails
+                                        spell={spell}
+                                        getPlayerSpells={getPlayerSpells}
+                                        key={spell.id}
+                                    />
+                                })
                             }
                         </ul>
                         {
@@ -169,7 +176,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                     <>
                         <ul>
                             {
-                                playerFeatures.map(feature => <li key={feature.id}>{feature.name}</li>)
+                                playerFeatures.map(feature => <FeatureDetails feature={feature} key={feature.id} />)
                             }
                         </ul>
                         {
