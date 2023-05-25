@@ -1,6 +1,6 @@
-const { reseedDB } = require("./seedData");
+const { initializeDB } = require("./seedData");
 const client = require("./client");
 
-reseedDB()
+initializeDB()
     .catch(console.error)
     .finally(() => client.end());
