@@ -108,6 +108,7 @@ const NewSpell = ({ schools, getSpells }) => {
                     <select
                         className="form-select"
                         id="spell-school"
+                        value={school}
                         required
                         onChange={(event) => setSchool(event.target.value)}
                     >

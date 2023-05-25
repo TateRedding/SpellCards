@@ -203,7 +203,9 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                     >
                                         <option value="">Select Spell</option>
                                         {
-                                            allSpells.map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
+                                            allSpells
+                                                .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                                .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
                                         }
                                     </select>
                                     <div className="form-text" id="spell-on-list-text">
