@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const NewSpell = ({ schools, getSpells }) => {
@@ -15,6 +16,8 @@ const NewSpell = ({ schools, getSpells }) => {
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+
+    const navigate = useNavigate();
 
     const createNewSpell = async (event) => {
         event.preventDefault();
@@ -212,8 +215,9 @@ const NewSpell = ({ schools, getSpells }) => {
                     />
                     <label htmlFor="spell-description">Description</label>
                 </div>
-                <button type="submit" className="btn btn-success">Add</button>
+                <button type="submit" className="btn btn-success mb-3">Add</button>
             </form>
+            <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
         </>
     );
 };

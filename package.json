@@ -5,6 +5,7 @@
   "scripts": {
     "build": "webpack --mode=production",
     "build:dev": "webpack -w --mode=development",
+    "init": "node db/init.js",
     "seed": "node ./db/seed.js",
     "seed:dev": "nodemon -L ./db/seed.js",
     "start": "node server.js",

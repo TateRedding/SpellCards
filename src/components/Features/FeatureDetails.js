@@ -29,14 +29,20 @@ const FeatureDetails = ({ feature, getPlayerData }) => {
                         </div>
                     </div>
                     :
-                    <div className="card mb-3">
-                        <div className="card-body">
+                    <div className="accordion mb-3" id={`feature-accordion-${feature.id}`}>
+                        <div className="accordion-item">
                             <div className="d-flex justify-content-between">
-                                <h5 className="card-title">{feature.name}</h5>
-                                <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
+                                <h5 className="accordion-header">
+                                    <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>{feature.name}</button>
+                                </h5>
+                                <button className="btn btn-danger m-1" onClick={() => setRemoving(true)}>Remove</button>
                             </div>
-                            <p className="card-text mb-0"><b>Origin: </b>{feature.origin}</p>
-                            <p className="card-text">{feature.description}</p>
+                            <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>
+                                <div className="accordion-body">
+                                    <p className="mb-0"><b>Origin: </b>{feature.origin}</p>
+                                    <p>{feature.description}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
             }

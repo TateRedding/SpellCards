@@ -7,6 +7,7 @@ import SpellDetails from "./Spells/SpellDetails";
 const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [tab, setTab] = useState("spells");
     const [playerData, setPlayerData] = useState({});
+    const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [spellSearchTerm, setSpellSearchTerm] = useState('');
     const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
@@ -15,6 +16,8 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [showFeatureSelect, setShowFeatureSelect] = useState(false);
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
+
+    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     const getPlayerData = async () => {
         try {
@@ -88,7 +91,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
     useEffect(() => {
         setSpellSearchTerm('');
         setFeatureSearchTerm('');
-    }, [tab]);
+    }, [tab, selectedSpellLevel]);
 
     useEffect(() => {
         setSpellAlreadyOnList(false);
@@ -124,21 +127,45 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
             {
                 (tab === "spells") ?
                     <>
-                        <div className="form-floating mb-3">
-                            <input
-                                className="form-control"
-                                id="searchInput-player-spells"
-                                value={spellSearchTerm}
-                                placeholder="Search"
-                                onChange={(event) => setSpellSearchTerm(event.target.value)}
-                            />
-                            <label htmlFor="searchInput" className="form-label">Search</label>
+                        <div className="d-flex align-items-end mb-3">
+                            <div className="form-floating me-3">
+                                <input
+                                    className="form-control"
+                                    id="searchInput-player-spells"
+                                    value={spellSearchTerm}
+                                    placeholder="Search"
+                                    onChange={(event) => setSpellSearchTerm(event.target.value)}
+                                />
+                                <label htmlFor="searchInput" className="form-label">Search</label>
+                            </div>
+                            <div>
+                                <label htmlFor="level-filter">Spell Level</label>
+                                <select
+                                    className="form-select"
+                                    id="level-filter"
+                                    value={selectedSpellLevel}
+                                    onChange={(event) => setSelectedSpellLevel(event.target.value)}
+                                >
+                                    <option value="">All</option>
+                                    <option value={0}>Cantrip</option>
+                                    {
+                                        spellLevels.map((level, idx) => <option value={level} key={idx}>{level}</option>)
+                                    }
+                                </select>
+                            </div>
                         </div>
-                        <ul>
+                        <div>
                             {
                                 (Object.keys(playerData).length) ?
                                     playerData.spells
                                         .filter(spell => spell.name.toLowerCase().includes(spellSearchTerm.toLowerCase()))
+                                        .filter(spell => {
+                                            if (selectedSpellLevel) {
+                                                return spell.level === Number(selectedSpellLevel);
+                                            } else {
+                                                return true;
+                                            }
+                                        })
                                         .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
                                         .map(spell => {
                                             return <SpellDetails
@@ -150,7 +177,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                     :
                                     null
                             }
-                        </ul>
+                        </div>
                         {
                             (showSpellSelect) ?
                                 <form onSubmit={addSpell} autoComplete="off">
@@ -205,7 +232,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                             />
                             <label htmlFor="searchInput" className="form-label">Search</label>
                         </div>
-                        <ul>
+                        <div>
                             {
                                 (Object.keys(playerData).length) ?
                                     playerData.features
@@ -221,7 +248,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                     :
                                     null
                             }
-                        </ul>
+                        </div>
                         {
                             (showFeatureSelect) ?
                                 <form onSubmit={addFeature} autoComplete="off">

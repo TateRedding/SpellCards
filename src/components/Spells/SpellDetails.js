@@ -26,6 +26,24 @@ const SpellDetails = ({ spell, getPlayerData }) => {
         durationString = spell.duration;
     };
 
+    let levelString = "";
+    if (spell.level === 0) {
+        levelString = "Cantrip, ";
+    } else {
+        levelString = `${spell.level}`;
+        if (spell.level === 1) {
+            levelString += "st"
+        } else if (spell.level === 2) {
+            levelString += "nd"
+        } else if (spell.level === 3) {
+            levelString += "rd"
+        } else {
+            levelString += "th"
+        }
+        levelString += " level ";
+    }
+    levelString += spell.school.toLowerCase();
+
     const removeSpell = async () => {
         try {
             const response = await axios.delete(`/api/player_spells/${spell.playerSpellId}`);
@@ -51,19 +69,26 @@ const SpellDetails = ({ spell, getPlayerData }) => {
                         </div>
                     </div>
                     :
-                    <div className="card mb-3">
-                        <div className="card-body">
+                    <div className="accordion mb-3" id={`spell-accordion-${spell.id}`}>
+                        <div className="accordion-item">
                             <div className="d-flex justify-content-between">
-                                <h5 className="card-title">{spell.name}</h5>
-                                <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
+                                <h5 className="accordion-header">
+                                    <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#spell-body-${spell.id}`}>{spell.name}</button>
+                                </h5>
+                                <button className="btn btn-danger m-1" onClick={() => setRemoving(true)}>Remove</button>
                             </div>
-                            <p className="card-text mb-0"><b>Casting Time: </b>{spell.castingTime}</p>
-                            <p className="card-text mb-0"><b>Range: </b>{spell.range}</p>
-                            <p className="card-text mb-0"><b>Components: </b>{componentsString}</p>
-                            <p className="card-text mb-2"><b>Duration: </b>{durationString}</p>
-                            <p className="card-text">{spell.description}</p>
+                            <div id={`spell-body-${spell.id}`} className="accordion-collapse collapse" data-bs-parent={`spell-accordion-${spell.id}`}>
+                                <div className="accordion-body">
+                                    <p className="mb-2"><i>{levelString}</i></p>
+                                    <p className="mb-0"><b>Casting Time: </b>{spell.castingTime}</p>
+                                    <p className="mb-0"><b>Range: </b>{spell.range}</p>
+                                    <p className="mb-0"><b>Components: </b>{componentsString}</p>
+                                    <p className="mb-2"><b>Duration: </b>{durationString}</p>
+                                    <p>{spell.description}</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div >
             }
         </>
     );

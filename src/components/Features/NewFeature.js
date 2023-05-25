@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const NewFeature = ({ getFeatures }) => {
@@ -6,6 +7,8 @@ const NewFeature = ({ getFeatures }) => {
     const [origin, setOrigin] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+
+    const navigate = useNavigate();
 
     const createNewFeature = async (event) => {
         event.preventDefault();
@@ -83,8 +86,9 @@ const NewFeature = ({ getFeatures }) => {
                     />
                     <label htmlFor="feature-description">Description</label>
                 </div>
-                <button type="submit" className="btn btn-success">Add</button>
+                <button type="submit" className="btn btn-success mb-3">Add</button>
             </form>
+            <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
         </>
     );
 };

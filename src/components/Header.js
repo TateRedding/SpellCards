@@ -1,14 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const Header = ({ players }) => {
 
     return (
         <header>
-            <nav className="navbar fixed-top navbar-expand-sm bg-body-tertiary">
+            <nav className="navbar navbar-expand-sm bg-body-tertiary mb-3">
                 <div className="container-fluid">
-                    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#playerButtons" aria-controls="playerButtons" aria-expanded="false" aria-label="Toggle navigation">
+                    <button className="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#playerButtons">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="playerButtons">

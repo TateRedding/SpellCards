@@ -1,8 +1,16 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ players }) => {
+    const navigate = useNavigate();
+
     return (
-        <h3>Select your name from the navigation menu to see your own spell and feature lists, or view the enitre list of spells or features.</h3>
+        <div className="d-flex flex-column align-items-center">
+            <h5 className="text-center mb-3">Select your name from the list below or the navigation menu.</h5>
+            {
+                players.map(player => <button className="btn btn-outline-primary mb-3" onClick={() => navigate(`/${player.name.toLowerCase()}`)}>{player.name}</button>)
+            }
+        </div>
     );
 };
 

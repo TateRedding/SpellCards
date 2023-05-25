@@ -59,7 +59,10 @@ const App = () => {
             <Header players={players} />
             <main>
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={
+                        <Home
+                            players={players}
+                        />} />
                     <Route path="/features" element={
                         <AllFeatures
                             features={features}

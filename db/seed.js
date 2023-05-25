@@ -28,12 +28,12 @@ const createTables = async () => {
     try {
         console.log("Creating tables...");
         await client.query(`
-            CREATE TABLE players (
+            CREATE TABLE IF NOT EXISTS players (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(32) NOT NULL
             );
 
-            CREATE TABLE spells (
+            CREATE TABLE IF NOT EXISTS spells (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 level INTEGER NOT NULL,
@@ -49,21 +49,21 @@ const createTables = async () => {
                 description TEXT NOT NULL
             );
 
-            CREATE TABLE player_spells (
+            CREATE TABLE IF NOT EXISTS player_spells (
                 id SERIAL PRIMARY KEY,
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "spellId" INTEGER NOT NULL REFERENCES spells(id),
                 UNIQUE ("playerId", "spellId")
             );
 
-            CREATE TABLE features (
+            CREATE TABLE IF NOT EXISTS features (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 origin VARCHAR(128),
                 description TEXT NOT NULL
             );
 
-            CREATE TABLE player_features (
+            CREATE TABLE IF NOT EXISTS player_features (
                 id SERIAL PRIMARY KEY,
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "featureId" INTEGER NOT NULL REFERENCES features(id),
