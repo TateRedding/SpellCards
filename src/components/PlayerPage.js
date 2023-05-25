@@ -7,9 +7,11 @@ import SpellDetails from "./Spells/SpellDetails";
 const PlayerPage = ({ player, allSpells, allFeatures }) => {
     const [tab, setTab] = useState("spells");
     const [playerData, setPlayerData] = useState({});
+    const [spellSearchTerm, setSpellSearchTerm] = useState('');
     const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
+    const [featureSearchTerm, setFeatureSearchTerm] = useState('');
     const [showFeatureSelect, setShowFeatureSelect] = useState(false);
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
@@ -79,7 +81,14 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
         setSelectedFeatureId('');
         setSpellAlreadyOnList(false);
         setFeatureAlreadyOnList(false);
+        setSpellSearchTerm('');
+        setFeatureSearchTerm('');
     }, [player]);
+
+    useEffect(() => {
+        setSpellSearchTerm('');
+        setFeatureSearchTerm('');
+    }, [tab]);
 
     useEffect(() => {
         setSpellAlreadyOnList(false);
@@ -115,16 +124,29 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
             {
                 (tab === "spells") ?
                     <>
+                        <div className="form-floating mb-3">
+                            <input
+                                className="form-control"
+                                id="searchInput-player-spells"
+                                value={spellSearchTerm}
+                                placeholder="Search"
+                                onChange={(event) => setSpellSearchTerm(event.target.value)}
+                            />
+                            <label htmlFor="searchInput" className="form-label">Search</label>
+                        </div>
                         <ul>
                             {
                                 (Object.keys(playerData).length) ?
-                                    playerData.spells.map(spell => {
-                                        return <SpellDetails
-                                            spell={spell}
-                                            getPlayerData={getPlayerData}
-                                            key={spell.id}
-                                        />
-                                    })
+                                    playerData.spells
+                                        .filter(spell => spell.name.toLowerCase().includes(spellSearchTerm.toLowerCase()))
+                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                        .map(spell => {
+                                            return <SpellDetails
+                                                spell={spell}
+                                                getPlayerData={getPlayerData}
+                                                key={spell.id}
+                                            />
+                                        })
                                     :
                                     null
                             }
@@ -173,16 +195,29 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
             {
                 (tab === "features") ?
                     <>
+                        <div className="form-floating mb-3">
+                            <input
+                                className="form-control"
+                                id="searchInput-player-spells"
+                                value={featureSearchTerm}
+                                placeholder="Search"
+                                onChange={(event) => setFeatureSearchTerm(event.target.value)}
+                            />
+                            <label htmlFor="searchInput" className="form-label">Search</label>
+                        </div>
                         <ul>
                             {
                                 (Object.keys(playerData).length) ?
-                                    playerData.features.map(feature => {
-                                        return <FeatureDetails
-                                            feature={feature}
-                                            getPlayerData={getPlayerData}
-                                            key={feature.id}
-                                        />
-                                    })
+                                    playerData.features
+                                        .filter(feature => feature.name.toLowerCase().includes(featureSearchTerm.toLowerCase()))
+                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                        .map(feature => {
+                                            return <FeatureDetails
+                                                feature={feature}
+                                                getPlayerData={getPlayerData}
+                                                key={feature.id}
+                                            />
+                                        })
                                     :
                                     null
                             }

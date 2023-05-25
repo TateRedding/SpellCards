@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallFeatureCard from "./SmallFeatureCard";
 
 const AllFeatures = ({ features, getFeatures }) => {
-    const [filteredFeatures, setFilteredFeatures] = useState([]);
+
     const [searchTerm, setSearchTerm] = useState('');
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        setFilteredFeatures(features);
-    }, [features]);
-
-    useEffect(() => {
-        setFilteredFeatures(features.filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase())));
-    }, [searchTerm]);
 
     return (
         <>
@@ -30,13 +22,16 @@ const AllFeatures = ({ features, getFeatures }) => {
                 <label htmlFor="searchInput" className="form-label">Search</label>
             </div>
             {
-                filteredFeatures.map(feature => {
-                    return <SmallFeatureCard
-                        feature={feature}
-                        getFeatures={getFeatures}
-                        key={feature.id}
-                    />
-                })
+                features
+                    .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                    .map(feature => {
+                        return <SmallFeatureCard
+                            feature={feature}
+                            getFeatures={getFeatures}
+                            key={feature.id}
+                        />
+                    })
             }
         </>
     );
