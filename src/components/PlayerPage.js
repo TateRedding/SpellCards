@@ -276,7 +276,9 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                     >
                                         <option value="">Select Feature</option>
                                         {
-                                            allFeatures.map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
+                                            allFeatures
+                                                .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                                .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
                                         }
                                     </select>
                                     <div className="form-text" id="feature-on-list-text">
