@@ -30,7 +30,7 @@ const createTables = async () => {
         await client.query(`
             CREATE TABLE IF NOT EXISTS players (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(32) NOT NULL
+                name VARCHAR(32) UNIQUE NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS spells (
@@ -70,7 +70,7 @@ const createTables = async () => {
                 UNIQUE ("playerId", "featureId")
             );
 
-        `)
+        `);
         console.log("Finished creating tables!");
     } catch (error) {
         console.log("Error creating tables!");
@@ -82,14 +82,18 @@ const createPlayers = async () => {
     try {
         console.log("Filling players table...");
 
-        const players = [];
-        players.push(await createPlayer("Khirun"));
-        players.push(await createPlayer("Mona"));
-        players.push(await createPlayer("Robi"));
-        players.push(await createPlayer("Thrall"));
-        players.push(await createPlayer("Torment"));
+        await createPlayer("Khirun");
+        await createPlayer("Mona");
+        await createPlayer("Robi");
+        await createPlayer("Thrall");
+        await createPlayer("Torment");
 
+        const { rows: players } = await client.query(`
+            SELECT *
+            FROM players;
+        `);
         console.log(players);
+        
         console.log("Finished filling players table!");
     } catch (error) {
         console.log("Error filling players table!");

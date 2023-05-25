@@ -7,6 +7,7 @@ const createPlayer = async (name) => {
         const { rows: [player] } = await client.query(`
             INSERT INTO players (name)
             VALUES ('${name}')
+            ON CONFLICT DO NOTHING
             RETURNING *;
         `);
         return player;
