@@ -3,8 +3,26 @@ main {
     margin: 0 auto;
 }
 
-@media (max-width: 480px) {
+.spell-tools {
+    align-items: end;
+}
+
+.spell-search {
+    margin-right: 1rem;
+}
+
+@media (max-width: 576px) {
     main {
         width: 95vw;
+    }
+
+    .spell-tools {
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .spell-search {
+        margin-right: 0;
+        margin-bottom: 1rem;
     }
 }

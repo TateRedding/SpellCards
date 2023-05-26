@@ -29,6 +29,27 @@ const App = () => {
         "Transmutation"
     ];
 
+    const sortingFunctions = [
+        {
+            name: "A to Z",
+            func: (a, b) => a.name.toLowerCase() > b.name.toLowerCase()
+        },
+        {
+            name: "Z to A",
+            func: (a, b) => a.name.toLowerCase() < b.name.toLowerCase()
+        },
+        {
+            name: "Spell Level: Low to High",
+            func: (a, b) => a.level > b.level
+        },
+        {
+            name: "Spell Level: High to Low",
+            func: (a, b) => a.level < b.level
+        }
+    ];
+
+    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
     const getPlayers = async () => {
         try {
             const response = await axios.get("/api/players");
@@ -67,6 +88,7 @@ const App = () => {
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
+                            sortingFunctions={sortingFunctions.slice(0, 2)}
                         />} />
                     <Route path="/features/new" element={
                         <NewFeature
@@ -80,6 +102,8 @@ const App = () => {
                         <AllSpells
                             spells={spells}
                             getSpells={getSpells}
+                            spellLevels={spellLevels}
+                            sortingFunctions={sortingFunctions}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell
@@ -99,6 +123,8 @@ const App = () => {
                                     player={player}
                                     allSpells={spells}
                                     allFeatures={features}
+                                    spellLevels={spellLevels}
+                                    sortingFunctions={sortingFunctions}
                                 />
                             }
                             key={player.id} />

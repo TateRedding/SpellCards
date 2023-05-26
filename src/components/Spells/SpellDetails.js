@@ -84,7 +84,27 @@ const SpellDetails = ({ spell, getPlayerData }) => {
                                     <p className="mb-0"><b>Range: </b>{spell.range}</p>
                                     <p className="mb-0"><b>Components: </b>{componentsString}</p>
                                     <p className="mb-2"><b>Duration: </b>{durationString}</p>
-                                    <p>{spell.description}</p>
+                                    {
+                                        spell.description
+                                            .split('\n')
+                                            .map((paragraph, idx) => {
+                                                return <p key={idx}>{
+                                                    paragraph
+                                                        .split('**')
+                                                        .map((segment, idx) => {
+                                                            if (idx % 2) {
+                                                                if (idx === paragraph.split('**').length - 1) {
+                                                                    return `**${segment}`
+                                                                } else {
+                                                                    return <b key={idx}>{segment}</b>
+                                                                };
+                                                            } else {
+                                                                return segment
+                                                            };
+                                                        })
+                                                }</p>
+                                            })
+                                    }
                                 </div>
                             </div>
                         </div>

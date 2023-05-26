@@ -40,7 +40,27 @@ const FeatureDetails = ({ feature, getPlayerData }) => {
                             <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>
                                 <div className="accordion-body">
                                     <p className="mb-0"><b>Origin: </b>{feature.origin}</p>
-                                    <p>{feature.description}</p>
+                                    {
+                                        feature.description
+                                            .split('\n')
+                                            .map((paragraph, idx) => {
+                                                return <p key={idx}>{
+                                                    paragraph
+                                                        .split('**')
+                                                        .map((segment, idx) => {
+                                                            if (idx % 2) {
+                                                                if (idx === paragraph.split('**').length - 1) {
+                                                                    return `**${segment}`
+                                                                } else {
+                                                                    return <b key={idx}>{segment}</b>
+                                                                };
+                                                            } else {
+                                                                return segment
+                                                            };
+                                                        })
+                                                }</p>
+                                            })
+                                    }
                                 </div>
                             </div>
                         </div>

@@ -4,20 +4,20 @@ import axios from "axios";
 import FeatureDetails from "./Features/FeatureDetails";
 import SpellDetails from "./Spells/SpellDetails";
 
-const PlayerPage = ({ player, allSpells, allFeatures }) => {
+const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFunctions }) => {
     const [tab, setTab] = useState("spells");
     const [playerData, setPlayerData] = useState({});
+    const [selectedSpellSort, setSelectedSpellSort] = useState(0);
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [spellSearchTerm, setSpellSearchTerm] = useState('');
     const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
+    const [selectedFeatureSort, setSelectedFeatureSort] = useState(0);
     const [featureSearchTerm, setFeatureSearchTerm] = useState('');
     const [showFeatureSelect, setShowFeatureSelect] = useState(false);
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
-
-    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
     const getPlayerData = async () => {
         try {
@@ -127,8 +127,8 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
             {
                 (tab === "spells") ?
                     <>
-                        <div className="d-flex align-items-end mb-3">
-                            <div className="form-floating me-3">
+                        <div className="spell-tools d-flex mb-3">
+                            <div className="spell-search form-floating">
                                 <input
                                     className="form-control"
                                     id="searchInput-player-spells"
@@ -138,20 +138,35 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                 />
                                 <label htmlFor="searchInput" className="form-label">Search</label>
                             </div>
-                            <div>
-                                <label htmlFor="level-filter">Spell Level</label>
-                                <select
-                                    className="form-select"
-                                    id="level-filter"
-                                    value={selectedSpellLevel}
-                                    onChange={(event) => setSelectedSpellLevel(event.target.value)}
-                                >
-                                    <option value="">All</option>
-                                    <option value={0}>Cantrip</option>
-                                    {
-                                        spellLevels.map((level, idx) => <option value={level} key={idx}>{level}</option>)
-                                    }
-                                </select>
+                            <div className="d-flex">
+                                <div className="me-3">
+                                    <label htmlFor="level-filter">Level</label>
+                                    <select
+                                        className="form-select"
+                                        id="level-filter"
+                                        value={selectedSpellLevel}
+                                        onChange={(event) => setSelectedSpellLevel(event.target.value)}
+                                    >
+                                        <option value="">All</option>
+                                        <option value={0}>Cantrip</option>
+                                        {
+                                            spellLevels.map((level, idx) => <option value={level} key={idx}>{level}</option>)
+                                        }
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="sort-select">Order: </label>
+                                    <select
+                                        className="form-select"
+                                        id="sort-select"
+                                        value={selectedSpellSort}
+                                        onChange={(event) => setSelectedSpellSort(event.target.value)}
+                                    >
+                                        {
+                                            sortingFunctions.map((sort, idx) => <option value={idx} key={idx}>{sort.name}</option>)
+                                        }
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -166,7 +181,7 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
                                                 return true;
                                             }
                                         })
-                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                        .sort(sortingFunctions[selectedSpellSort].func)
                                         .map(spell => {
                                             return <SpellDetails
                                                 spell={spell}
@@ -224,22 +239,39 @@ const PlayerPage = ({ player, allSpells, allFeatures }) => {
             {
                 (tab === "features") ?
                     <>
-                        <div className="form-floating mb-3">
-                            <input
-                                className="form-control"
-                                id="searchInput-player-spells"
-                                value={featureSearchTerm}
-                                placeholder="Search"
-                                onChange={(event) => setFeatureSearchTerm(event.target.value)}
-                            />
-                            <label htmlFor="searchInput" className="form-label">Search</label>
+                        <div className="d-flex align-items-end mb-3">
+                            <div className="form-floating me-3">
+                                <input
+                                    className="form-control"
+                                    id="searchInput-player-spells"
+                                    value={featureSearchTerm}
+                                    placeholder="Search"
+                                    onChange={(event) => setFeatureSearchTerm(event.target.value)}
+                                />
+                                <label htmlFor="searchInput" className="form-label">Search</label>
+                            </div>
+                            <div>
+                                <label htmlFor="sort-select">Order: </label>
+                                <select
+                                    className="form-select"
+                                    id="sort-select"
+                                    value={selectedFeatureSort}
+                                    onChange={(event) => setSelectedFeatureSort(event.target.value)}
+                                >
+                                    {
+                                        sortingFunctions
+                                            .slice(0, 2)
+                                            .map((sort, idx) => <option value={idx} key={idx}>{sort.name}</option>)
+                                    }
+                                </select>
+                            </div>
                         </div>
                         <div>
                             {
                                 (Object.keys(playerData).length) ?
                                     playerData.features
                                         .filter(feature => feature.name.toLowerCase().includes(featureSearchTerm.toLowerCase()))
-                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
+                                        .sort(sortingFunctions[selectedFeatureSort].func)
                                         .map(feature => {
                                             return <FeatureDetails
                                                 feature={feature}
