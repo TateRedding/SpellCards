@@ -129,7 +129,16 @@ const EditFeature = ({ getFeatures }) => {
             </form>
             {
                 (success) ?
-                    <p>Successfully updated {feature.name}!</p>
+                    <div className="position-fixed bottom-0">
+                        <div className="card">
+                            <div className="card-header text-bg-success">
+                                <b>Success!</b>
+                            </div>
+                            <div className="card-body">
+                                <p className="card-text">Successfully updated {feature.name}!</p>
+                            </div>
+                        </div>
+                    </div>
                     :
                     null
             }

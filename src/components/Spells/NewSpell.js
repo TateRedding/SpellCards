@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -16,6 +16,7 @@ const NewSpell = ({ schools, getSpells }) => {
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
 
@@ -59,12 +60,20 @@ const NewSpell = ({ schools, getSpells }) => {
                     setDuration('');
                     setDescription('');
                     getSpells();
+                    setSuccess(true);
                 };
             };
         } catch (error) {
             console.error(error);
         };
     };
+
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => setSuccess(false), 3000);
+            return () => clearTimeout(timer);
+        };
+    }, [success]);
 
     return (
         <>
@@ -225,6 +234,21 @@ const NewSpell = ({ schools, getSpells }) => {
                 </div>
                 <button type="submit" className="btn btn-success mb-3">Add</button>
             </form>
+            {
+                (success) ?
+                    <div className="position-fixed bottom-0">
+                        <div className="card">
+                            <div className="card-header text-bg-success">
+                                <b>Success!</b>
+                            </div>
+                            <div className="card-body">
+                                <p className="card-text">Successfully added new spell!</p>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    null
+            }
         </>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ const NewFeature = ({ getFeatures }) => {
     const [origin, setOrigin] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
+    const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
 
@@ -25,6 +26,7 @@ const NewFeature = ({ getFeatures }) => {
                 if (response.data.name === "NameTakenError") {
                     setNameTaken(true)
                 } else {
+                    setSuccess(true);
                     setName('');
                     setOrigin('');
                     setDescription('');
@@ -35,6 +37,13 @@ const NewFeature = ({ getFeatures }) => {
             console.error(error);
         };
     };
+
+    useEffect(() => {
+        if (success) {
+            const timer = setTimeout(() => setSuccess(false), 3000);
+            return () => clearTimeout(timer);
+        };
+    }, [success]);
 
     return (
         <>
@@ -95,6 +104,21 @@ const NewFeature = ({ getFeatures }) => {
                 </div>
                 <button type="submit" className="btn btn-success mb-3">Add</button>
             </form>
+            {
+                (success) ?
+                    <div className="position-fixed bottom-0">
+                        <div className="card">
+                            <div className="card-header text-bg-success">
+                                <b>Success!</b>
+                            </div>
+                            <div className="card-body">
+                                <p className="card-text">Successfully added new feature!</p>
+                            </div>
+                        </div>
+                    </div>
+                    :
+                    null
+            }
         </>
     );
 };
