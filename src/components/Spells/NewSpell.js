@@ -68,7 +68,10 @@ const NewSpell = ({ schools, getSpells }) => {
 
     return (
         <>
-            <h2>New Spell</h2>
+            <div className="d-flex align-items-center mb-2">
+                <h2 className="me-3 mb-0">New Spell</h2>
+                <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
+            </div>
             <form onSubmit={createNewSpell} autoComplete="off">
                 <div className="form-floating">
                     <input
@@ -204,10 +207,11 @@ const NewSpell = ({ schools, getSpells }) => {
                     />
                     <label htmlFor="spell-duration">Duration</label>
                 </div>
-                <div className="form-floating mb-3">
+                <div className="form-floating">
                     <textarea
                         className="form-control"
                         id="spell-description"
+                        aria-labelledby="description-help-text"
                         style={{ height: "100px" }}
                         value={description}
                         required
@@ -216,9 +220,11 @@ const NewSpell = ({ schools, getSpells }) => {
                     />
                     <label htmlFor="spell-description">Description</label>
                 </div>
+                <div className="form-text mb-3" id="description-help-text">
+                    Surround text with double asterisks for bold: "**bold text**"
+                </div>
                 <button type="submit" className="btn btn-success mb-3">Add</button>
             </form>
-            <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
         </>
     );
 };

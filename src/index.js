@@ -12,6 +12,8 @@ import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
 import NewSpell from "./components/Spells/NewSpell";
 import PlayerPage from "./components/PlayerPage";
+import SingleFeature from "./components/Features/SingleFeature";
+import SingleSpell from "./components/Spells/SingleSpell";
 
 const App = () => {
     const [features, setFeatures] = useState([]);
@@ -48,7 +50,79 @@ const App = () => {
         }
     ];
 
-    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+    const formatText = (text) => {
+        const formattedText = text
+            .split('\n')
+            .map((paragraph, idx) => {
+                return <p key={idx}>{
+                    paragraph
+                        .split('**')
+                        .map((segment, idx) => {
+                            if (idx % 2) {
+                                if (idx === paragraph.split('**').length - 1) {
+                                    return `**${segment}`
+                                } else {
+                                    return <b key={idx}>{segment}</b>
+                                };
+                            } else {
+                                return segment
+                            };
+                        })
+                }</p>
+            });
+        return formattedText;
+    };
+
+    const createComponentsString = (spell) => {
+        const componentsArr = [];
+        if (spell.verbal) {
+            componentsArr.push("V");
+        };
+        if (spell.somatic) {
+            componentsArr.push("S");
+        };
+        if (spell.material) {
+            componentsArr.push("M");
+        };
+        let componentsString = componentsArr.join(", ");
+        if (spell.materialComponents) {
+            componentsString = `${componentsString} (${spell.materialComponents})`
+        };
+        return componentsString;
+    };
+
+    const createDurationString = (spell) => {
+        let durationString = "";
+        if (spell.concentration) {
+            durationString = `Concentration, up to ${spell.duration}`;
+        } else {
+            durationString = spell.duration;
+        };
+        return durationString;
+    };
+
+    const createLevelString = (spell) => {
+        let levelString = "";
+        if (spell.level === 0) {
+            levelString = "Cantrip, ";
+        } else {
+            levelString = `${spell.level}`;
+            if (spell.level === 1) {
+                levelString += "st"
+            } else if (spell.level === 2) {
+                levelString += "nd"
+            } else if (spell.level === 3) {
+                levelString += "rd"
+            } else {
+                levelString += "th"
+            }
+            levelString += " level ";
+        }
+        levelString += spell.school.toLowerCase();
+        return levelString;
+    }
 
     const getPlayers = async () => {
         try {
@@ -98,6 +172,11 @@ const App = () => {
                         <EditFeature
                             getFeatures={getFeatures}
                         />} />
+                    <Route path="/features/:featureId" element={
+                        <SingleFeature
+                            formatText={formatText}
+                        />
+                    } />
                     <Route path="/spells" element={
                         <AllSpells
                             spells={spells}
@@ -115,6 +194,14 @@ const App = () => {
                             schools={schools}
                             getSpells={getSpells}
                         />} />
+                    <Route path="/spells/:spellId" element={
+                        <SingleSpell
+                            createComponentsString={createComponentsString}
+                            createDurationString={createDurationString}
+                            createLevelString={createLevelString}
+                            formatText={formatText}
+                        />
+                    } />
                     {
                         players.map(player => <Route
                             path={`/${player.name}`}
@@ -125,6 +212,10 @@ const App = () => {
                                     allFeatures={features}
                                     spellLevels={spellLevels}
                                     sortingFunctions={sortingFunctions}
+                                    formatText={formatText}
+                                    createComponentsString={createComponentsString}
+                                    createDurationString={createDurationString}
+                                    createLevelString={createLevelString}
                                 />
                             }
                             key={player.id} />

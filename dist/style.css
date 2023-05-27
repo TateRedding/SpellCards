@@ -3,6 +3,10 @@ main {
     margin: 0 auto;
 }
 
+.player-button {
+    width: 100px;
+}
+
 .spell-tools {
     align-items: end;
 }

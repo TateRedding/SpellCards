@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const EditFeature = ({ getFeatures }) => {
@@ -11,6 +11,8 @@ const EditFeature = ({ getFeatures }) => {
     const [success, setSuccess] = useState(false);
 
     const { featureId } = useParams();
+
+    const navigate = useNavigate();
 
     const getFeatureData = async () => {
         try {
@@ -72,7 +74,10 @@ const EditFeature = ({ getFeatures }) => {
 
     return (
         <>
-            <h2>Update Feature</h2>
+            <div className="d-flex align-items-center mb-2">
+                <h2 className="me-3 mb-0">Update Feature</h2>
+                <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
+            </div>
             <form onSubmit={updateFeature} autoComplete="off">
                 <div className="form-floating">
                     <input

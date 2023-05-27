@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const FeatureDetails = ({ feature, getPlayerData }) => {
+const FeatureDetails = ({ feature, getPlayerData, formatText }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeFeature = async () => {
@@ -31,36 +31,18 @@ const FeatureDetails = ({ feature, getPlayerData }) => {
                     :
                     <div className="accordion mb-3" id={`feature-accordion-${feature.id}`}>
                         <div className="accordion-item">
-                            <div className="d-flex justify-content-between">
-                                <h5 className="accordion-header">
-                                    <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>{feature.name}</button>
-                                </h5>
-                                <button className="btn btn-danger m-1" onClick={() => setRemoving(true)}>Remove</button>
-                            </div>
+                            <h5 className="accordion-header">
+                                <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>
+                                <span className="me-3">{feature.name}</span>
+                                    <span><i>{feature.origin}</i></span>
+                                </button>
+                            </h5>
                             <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>
                                 <div className="accordion-body">
-                                    <p className="mb-0"><b>Origin: </b>{feature.origin}</p>
                                     {
-                                        feature.description
-                                            .split('\n')
-                                            .map((paragraph, idx) => {
-                                                return <p key={idx}>{
-                                                    paragraph
-                                                        .split('**')
-                                                        .map((segment, idx) => {
-                                                            if (idx % 2) {
-                                                                if (idx === paragraph.split('**').length - 1) {
-                                                                    return `**${segment}`
-                                                                } else {
-                                                                    return <b key={idx}>{segment}</b>
-                                                                };
-                                                            } else {
-                                                                return segment
-                                                            };
-                                                        })
-                                                }</p>
-                                            })
+                                        formatText(feature.description)
                                     }
+                                    <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
                                 </div>
                             </div>
                         </div>

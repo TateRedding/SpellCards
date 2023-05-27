@@ -4,13 +4,23 @@ import axios from "axios";
 import FeatureDetails from "./Features/FeatureDetails";
 import SpellDetails from "./Spells/SpellDetails";
 
-const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFunctions }) => {
+const PlayerPage = ({
+    player,
+    allSpells,
+    allFeatures,
+    spellLevels,
+    sortingFunctions,
+    formatText,
+    createComponentsString,
+    createDurationString,
+    createLevelString
+}) => {
     const [tab, setTab] = useState("spells");
     const [playerData, setPlayerData] = useState({});
     const [selectedSpellSort, setSelectedSpellSort] = useState(0);
+    const [maxSpellLevel, setMaxSpellLevel] = useState(0);
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [spellSearchTerm, setSpellSearchTerm] = useState('');
-    const [showSpellSelect, setShowSpellSelect] = useState(false);
     const [selectedSpellId, setSelectedSpellId] = useState('');
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
     const [selectedFeatureSort, setSelectedFeatureSort] = useState(0);
@@ -41,7 +51,6 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                     setSpellAlreadyOnList(true);
                 } else {
                     setSelectedSpellId('');
-                    setShowSpellSelect(false);
                     getPlayerData();
                 };
             };
@@ -63,7 +72,6 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                     setFeatureAlreadyOnList(true);
                 } else {
                     setSelectedFeatureId('');
-                    setShowFeatureSelect(false);
                     getPlayerData();
                 };
             };
@@ -78,8 +86,6 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
 
     useEffect(() => {
         getPlayerData();
-        setShowSpellSelect(false);
-        setShowFeatureSelect(false);
         setSelectedSpellId('');
         setSelectedFeatureId('');
         setSpellAlreadyOnList(false);
@@ -87,6 +93,12 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
         setSpellSearchTerm('');
         setFeatureSearchTerm('');
     }, [player]);
+
+    useEffect(() => {
+        if (playerData.spells) {
+            setMaxSpellLevel(Math.max(...playerData.spells.map(spell => spell.level)));
+        };
+    }, [playerData])
 
     useEffect(() => {
         setSpellSearchTerm('');
@@ -150,7 +162,9 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                                         <option value="">All</option>
                                         <option value={0}>Cantrip</option>
                                         {
-                                            spellLevels.map((level, idx) => <option value={level} key={idx}>{level}</option>)
+                                            spellLevels
+                                                .slice(0, maxSpellLevel)
+                                                .map((level, idx) => <option value={level} key={idx}>{level}</option>)
                                         }
                                     </select>
                                 </div>
@@ -171,7 +185,7 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                         </div>
                         <div>
                             {
-                                (Object.keys(playerData).length) ?
+                                (playerData.spells) ?
                                     playerData.spells
                                         .filter(spell => spell.name.toLowerCase().includes(spellSearchTerm.toLowerCase()))
                                         .filter(spell => {
@@ -186,6 +200,10 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                                             return <SpellDetails
                                                 spell={spell}
                                                 getPlayerData={getPlayerData}
+                                                formatText={formatText}
+                                                createComponentsString={createComponentsString}
+                                                createDurationString={createDurationString}
+                                                createLevelString={createLevelString}
                                                 key={spell.id}
                                             />
                                         })
@@ -193,46 +211,34 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                                     null
                             }
                         </div>
-                        {
-                            (showSpellSelect) ?
-                                <form onSubmit={addSpell} autoComplete="off">
-                                    <div className="d-flex mb-3">
-                                        <button className="btn btn-primary me-2" onClick={() => {
-                                            setShowSpellSelect(false);
-                                            setSelectedSpellId('');
-                                            setSpellAlreadyOnList(false);
-                                        }
-                                        }>Back</button>
-                                        <button className="btn btn-success" type="submit">Confirm Add</button>
-                                    </div>
-                                    <select
-                                        className={
-                                            (spellAlreadyOnList) ?
-                                                "form-select is-invalid" :
-                                                "form-select"
-                                        }
-                                        aria-labelledby="spell-on-list-text"
-                                        value={selectedSpellId}
-                                        required
-                                        onChange={(event) => setSelectedSpellId(event.target.value)}
-                                    >
-                                        <option value="">Select Spell</option>
-                                        {
-                                            allSpells
-                                                .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
-                                                .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
-                                        }
-                                    </select>
-                                    <div className="form-text" id="spell-on-list-text">
-                                        {
-                                            (spellAlreadyOnList) ?
-                                                "This spell is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form> :
-                                <button className="btn btn-success" onClick={() => setShowSpellSelect(true)}>Add Spell</button>
-                        }
+                        <form className="d-flex" onSubmit={addSpell} autoComplete="off">
+                            <button className="btn btn-success me-2" type="submit">Add Spell</button>
+                            <select
+                                className={
+                                    (spellAlreadyOnList) ?
+                                        "form-select is-invalid" :
+                                        "form-select"
+                                }
+                                aria-labelledby="spell-on-list-text"
+                                value={selectedSpellId}
+                                required
+                                onChange={(event) => setSelectedSpellId(event.target.value)}
+                            >
+                                <option value="">Select Spell</option>
+                                {
+                                    allSpells
+                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase()? 1 : -1)
+                                        .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
+                                }
+                            </select>
+                            <div className="form-text" id="spell-on-list-text">
+                                {
+                                    (spellAlreadyOnList) ?
+                                        "This spell is already on your list!" :
+                                        null
+                                }
+                            </div>
+                        </form>
                     </> :
                     null
             }
@@ -268,7 +274,7 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                         </div>
                         <div>
                             {
-                                (Object.keys(playerData).length) ?
+                                (playerData.features) ?
                                     playerData.features
                                         .filter(feature => feature.name.toLowerCase().includes(featureSearchTerm.toLowerCase()))
                                         .sort(sortingFunctions[selectedFeatureSort].func)
@@ -276,6 +282,7 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                                             return <FeatureDetails
                                                 feature={feature}
                                                 getPlayerData={getPlayerData}
+                                                formatText={formatText}
                                                 key={feature.id}
                                             />
                                         })
@@ -283,46 +290,34 @@ const PlayerPage = ({ player, allSpells, allFeatures, spellLevels, sortingFuncti
                                     null
                             }
                         </div>
-                        {
-                            (showFeatureSelect) ?
-                                <form onSubmit={addFeature} autoComplete="off">
-                                    <div className="d-flex mb-3">
-                                        <button className="btn btn-primary me-2" onClick={() => {
-                                            setShowFeatureSelect(false);
-                                            setSelectedFeatureId('');
-                                            setFeatureAlreadyOnList(false);
-                                        }
-                                        }>Back</button>
-                                        <button className="btn btn-success" type="submit">Confirm Add</button>
-                                    </div>
-                                    <select
-                                        className={
-                                            (featureAlreadyOnList) ?
-                                                "form-select is-invalid" :
-                                                "form-select"
-                                        }
-                                        aria-labelledby="feature-on-list-text"
-                                        value={selectedFeatureId}
-                                        required
-                                        onChange={(event) => setSelectedFeatureId(event.target.value)}
-                                    >
-                                        <option value="">Select Feature</option>
-                                        {
-                                            allFeatures
-                                                .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase())
-                                                .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
-                                        }
-                                    </select>
-                                    <div className="form-text" id="feature-on-list-text">
-                                        {
-                                            (featureAlreadyOnList) ?
-                                                "This feature is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form> :
-                                <button className="btn btn-success" onClick={() => setShowFeatureSelect(true)}>Add Feature</button>
-                        }
+                        <form className="d-flex" onSubmit={addFeature} autoComplete="off">
+                            <button className="btn btn-success me-2" type="submit">Add Feature</button>
+                            <select
+                                className={
+                                    (featureAlreadyOnList) ?
+                                        "form-select is-invalid" :
+                                        "form-select"
+                                }
+                                aria-labelledby="feature-on-list-text"
+                                value={selectedFeatureId}
+                                required
+                                onChange={(event) => setSelectedFeatureId(event.target.value)}
+                            >
+                                <option value="">Select Feature</option>
+                                {
+                                    allFeatures
+                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+                                        .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
+                                }
+                            </select>
+                            <div className="form-text" id="feature-on-list-text">
+                                {
+                                    (featureAlreadyOnList) ?
+                                        "This feature is already on your list!" :
+                                        null
+                                }
+                            </div>
+                        </form>
                     </> :
                     null
             }

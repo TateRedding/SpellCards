@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 const EditSpell = ({ schools, getSpells }) => {
@@ -20,6 +20,8 @@ const EditSpell = ({ schools, getSpells }) => {
     const [success, setSuccess] = useState(false);
 
     const { spellId } = useParams();
+
+    const navigate = useNavigate();
 
     const getSpellData = async () => {
         try {
@@ -105,7 +107,10 @@ const EditSpell = ({ schools, getSpells }) => {
 
     return (
         <>
-            <h2>Update Spell</h2>
+            <div className="d-flex align-items-center mb-2">
+                <h2 className="me-3 mb-0">Update Spell</h2>
+                <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
+            </div>
             <form onSubmit={updateSpell} autoComplete="off">
                 <div className="form-floating">
                     <input
