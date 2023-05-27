@@ -246,10 +246,11 @@ const EditSpell = ({ schools, getSpells }) => {
                     />
                     <label htmlFor="spell-duration">Duration</label>
                 </div>
-                <div className="form-floating mb-3">
+                <div className="form-floating">
                     <textarea
                         className="form-control"
                         id="spell-description"
+                        aria-labelledby="description-help-text"
                         style={{ height: "100px" }}
                         value={description}
                         required
@@ -257,6 +258,9 @@ const EditSpell = ({ schools, getSpells }) => {
                         onChange={(event) => setDescription(event.target.value)}
                     />
                     <label htmlFor="spell-description">Description</label>
+                </div>
+                <div className="form-text mb-3" id="description-help-text">
+                    Surround text with double asterisks for bold: "**bold text**"
                 </div>
                 <button type="submit" className="btn btn-success">Update</button>
             </form>
