@@ -25,7 +25,6 @@ const PlayerPage = ({
     const [spellAlreadyOnList, setSpellAlreadyOnList] = useState(false);
     const [selectedFeatureSort, setSelectedFeatureSort] = useState(0);
     const [featureSearchTerm, setFeatureSearchTerm] = useState('');
-    const [showFeatureSelect, setShowFeatureSelect] = useState(false);
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
 

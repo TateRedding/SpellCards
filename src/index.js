@@ -183,6 +183,7 @@ const App = () => {
                             getSpells={getSpells}
                             spellLevels={spellLevels}
                             sortingFunctions={sortingFunctions}
+                            createLevelString={createLevelString}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell

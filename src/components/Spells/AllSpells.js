@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallSpellCard from "./SmallSpellCard";
 
-const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions }) => {
+const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
@@ -69,6 +69,7 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions }) => {
                         return <SmallSpellCard
                             spell={spell}
                             getSpells={getSpells}
+                            createLevelString={createLevelString}
                             key={spell.id}
                         />
                     })

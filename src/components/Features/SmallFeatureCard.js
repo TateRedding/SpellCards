@@ -29,10 +29,14 @@ const SmallFeatureCard = ({ feature, getFeatures }) => {
                             <button className="btn btn-primary me-2" onClick={() => setDeleting(false)}>No</button>
                             <button className="btn btn-danger" onClick={deleteFeature}>Yes</button>
                         </div>
-                    </div> :
+                    </div>
+                    :
                     <div className="card mb-3">
                         <div className="card-body">
-                            <h5 className="card-title">{feature.name}</h5>
+                            <div className="d-flex">
+                            <h5 className="card-title me-3">{feature.name}</h5>
+                            <p className="card-text"><i>{feature.origin}</i></p>
+                            </div>
                             <button className="btn btn-success btn-sm me-2" onClick={() => navigate(`/features/${feature.id}`)}>Details</button>
                             <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/features/edit/${feature.id}`)}>Edit</button>
                             <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
