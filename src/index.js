@@ -32,19 +32,19 @@ const App = () => {
     const sortingFunctions = [
         {
             name: "A to Z",
-            func: (a, b) => a.name.toLowerCase() > b.name.toLowerCase()
+            func: (a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1
         },
         {
             name: "Z to A",
-            func: (a, b) => a.name.toLowerCase() < b.name.toLowerCase()
+            func: (a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1
         },
         {
             name: "Spell Level: Low to High",
-            func: (a, b) => a.level > b.level
+            func: (a, b) => a.level > b.level ? -1 : 1
         },
         {
             name: "Spell Level: High to Low",
-            func: (a, b) => a.level < b.level
+            func: (a, b) => a.level < b.level ? -1 : 1
         }
     ];
 
