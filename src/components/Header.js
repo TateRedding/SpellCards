@@ -16,16 +16,22 @@ const Header = ({ players }) => {
                                 players.map((player) => {
                                     return (
                                         <li className="nav-item" key={player.id}>
-                                            <Link className="nav-link" to={`/${player.name.toLowerCase()}`}>{player.name}</Link>
+                                            <Link className="nav-link" to={`/${player.name.toLowerCase()}`}>
+                                                <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">{player.name}</span>
+                                            </Link>
                                         </li>
                                     );
                                 })
                             }
                             <li className="nav-item">
-                                <Link className="nav-link" to="/spells">Spells</Link>
+                                <Link className="nav-link" to="/spells">
+                                    <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Spells</span>
+                                </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/features">Features</Link>
+                                <Link className="nav-link" to="/features">
+                                    <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Spells</span>
+                                </Link>
                             </li>
                         </ul>
                     </div>
