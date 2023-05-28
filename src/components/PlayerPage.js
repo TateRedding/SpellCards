@@ -90,6 +90,7 @@ const PlayerPage = ({
         getPlayerData();
         setSelectedSpellId('');
         setSelectedFeatureId('');
+        setSelectedSpellLevel('');
         setSpellAlreadyOnList(false);
         setFeatureAlreadyOnList(false);
         setSpellSearchTerm('');
