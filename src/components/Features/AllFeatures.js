@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallFeatureCard from "./SmallFeatureCard";
+import SearchBar from "../SearchBar";
 
 const AllFeatures = ({ features, getFeatures, sortingFunctions }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,16 +13,7 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions }) => {
         <>
             <button className="btn btn-success mb-3" onClick={() => navigate("/features/new")}>New Feature</button>
             <div className="d-flex align-items-end mb-3">
-                <div className="form-floating me-3">
-                    <input
-                        className="form-control"
-                        id="searchInput-features"
-                        value={searchTerm}
-                        placeholder="Search"
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                    />
-                    <label htmlFor="searchInput" className="form-label">Search</label>
-                </div>
+                <SearchBar className="me-3" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <div>
                     <label htmlFor="sort-select">Order: </label>
                     <select

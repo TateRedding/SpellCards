@@ -30,7 +30,7 @@ const Header = ({ players }) => {
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/features">
-                                    <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Spells</span>
+                                    <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Features</span>
                                 </Link>
                             </li>
                         </ul>

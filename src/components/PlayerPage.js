@@ -3,6 +3,7 @@ import axios from "axios";
 
 import FeatureDetails from "./Features/FeatureDetails";
 import SpellDetails from "./Spells/SpellDetails";
+import SearchBar from "./SearchBar";
 
 const PlayerPage = ({
     player,
@@ -139,16 +140,7 @@ const PlayerPage = ({
                 (tab === "spells") ?
                     <>
                         <div className="spell-tools d-flex mb-3">
-                            <div className="spell-search form-floating">
-                                <input
-                                    className="form-control"
-                                    id="searchInput-player-spells"
-                                    value={spellSearchTerm}
-                                    placeholder="Search"
-                                    onChange={(event) => setSpellSearchTerm(event.target.value)}
-                                />
-                                <label htmlFor="searchInput" className="form-label">Search</label>
-                            </div>
+                            <SearchBar className="spell-search" searchTerm={spellSearchTerm} setSearchTerm={setSpellSearchTerm} />
                             <div className="d-flex">
                                 <div className="me-3">
                                     <label htmlFor="level-filter">Level</label>
@@ -226,7 +218,7 @@ const PlayerPage = ({
                                 <option value="">Select Spell</option>
                                 {
                                     allSpells
-                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase()? 1 : -1)
+                                        .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
                                         .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
                                 }
                             </select>
@@ -245,16 +237,7 @@ const PlayerPage = ({
                 (tab === "features") ?
                     <>
                         <div className="d-flex align-items-end mb-3">
-                            <div className="form-floating me-3">
-                                <input
-                                    className="form-control"
-                                    id="searchInput-player-spells"
-                                    value={featureSearchTerm}
-                                    placeholder="Search"
-                                    onChange={(event) => setFeatureSearchTerm(event.target.value)}
-                                />
-                                <label htmlFor="searchInput" className="form-label">Search</label>
-                            </div>
+                            <SearchBar className="me-3" searchTerm={featureSearchTerm} setSearchTerm={setFeatureSearchTerm} />
                             <div>
                                 <label htmlFor="sort-select">Order: </label>
                                 <select

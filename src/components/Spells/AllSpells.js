@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SmallSpellCard from "./SmallSpellCard";
+import SearchBar from "../SearchBar";
 
 const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -13,16 +14,7 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
         <>
             <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
             <div className="spell-tools d-flex mb-3">
-                <div className="spell-search form-floating">
-                    <input
-                        className="form-control"
-                        id="searchInput-spells"
-                        value={searchTerm}
-                        placeholder="Search"
-                        onChange={(event) => setSearchTerm(event.target.value)}
-                    />
-                    <label htmlFor="searchInput" className="form-label">Search</label>
-                </div>
+                <SearchBar className="spell-search" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <div className="d-flex">
                     <div className="me-3">
                         <label htmlFor="level-filter">Level</label>
