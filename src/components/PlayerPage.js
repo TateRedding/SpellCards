@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 import FeatureDetails from "./Features/FeatureDetails";
-import SpellDetails from "./Spells/SpellDetails";
+import LevelSelect from "./LevelSelect";
 import SearchBar from "./SearchBar";
+import SortSelect from "./SortSelect";
+import SpellDetails from "./Spells/SpellDetails";
 
 const PlayerPage = ({
     player,
@@ -140,38 +142,23 @@ const PlayerPage = ({
                 (tab === "spells") ?
                     <>
                         <div className="spell-tools d-flex mb-3">
-                            <SearchBar className="spell-search" searchTerm={spellSearchTerm} setSearchTerm={setSpellSearchTerm} />
+                            <SearchBar
+                                className="spell-search"
+                                searchTerm={spellSearchTerm}
+                                setSearchTerm={setSpellSearchTerm}
+                            />
                             <div className="d-flex">
-                                <div className="me-3">
-                                    <label htmlFor="level-filter">Level</label>
-                                    <select
-                                        className="form-select"
-                                        id="level-filter"
-                                        value={selectedSpellLevel}
-                                        onChange={(event) => setSelectedSpellLevel(event.target.value)}
-                                    >
-                                        <option value="">All</option>
-                                        <option value={0}>Cantrip</option>
-                                        {
-                                            spellLevels
-                                                .slice(0, maxSpellLevel)
-                                                .map((level, idx) => <option value={level} key={idx}>{level}</option>)
-                                        }
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="sort-select">Order: </label>
-                                    <select
-                                        className="form-select"
-                                        id="sort-select"
-                                        value={selectedSpellSort}
-                                        onChange={(event) => setSelectedSpellSort(event.target.value)}
-                                    >
-                                        {
-                                            sortingFunctions.map((sort, idx) => <option value={idx} key={idx}>{sort.name}</option>)
-                                        }
-                                    </select>
-                                </div>
+                                <LevelSelect
+                                    spellLevels={spellLevels}
+                                    selectedSpellLevel={selectedSpellLevel}
+                                    setSelectedSpellLevel={setSelectedSpellLevel}
+                                    maxSpellLevel={maxSpellLevel}
+                                />
+                                <SortSelect
+                                    sortingFunctions={sortingFunctions}
+                                    selectedSort={selectedSpellSort}
+                                    setSelectedSort={setSelectedSpellSort}
+                                />
                             </div>
                         </div>
                         <div>
@@ -237,22 +224,16 @@ const PlayerPage = ({
                 (tab === "features") ?
                     <>
                         <div className="d-flex align-items-end mb-3">
-                            <SearchBar className="me-3" searchTerm={featureSearchTerm} setSearchTerm={setFeatureSearchTerm} />
-                            <div>
-                                <label htmlFor="sort-select">Order: </label>
-                                <select
-                                    className="form-select"
-                                    id="sort-select"
-                                    value={selectedFeatureSort}
-                                    onChange={(event) => setSelectedFeatureSort(event.target.value)}
-                                >
-                                    {
-                                        sortingFunctions
-                                            .slice(0, 2)
-                                            .map((sort, idx) => <option value={idx} key={idx}>{sort.name}</option>)
-                                    }
-                                </select>
-                            </div>
+                            <SearchBar
+                                className="me-3"
+                                searchTerm={featureSearchTerm}
+                                setSearchTerm={setFeatureSearchTerm}
+                            />
+                            <SortSelect
+                                sortingFunctions={sortingFunctions.slice(0, 2)}
+                                selectedSort={selectedFeatureSort}
+                                setSelectedSort={setSelectedFeatureSort}
+                            />
                         </div>
                         <div>
                             {

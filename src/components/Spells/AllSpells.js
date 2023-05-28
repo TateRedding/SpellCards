@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SmallSpellCard from "./SmallSpellCard";
+
+import LevelSelect from "../LevelSelect";
 import SearchBar from "../SearchBar";
+import SmallSpellCard from "./SmallSpellCard";
+import SortSelect from "../SortSelect";
 
 const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -14,36 +17,22 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
         <>
             <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
             <div className="spell-tools d-flex mb-3">
-                <SearchBar className="spell-search" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                <SearchBar
+                    className="spell-search"
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                />
                 <div className="d-flex">
-                    <div className="me-3">
-                        <label htmlFor="level-filter">Level</label>
-                        <select
-                            className="form-select"
-                            id="level-filter"
-                            value={selectedSpellLevel}
-                            onChange={(event) => setSelectedSpellLevel(event.target.value)}
-                        >
-                            <option value="">All</option>
-                            <option value={0}>Cantrip</option>
-                            {
-                                spellLevels.map((level, idx) => <option value={level} key={idx}>{level}</option>)
-                            }
-                        </select>
-                    </div>
-                    <div>
-                        <label htmlFor="sort-select">Order: </label>
-                        <select
-                            className="form-select"
-                            id="sort-select"
-                            value={selectedSort}
-                            onChange={(event) => setSelectedSort(event.target.value)}
-                        >
-                            {
-                                sortingFunctions.map((sort, idx) => <option value={idx} key={idx}>{sort.name}</option>)
-                            }
-                        </select>
-                    </div>
+                    <LevelSelect
+                        spellLevels={spellLevels}
+                        selectedSpellLevel={selectedSpellLevel}
+                        setSelectedSpellLevel={setSelectedSpellLevel}
+                    />
+                    <SortSelect
+                        sortingFunctions={sortingFunctions}
+                        selectedSort={selectedSort}
+                        setSelectedSort={setSelectedSort}
+                    />
                 </div>
             </div>
             {
