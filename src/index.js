@@ -4,6 +4,8 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import AllFeatures from "./components/Features/AllFeatures";
+import AllItems from "./components/Items/AllItems";
+import AllQuests from "./components/Quests/AllQuests";
 import AllSpells from "./components/Spells/AllSpells";
 import EditFeature from "./components/Features/EditFeature"
 import EditSpell from "./components/Spells/EditSpell";
@@ -17,7 +19,9 @@ import SingleSpell from "./components/Spells/SingleSpell";
 
 const App = () => {
     const [features, setFeatures] = useState([]);
+    const [items, setItems] = useState([]);
     const [players, setPlayers] = useState([]);
+    const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
 
     const schools = [
@@ -143,10 +147,22 @@ const App = () => {
         setFeatures(response.data);
     };
 
+    const getItems = async () => {
+        const response = await axios.get("/api/items");
+        setItems(response.data);
+    };
+
+    const getQuests = async () => {
+        const response = await axios.get("/api/quests");
+        setQuests(response.data);
+    };
+
     useEffect(() => {
         getPlayers();
         getSpells();
         getFeatures();
+        getItems();
+        getQuests();
     }, []);
 
     return (
@@ -175,6 +191,20 @@ const App = () => {
                     <Route path="/features/:featureId" element={
                         <SingleFeature
                             formatText={formatText}
+                        />
+                    } />
+                    <Route path="/items" element={
+                        <AllItems
+                            items={items}
+                            getItems={getItems}
+                            sortingFunctions={sortingFunctions.slice(0, 2)}
+                        />
+                    } />
+                    <Route path="/quests" element={
+                        <AllQuests
+                            quests={quests}
+                            getQuests={getQuests}
+                            sortingFunctions={sortingFunctions.slice(0, 2)}
                         />
                     } />
                     <Route path="/spells" element={

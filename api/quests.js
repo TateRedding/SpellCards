@@ -11,7 +11,7 @@ const {
 
 router.get("/", async (req, res, next) => {
     try {
-        const quests = getAllQuests();
+        const quests = await getAllQuests();
         res.send(quests);
     } catch ({ name, message }) {
         next({ name, message });

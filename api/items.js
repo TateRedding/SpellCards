@@ -11,7 +11,7 @@ const {
 
 router.get("/", async (req, res, next) => {
     try {
-        const items = getAllItems();
+        const items = await getAllItems();
         res.send(items);
     } catch ({ name, message }) {
         next({ name, message });
