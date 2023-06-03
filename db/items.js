@@ -2,7 +2,9 @@ const {
     createRow,
     updateRow,
     deleteRow,
-    getAllRows
+    getAllRows,
+    getRowById,
+    getRowByName
 } = require("./utils")
 
 const createItem = async (fields) => {
@@ -37,9 +39,27 @@ const getAllItems = async () => {
     };
 };
 
+const getItemById = async (id) => {
+    try {
+        return await getRowById('items', id)
+    } catch (error) {
+        console.error(error);
+    };
+};
+
+const getItemByName = async (name) => {
+    try {
+        return await getRowByName('items', name)
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 module.exports = {
     createItem,
     updateItem,
     deleteItem,
-    getAllItems
+    getAllItems,
+    getItemById,
+    getItemByName
 };

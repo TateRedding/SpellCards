@@ -2,7 +2,9 @@ const {
     createRow,
     updateRow,
     deleteRow,
-    getAllRows
+    getAllRows,
+    getRowById,
+    getRowByName
 } = require("./utils");
 
 const createQuest = async (fields) => {
@@ -37,9 +39,27 @@ const getAllQuests = async () => {
     };
 };
 
+const getQuestById = async (id) => {
+    try {
+        return await getRowById('quests', id)
+    } catch (error) {
+        console.error(error);
+    };
+};
+
+const getQuestByName = async (name) => {
+    try {
+        return await getRowByName('quests', name)
+    } catch (error) {
+        console.error(error);
+    };
+};
+
 module.exports = {
     createQuest,
     updateQuest,
     deleteQuest,
-    getAllQuests
+    getAllQuests,
+    getQuestById,
+    getQuestByName
 };

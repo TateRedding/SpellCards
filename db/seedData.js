@@ -76,7 +76,7 @@ const createTables = async () => {
 
             CREATE TABLE IF NOT EXISTS items (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(128) NOT NULL,
+                name VARCHAR(128) UNIQUE NOT NULL,
                 category VARCHAR(32) NOT NULL,
                 "categoryDetails" VARCHAR(128),
                 rarity VARCHAR(32) NOT NULL,
@@ -87,7 +87,7 @@ const createTables = async () => {
 
             CREATE TABLE IF NOT EXISTS quests (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(128) NOT NULL,
+                name VARCHAR(128) UNIQUE NOT NULL,
                 giver VARCHAR(128) NOT NULL,
                 completed BOOLEAN DEFAULT false,
                 description TEXT NOT NULL

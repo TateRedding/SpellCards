@@ -1,6 +1,6 @@
 const express = require('express');
-const { getAllPlayers, getPlayerByName, getPlayerById } = require('../db');
 const router = express.Router();
+const { getAllPlayers, getPlayerById } = require('../db');
 
 router.get("/", async (req, res, next) => {
     try {
