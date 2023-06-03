@@ -1,4 +1,3 @@
-const client = require("./client");
 const {
     createRow,
     updateRow,
@@ -36,7 +35,6 @@ const getAllItems = async () => {
     } catch (error) {
         console.error(error);
     };
-
 };
 
 module.exports = {

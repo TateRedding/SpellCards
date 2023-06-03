@@ -76,17 +76,20 @@ const createTables = async () => {
 
             CREATE TABLE IF NOT EXISTS items (
                 id SERIAL PRIMARY KEY,
+                name VARCHAR(128) NOT NULL,
                 category VARCHAR(32) NOT NULL,
                 "categoryDetails" VARCHAR(128),
-                rarirty VARCHAR(32) NOT NULL,
+                rarity VARCHAR(32) NOT NULL,
                 "requiresAttunement" BOOLEAN DEFAULT false,
-                "attunmentRequirements" TEXT,
+                "attunementRequirements" TEXT,
                 description TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS quests (
                 id SERIAL PRIMARY KEY,
+                name VARCHAR(128) NOT NULL,
                 giver VARCHAR(128) NOT NULL,
+                completed BOOLEAN DEFAULT false,
                 description TEXT NOT NULL
             );
 
@@ -258,6 +261,28 @@ const createInitialItems = async () => {
         console.log("Creating initial items...");
 
         const items = [];
+        items.push(await createItem({
+            name: "Manual of Gainful Exercise",
+            category: "wonderous item",
+            rarity: "very rare",
+            description: "This book describes fitness exercises, and it's words are charged with magic."
+        }));
+        items.push(await createItem({
+            name: "Mace of Terror",
+            category: "weapon",
+            categoryDetails: "mace",
+            rarity: "rare",
+            requiresAttunement: true,
+            description: "This magic weapon has 3 charges. While holding it..."
+        }));
+        items.push(await createItem({
+            name: "Instrument of the Bards: Cli Lyre",
+            category: "wonderous item",
+            rarity: "rare",
+            requiresAttunement: true,
+            attunementRequirements: "a bard",
+            description: "An instrument of the bards is an exquisite example of it's kind..."
+        }));
         console.log(items);
 
     } catch (error) {
@@ -271,6 +296,24 @@ const createInitialQuests = async () => {
         console.log("Creating initial quests...");
 
         const quests = [];
+        quests.push(await createQuest({
+            name: "Kill the rat infestation",
+            giver: "Abismark",
+            completed: true,
+            description: "Abismark in Valakovia has asked you to..."
+        }));
+        quests.push(await createQuest({
+            name: "Escort Bart to Berton",
+            giver: "Bart",
+            description: "Bart is scraed of traveling alone and..."
+
+        }));
+        quests.push(await createQuest({
+            name: "Find the stolen books",
+            giver: "Librarian in Valakovia",
+            description: "The library of Valakovia has been robbed of some very important books..."
+
+        }));
         console.log(quests);
 
     } catch (error) {
@@ -289,6 +332,8 @@ const reseedDB = async () => {
         await createInitialPlayerSpells();
         await createInitialFeatures();
         await createInitialPlayerFeatures();
+        await createInitialItems();
+        await createInitialQuests();
     } catch (error) {
         console.error(error);
     };
