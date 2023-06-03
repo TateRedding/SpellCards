@@ -38,12 +38,12 @@ const SpellDetails = ({
                     :
                     <div className="accordion mb-3" id={`spell-accordion-${spell.id}`}>
                         <div className="accordion-item">
-                            <h5 className="accordion-header">
+                            <h2 className="accordion-header">
                                 <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#spell-body-${spell.id}`}>
                                     <span className="me-3">{spell.name}</span>
                                     <span><i>{createLevelString(spell)}</i></span>
                                 </button>
-                            </h5>
+                            </h2>
                             <div id={`spell-body-${spell.id}`} className="accordion-collapse collapse" data-bs-parent={`spell-accordion-${spell.id}`}>
                                 <div className="accordion-body">
                                     <p className="mb-0"><b>Casting Time: </b>{spell.castingTime}</p>

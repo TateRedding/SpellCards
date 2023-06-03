@@ -35,7 +35,7 @@ router.post("/", async (req, res, next) => {
     };
 });
 
-router.patch("/questId", async (req, res, next) => {
+router.patch("/:questId", async (req, res, next) => {
     const { questId } = req.params;
     const { name } = req.body;
     try {
@@ -54,7 +54,7 @@ router.patch("/questId", async (req, res, next) => {
     };
 });
 
-router.delete("/questId", async (req, res, next) => {
+router.delete("/:questId", async (req, res, next) => {
     const { questId } = req.params;
     try {
         const quest = await getQuestById(questId);

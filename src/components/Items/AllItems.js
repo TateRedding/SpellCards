@@ -5,7 +5,7 @@ import ItemCard from "./ItemCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
 
-const AllItems = ({ items, getItems, sortingFunctions }) => {
+const AllItems = ({ items, formatText, getItems, sortingFunctions }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -33,6 +33,7 @@ const AllItems = ({ items, getItems, sortingFunctions }) => {
                     .map(item => {
                         return <ItemCard
                             item={item}
+                            formatText={formatText}
                             getItems={getItems}
                             key={item.id}
                         />

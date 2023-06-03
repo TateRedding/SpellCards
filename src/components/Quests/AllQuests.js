@@ -5,7 +5,7 @@ import QuestCard from "./QuestCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
 
-const AllQuests = ({ quests, getQuests, sortingFunctions }) => {
+const AllQuests = ({ quests, formatText, getQuests, sortingFunctions }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -33,6 +33,7 @@ const AllQuests = ({ quests, getQuests, sortingFunctions }) => {
                     .map(quest => {
                         return <QuestCard
                             quest={quest}
+                            formatText={formatText}
                             getQuests={getQuests}
                             key={quest.id}
                         />

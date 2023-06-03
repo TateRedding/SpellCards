@@ -35,7 +35,7 @@ router.post("/", async (req, res, next) => {
     };
 });
 
-router.patch("/itemId", async (req, res, next) => {
+router.patch("/:itemId", async (req, res, next) => {
     const { itemId } = req.params;
     const { name } = req.body;
     try {
@@ -54,7 +54,7 @@ router.patch("/itemId", async (req, res, next) => {
     };
 });
 
-router.delete("/itemId", async (req, res, next) => {
+router.delete("/:itemId", async (req, res, next) => {
     const { itemId } = req.params;
     try {
         const item = await getItemById(itemId);

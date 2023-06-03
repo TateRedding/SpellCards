@@ -35,6 +35,26 @@ const App = () => {
         "Transmutation"
     ];
 
+    const itemCategories = [
+        "Armor",
+        "Potion",
+        "Ring",
+        "Rod",
+        "Scroll",
+        "Staff",
+        "Wand",
+        "Weapon",
+        "Wonderous Item"
+    ];
+
+    const rarities = [
+        "Common",
+        "Uncommon",
+        "Rare",
+        "Very rare",
+        "Legendary"
+    ];
+
     const sortingFunctions = [
         {
             name: "A to Z",
@@ -126,7 +146,7 @@ const App = () => {
         }
         levelString += spell.school.toLowerCase();
         return levelString;
-    }
+    };
 
     const getPlayers = async () => {
         try {
@@ -196,6 +216,7 @@ const App = () => {
                     <Route path="/items" element={
                         <AllItems
                             items={items}
+                            formatText={formatText}
                             getItems={getItems}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
                         />
@@ -203,6 +224,7 @@ const App = () => {
                     <Route path="/quests" element={
                         <AllQuests
                             quests={quests}
+                            formatText={formatText}
                             getQuests={getQuests}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
                         />
