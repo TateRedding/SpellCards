@@ -4,7 +4,9 @@ const {
     createSpell,
     createPlayerSpell,
     createFeature,
-    createPlayerFeature
+    createPlayerFeature,
+    createItem,
+    createQuest
 } = require(".");
 
 const dropTables = async () => {
@@ -15,6 +17,8 @@ const dropTables = async () => {
             DROP TABLE IF EXISTS player_features;
             DROP TABLE IF EXISTS spells;
             DROP TABLE IF EXISTS features;
+            DROP TABLE IF EXISTS items;
+            DROP TABLE IF EXISTS quests;
             DROP TABLE IF EXISTS players;
         `);
         console.log("Finished dropping tables.");
@@ -68,6 +72,22 @@ const createTables = async () => {
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "featureId" INTEGER NOT NULL REFERENCES features(id),
                 UNIQUE ("playerId", "featureId")
+            );
+
+            CREATE TABLE IF NOT EXISTS items (
+                id SERIAL PRIMARY KEY,
+                category VARCHAR(32) NOT NULL,
+                "categoryDetails" VARCHAR(128),
+                rarirty VARCHAR(32) NOT NULL,
+                "requiresAttunement" BOOLEAN DEFAULT false,
+                "attunmentRequirements" TEXT,
+                description TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS quests (
+                id SERIAL PRIMARY KEY,
+                giver VARCHAR(128) NOT NULL,
+                description TEXT NOT NULL
             );
 
         `);
@@ -229,6 +249,32 @@ const createInitialPlayerFeatures = async () => {
         console.log("Finished creating initial player_features!");
     } catch (error) {
         console.log("Error creating initial player_features!");
+        console.error(error);
+    };
+};
+
+const createInitialItems = async () => {
+    try {
+        console.log("Creating initial items...");
+
+        const items = [];
+        console.log(items);
+
+    } catch (error) {
+        console.log("Error creating initial items!");
+        console.error(error);
+    };
+};
+
+const createInitialQuests = async () => {
+    try {
+        console.log("Creating initial quests...");
+
+        const quests = [];
+        console.log(quests);
+
+    } catch (error) {
+        console.log("Error creating initial quests!");
         console.error(error);
     };
 };

@@ -1,6 +1,11 @@
 const client = require("./client");
 const { getSpellsByPlayerId } = require("./spells");
 const { getFeaturesByPlayerId } = require("./features");
+const {
+    getAllRows,
+    getRowById,
+    getRowByName
+} = require("./utils");
 
 const createPlayer = async (name) => {
     try {
@@ -18,11 +23,7 @@ const createPlayer = async (name) => {
 
 const getAllPlayers = async () => {
     try {
-        const { rows: players } = await client.query(`
-            SELECT *
-            FROM players;
-        `);
-        return players;
+        return getAllRows('players');
     } catch (error) {
         console.error(error);
     };
@@ -30,11 +31,7 @@ const getAllPlayers = async () => {
 
 const getPlayerById = async (id) => {
     try {
-        const { rows: [player] } = await client.query(`
-            SELECT *
-            FROM players
-            WHERE id=${id};
-        `);
+        const player = await getRowById('players', id);
         if (player) {
             player.spells = await getSpellsByPlayerId(player.id);
             player.features = await getFeaturesByPlayerId(player.id)
@@ -47,12 +44,7 @@ const getPlayerById = async (id) => {
 
 const getPlayerByName = async (name) => {
     try {
-        const { rows: [player] } = await client.query(`
-            SELECT *
-            FROM players
-            WHERE name='${name}';
-        `);
-        return player;
+        return await getRowByName('players', name);
     } catch (error) {
         console.error(error);
     };

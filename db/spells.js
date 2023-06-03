@@ -1,34 +1,24 @@
 const client = require("./client");
+const {
+    createRow,
+    updateRow,
+    deleteRow,
+    getAllRows,
+    getRowById,
+    getRowByName
+} = require("./utils");
 
 const createSpell = async (fields) => {
-    const keys = Object.keys(fields);
-    const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
-    const columnNames = keys.map((key) => `"${key}"`).join(', ');
     try {
-        const { rows: [result] } = await client.query(`
-            INSERT INTO spells (${columnNames})
-            VALUES (${valuesString})
-            RETURNING *;
-        `, Object.values(fields));
-        return result;
+        return await createRow('spells', fields)
     } catch (error) {
         console.error(error);
     };
 };
 
 const updateSpell = async (id, fields) => {
-    const setString = Object.keys(fields).map((key, index) => `"${key}"=$${index + 1}`).join(', ');
-    if (!setString.length) {
-        return;
-    };
     try {
-        const { rows: [spell] } = await client.query(`
-            UPDATE spells
-            SET ${setString}
-            WHERE id=${id}
-            RETURNING *;
-        `, Object.values(fields));
-        return spell;
+        return await updateRow('spells', id, fields);
     } catch (error) {
         console.error(error);
     };
@@ -36,12 +26,7 @@ const updateSpell = async (id, fields) => {
 
 const deleteSpell = async (id) => {
     try {
-        const { rows: [spell] } = await client.query(`
-            DELETE FROM spells
-            WHERE id=${id}
-            RETURNING *;
-        `);
-        return spell;
+        return await deleteRow('spells', id);
     } catch (error) {
         console.error(error);
     };
@@ -49,11 +34,7 @@ const deleteSpell = async (id) => {
 
 const getAllSpells = async () => {
     try {
-        const { rows: spells } = await client.query(`
-            SELECT *
-            FROM spells;
-        `);
-        return spells;
+        return getAllRows('spells');
     } catch (error) {
         console.error(error);
     };
@@ -61,12 +42,7 @@ const getAllSpells = async () => {
 
 const getSpellById = async (id) => {
     try {
-        const { rows: [spell] } = await client.query(`
-            SELECT *
-            FROM spells
-            WHERE id=${id}
-        `);
-        return spell;
+        return await getRowById('spells', id);
     } catch (error) {
         console.error(error);
     };
@@ -74,12 +50,7 @@ const getSpellById = async (id) => {
 
 const getSpellByName = async (name) => {
     try {
-        const { rows: [spell] } = await client.query(`
-            SELECT *
-            FROM spells
-            WHERE name='${name}'
-        `);
-        return spell;
+        return await getRowByName('spells', name);
     } catch (error) {
         console.error(error);
     };
