@@ -117,7 +117,7 @@ const NewItem = ({ itemCategories, rarities, getItems }) => {
                     <label htmlFor="item-category-details">Category Details</label>
                 </div>
                 <div className="form-text mb-3" id="item-category-details-help">
-                    This is uaually a weapon or armor type
+                    This is usually a weapon or armor type
                 </div>
                 <div className="form-floating mb-3">
                     <select
@@ -159,7 +159,7 @@ const NewItem = ({ itemCategories, rarities, getItems }) => {
                                 <label htmlFor="item-attunement-requirements">Attunement Requirements</label>
                             </div>
                             <div className="form-text mb-3" id="item-category-details-help">
-                                Specific species, class, etc...
+                                If attunement requires a specific class or species.
                             </div>
                         </>
                         :

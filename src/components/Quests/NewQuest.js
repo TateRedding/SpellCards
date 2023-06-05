@@ -49,7 +49,7 @@ const NewQuest = ({ getQuests }) => {
     return (
         <>
             <div className="d-flex align-items-center mb-2">
-                <h2 className="me-3 mb-0">New Item</h2>
+                <h2 className="me-3 mb-0">New Quest</h2>
                 <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
             </div>
             <form onSubmit={createNewQuest} autoComplete="off">
