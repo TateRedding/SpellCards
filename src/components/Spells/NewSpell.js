@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import SuccessCard from "../SuccessCard";
 
 const NewSpell = ({ schools, getSpells }) => {
     const [name, setName] = useState('');
@@ -236,16 +237,7 @@ const NewSpell = ({ schools, getSpells }) => {
             </form>
             {
                 (success) ?
-                    <div className="position-fixed bottom-0">
-                        <div className="card">
-                            <div className="card-header text-bg-success">
-                                <b>Success!</b>
-                            </div>
-                            <div className="card-body">
-                                <p className="card-text">Successfully added new spell!</p>
-                            </div>
-                        </div>
-                    </div>
+                    <SuccessCard message={"Successfuly added new spell!"} />
                     :
                     null
             }

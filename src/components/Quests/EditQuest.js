@@ -3,54 +3,54 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 
-const EditFeature = ({ getFeatures }) => {
-    const [feature, setFeature] = useState({});
+const EditQuest = ({ getQuests }) => {
+    const [quest, setQuest] = useState({});
     const [name, setName] = useState('');
-    const [origin, setOrigin] = useState('');
+    const [giver, setGiver] = useState('');
     const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
     const [success, setSuccess] = useState(false);
 
-    const { featureId } = useParams();
+    const { questId } = useParams();
 
     const navigate = useNavigate();
 
-    const getFeatureData = async () => {
+    const getQuestData = async () => {
         try {
-            const response = await axios.get(`/api/features/${featureId}`);
-            setFeature(response.data);
+            const response = await axios.get(`/api/quests/${questId}`);
+            setQuest(response.data);
         } catch (error) {
             console.error(error);
         };
     };
 
     const setValues = () => {
-        if (Object.keys(feature).length) {
-            setName(feature.name);
-            setOrigin(feature.origin);
-            setDescription(feature.description);
+        if (Object.keys(quest).length) {
+            setName(quest.name);
+            setGiver(quest.giver);
+            setDescription(quest.description);
         };
     };
 
-    const updateFeature = async (event) => {
+    const updateQuest = async (event) => {
         event.preventDefault();
         setNameTaken(false);
-        const updatedFeatureData = {
+        const updatedQuestData = {
             name,
-            origin,
+            giver,
             description
         };
 
         try {
-            const response = await axios.patch(`/api/features/${featureId}`, updatedFeatureData);
+            const response = await axios.patch(`/api/quests/${questId}`, updatedQuestData);
             if (response.data) {
                 if (response.data.name === "NameTakenError") {
                     setNameTaken(true);
                 } else {
-                    getFeatureData();
+                    getQuestData();
                     setValues();
+                    getQuests();
                     setSuccess(true);
-                    getFeatures();
                 };
             };
         } catch (error) {
@@ -59,12 +59,12 @@ const EditFeature = ({ getFeatures }) => {
     };
 
     useEffect(() => {
-        getFeatureData();
+        getQuestData();
     }, []);
 
     useEffect(() => {
         setValues();
-    }, [feature]);
+    }, [quest]);
 
     useEffect(() => {
         if (success) {
@@ -76,48 +76,44 @@ const EditFeature = ({ getFeatures }) => {
     return (
         <>
             <div className="d-flex align-items-center mb-2">
-                <h2 className="me-3 mb-0">Update Feature</h2>
+                <h2 className="me-3 mb-0">New Item</h2>
                 <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
             </div>
-            <form onSubmit={updateFeature} autoComplete="off">
+            <form onSubmit={updateQuest} autoComplete="off">
                 <div className="form-floating">
                     <input
                         className={(nameTaken) ? "form-control is-invalid" : "form-control"}
-                        id="feature-name"
+                        id="quest-name"
                         aria-labelledby="name-taken"
                         value={name}
                         required
                         placeholder="Name"
                         onChange={(event) => setName(event.target.value)}
                     />
-                    <label htmlFor="feature-name">Name</label>
+                    <label htmlFor="quest-name">Name</label>
                 </div>
                 <div className="form-text mb-3" id="name-taken">
                     {
                         (nameTaken) ?
-                            `Can't use the name ${name}, that feature already exists!` :
+                            `Can't use the name ${name}, that quest already exists!` :
                             null
                     }
                 </div>
-                <div className="form-floating">
+                <div className="form-floating mb-3">
                     <input
                         className="form-control"
-                        id="feature-origin"
-                        aria-labelledby="origin-help-text"
-                        value={origin}
+                        id="quest-giver"
+                        value={giver}
                         required
-                        placeholder="Origin"
-                        onChange={(event) => setOrigin(event.target.value)}
+                        placeholder="Quest Giver"
+                        onChange={(event) => setGiver(event.target.value)}
                     />
-                    <label htmlFor="feature-origin">Origin</label>
-                </div>
-                <div className="form-text mb-3" id="orign-help-text">
-                    Species, class, sub-class, feat, etc...
+                    <label htmlFor="quest-giver">Quest Giver</label>
                 </div>
                 <div className="form-floating">
                     <textarea
                         className="form-control"
-                        id="feature-description"
+                        id="quest-description"
                         aria-labelledby="description-help-text"
                         style={{ height: "100px" }}
                         value={description}
@@ -125,16 +121,16 @@ const EditFeature = ({ getFeatures }) => {
                         placeholder="Description"
                         onChange={(event) => setDescription(event.target.value)}
                     />
-                    <label htmlFor="feature-description">Description</label>
+                    <label htmlFor="quest-description">Description</label>
                 </div>
                 <div className="form-text mb-3" id="description-help-text">
                     Surround text with double asterisks for bold: "**bold text**"
                 </div>
-                <button type="submit" className="btn btn-success">Update</button>
+                <button type="submit" className="btn btn-success mb-3">Update</button>
             </form>
             {
                 (success) ?
-                    <SuccessCard message={`Successfully updated ${feature.name}!`} />
+                    <SuccessCard message={`Successfully updated ${name}!`} />
                     :
                     null
             }
@@ -142,4 +138,4 @@ const EditFeature = ({ getFeatures }) => {
     );
 };
 
-export default EditFeature;
+export default EditQuest;

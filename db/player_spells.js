@@ -1,4 +1,5 @@
 const client = require("./client");
+const { deleteRow } = require("./utils");
 
 const createPlayerSpell = async (playerId, spellId) => {
     try {
@@ -15,12 +16,7 @@ const createPlayerSpell = async (playerId, spellId) => {
 
 const deletePlayerSpell = async (id) => {
     try {
-        const { rows: [playerSpell] } = await client.query(`
-            DELETE FROM player_spells
-            WHERE id=${id}
-            RETURNING *;
-        `);
-        return playerSpell;
+        return await deleteRow('player_spells', id);
     } catch (error) {
         console.error(error);
     };

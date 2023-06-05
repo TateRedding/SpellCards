@@ -1,6 +1,10 @@
 const express = require('express');
-const { createPlayerSpell, getPlayerSpellByPlayerIdAndSpellId, deletePlayerSpell } = require('../db');
 const router = express.Router();
+const {
+    createPlayerSpell,
+    deletePlayerSpell,
+    getPlayerSpellByPlayerIdAndSpellId
+} = require('../db');
 
 router.post("/", async (req, res, next) => {
     const { playerId, spellId } = req.body;

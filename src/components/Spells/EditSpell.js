@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import SuccessCard from "../SuccessCard";
 
 const EditSpell = ({ schools, getSpells }) => {
     const [spell, setSpell] = useState({});
@@ -266,16 +267,7 @@ const EditSpell = ({ schools, getSpells }) => {
             </form>
             {
                 (success) ?
-                    <div className="position-fixed bottom-0">
-                        <div className="card">
-                            <div className="card-header text-bg-success">
-                                <b>Success!</b>
-                            </div>
-                            <div className="card-body">
-                                <p className="card-text">Successfully updated {spell.name}!</p>
-                            </div>
-                        </div>
-                    </div>
+                    <SuccessCard message={`Successfully updated ${spell.name}!`} />
                     :
                     null
             }

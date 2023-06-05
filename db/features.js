@@ -1,34 +1,24 @@
 const client = require("./client");
+const {
+    createRow,
+    updateRow,
+    deleteRow,
+    getAllRows,
+    getRowById,
+    getRowByName
+} = require("./utils");
 
 const createFeature = async (fields) => {
-    const keys = Object.keys(fields);
-    const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
-    const columnNames = keys.map((key) => `"${key}"`).join(', ');
     try {
-        const { rows: [result] } = await client.query(`
-            INSERT INTO features (${columnNames})
-            VALUES (${valuesString})
-            RETURNING *;
-        `, Object.values(fields));
-        return result;
+        return await createRow('features', fields);
     } catch (error) {
         console.error(error);
     };
 };
 
 const updateFeature = async (id, fields) => {
-    const setString = Object.keys(fields).map((key, index) => `"${key}"=$${index + 1}`).join(', ');
-    if (!setString.length) {
-        return;
-    };
     try {
-        const { rows: [feature] } = await client.query(`
-            UPDATE features
-            SET ${setString}
-            WHERE id=${id}
-            RETURNING *;
-        `, Object.values(fields));
-        return feature;
+        return await updateRow('features', id, fields);
     } catch (error) {
         console.error(error);
     };
@@ -36,12 +26,7 @@ const updateFeature = async (id, fields) => {
 
 const deleteFeature = async (id) => {
     try {
-        const { rows: [feature] } = await client.query(`
-            DELETE FROM features
-            WHERE id=${id}
-            RETURNING *;
-        `);
-        return feature;
+        return await deleteRow('features', id)
     } catch (error) {
         console.error(error);
     };
@@ -49,11 +34,7 @@ const deleteFeature = async (id) => {
 
 const getAllFeatures = async () => {
     try {
-        const { rows: features } = await client.query(`
-            SELECT *
-            FROM features;
-        `);
-        return features
+        return getAllRows('features');
     } catch (error) {
         console.error(error);
     };
@@ -61,12 +42,7 @@ const getAllFeatures = async () => {
 
 const getFeatureById = async (id) => {
     try {
-        const { rows: [feature] } = await client.query(`
-            SELECT *
-            FROM features
-            WHERE id=${id};
-        `);
-        return feature;
+        return await getRowById('features', id)
     } catch (error) {
         console.error(error);
     };
@@ -74,12 +50,7 @@ const getFeatureById = async (id) => {
 
 const getFeatureByName = async (name) => {
     try {
-        const { rows: [feature] } = await client.query(`
-            SELECT *
-            FROM features
-            WHERE name='${name}';
-        `);
-        return feature;
+        return await getRowByName('features', name);
     } catch (error) {
         console.error(error);
     };

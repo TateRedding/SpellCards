@@ -4,12 +4,18 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import AllFeatures from "./components/Features/AllFeatures";
+import AllItems from "./components/Items/AllItems";
+import AllQuests from "./components/Quests/AllQuests";
 import AllSpells from "./components/Spells/AllSpells";
 import EditFeature from "./components/Features/EditFeature"
+import EditItem from "./components/Items/EditItem";
+import EditQuest from "./components/Quests/EditQuest";
 import EditSpell from "./components/Spells/EditSpell";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
+import NewItem from "./components/Items/NewItem"
+import NewQuest from "./components/Quests/NewQuest";
 import NewSpell from "./components/Spells/NewSpell";
 import PlayerPage from "./components/PlayerPage";
 import SingleFeature from "./components/Features/SingleFeature";
@@ -17,7 +23,9 @@ import SingleSpell from "./components/Spells/SingleSpell";
 
 const App = () => {
     const [features, setFeatures] = useState([]);
+    const [items, setItems] = useState([]);
     const [players, setPlayers] = useState([]);
+    const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
 
     const schools = [
@@ -31,14 +39,46 @@ const App = () => {
         "Transmutation"
     ];
 
+    const itemCategories = [
+        "Armor",
+        "Potion",
+        "Ring",
+        "Rod",
+        "Scroll",
+        "Staff",
+        "Wand",
+        "Weapon",
+        "Wonderous Item"
+    ];
+
+    const rarities = [
+        "Common",
+        "Uncommon",
+        "Rare",
+        "Very rare",
+        "Legendary"
+    ];
+
     const sortingFunctions = [
         {
             name: "A to Z",
-            func: (a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            func: (a, b) => {
+                if (a.completed === b.completed) {
+                    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+                } else {
+                    return a.completed > b.completed ? 1 : -1
+                };
+            }
         },
         {
             name: "Z to A",
-            func: (a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
+            func: (a, b) => {
+                if (a.completed === b.completed) {
+                    return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
+                } else {
+                    return a.completed > b.completed ? 1 : -1
+                }
+            }
         },
         {
             name: "Spell Level: Low to High",
@@ -122,7 +162,7 @@ const App = () => {
         }
         levelString += spell.school.toLowerCase();
         return levelString;
-    }
+    };
 
     const getPlayers = async () => {
         try {
@@ -143,10 +183,22 @@ const App = () => {
         setFeatures(response.data);
     };
 
+    const getItems = async () => {
+        const response = await axios.get("/api/items");
+        setItems(response.data);
+    };
+
+    const getQuests = async () => {
+        const response = await axios.get("/api/quests");
+        setQuests(response.data);
+    };
+
     useEffect(() => {
         getPlayers();
         getSpells();
         getFeatures();
+        getItems();
+        getQuests();
     }, []);
 
     return (
@@ -175,6 +227,46 @@ const App = () => {
                     <Route path="/features/:featureId" element={
                         <SingleFeature
                             formatText={formatText}
+                        />
+                    } />
+                    <Route path="/items" element={
+                        <AllItems
+                            items={items}
+                            formatText={formatText}
+                            getItems={getItems}
+                            sortingFunctions={sortingFunctions.slice(0, 2)}
+                        />
+                    } />
+                    <Route path="/items/new" element={
+                        <NewItem
+                            itemCategories={itemCategories}
+                            rarities={rarities}
+                            getItems={getItems}
+                        />
+                    } />
+                    <Route path="/items/edit/:itemId" element={
+                        <EditItem
+                            itemCategories={itemCategories}
+                            rarities={rarities}
+                            getItems={getItems}
+                        />
+                    } />
+                    <Route path="/quests" element={
+                        <AllQuests
+                            quests={quests}
+                            formatText={formatText}
+                            getQuests={getQuests}
+                            sortingFunctions={sortingFunctions.slice(0, 2)}
+                        />
+                    } />
+                    <Route path="/quests/new" element={
+                        <NewQuest
+                            getQuests={getQuests}
+                        />
+                    } />
+                    <Route path="/quests/edit/:questId" element={
+                        <EditQuest
+                            getQuests={getQuests}
                         />
                     } />
                     <Route path="/spells" element={

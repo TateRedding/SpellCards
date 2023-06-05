@@ -31,12 +31,12 @@ const FeatureDetails = ({ feature, getPlayerData, formatText }) => {
                     :
                     <div className="accordion mb-3" id={`feature-accordion-${feature.id}`}>
                         <div className="accordion-item">
-                            <h5 className="accordion-header">
+                            <h2 className="accordion-header">
                                 <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>
                                 <span className="me-3">{feature.name}</span>
                                     <span><i>{feature.origin}</i></span>
                                 </button>
-                            </h5>
+                            </h2>
                             <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>
                                 <div className="accordion-body">
                                     {

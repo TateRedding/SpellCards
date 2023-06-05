@@ -1,6 +1,10 @@
 const express = require('express');
-const { createPlayerFeature, getPlayerFeatureByPlayerIdAndFeatureId, deletePlayerFeature } = require('../db');
 const router = express.Router();
+const {
+    createPlayerFeature,
+    deletePlayerFeature,
+    getPlayerFeatureByPlayerIdAndFeatureId,
+} = require('../db');
 
 router.post("/", async (req, res, next) => {
     const { playerId, featureId } = req.body;
