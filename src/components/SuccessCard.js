@@ -2,7 +2,7 @@ import React from "react";
 
 const SuccessCard = ({ message }) => {
     return (
-        <div className="position-fixed bottom-0">
+        <div className="position-fixed mb-3 bottom-0">
             <div className="card">
                 <div className="card-header text-bg-success">
                     <b>Success!</b>
