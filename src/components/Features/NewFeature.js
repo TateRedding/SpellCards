@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import SuccessCard from "../SuccessCard";
 
 const NewFeature = ({ getFeatures }) => {
     const [name, setName] = useState('');
@@ -106,16 +107,7 @@ const NewFeature = ({ getFeatures }) => {
             </form>
             {
                 (success) ?
-                    <div className="position-fixed bottom-0">
-                        <div className="card">
-                            <div className="card-header text-bg-success">
-                                <b>Success!</b>
-                            </div>
-                            <div className="card-body">
-                                <p className="card-text">Successfully added new feature!</p>
-                            </div>
-                        </div>
-                    </div>
+                    <SuccessCard message={"Successfully added new feature!"} />
                     :
                     null
             }

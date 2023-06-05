@@ -8,7 +8,14 @@ const Home = ({ players }) => {
         <div className="d-flex flex-column align-items-center mt-5">
             <h5 className="text-center mb-3">Who are you?</h5>
             {
-                players.map(player => <button className="player-button btn btn-outline-primary mb-3" onClick={() => navigate(`/${player.name.toLowerCase()}`)}>{player.name}</button>)
+                players.map(player => {
+                    return (
+                        <button
+                            className="player-button btn btn-outline-primary mb-3"
+                            key={player.id}
+                            onClick={() => navigate(`/${player.name.toLowerCase()}`)}>{player.name}</button>
+                    )
+                })
             }
         </div>
     );

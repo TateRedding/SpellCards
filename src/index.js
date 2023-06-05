@@ -12,6 +12,8 @@ import EditSpell from "./components/Spells/EditSpell";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
+import NewItem from "./components/Items/NewItem"
+import NewQuest from "./components/Quests/NewQuest";
 import NewSpell from "./components/Spells/NewSpell";
 import PlayerPage from "./components/PlayerPage";
 import SingleFeature from "./components/Features/SingleFeature";
@@ -221,12 +223,24 @@ const App = () => {
                             sortingFunctions={sortingFunctions.slice(0, 2)}
                         />
                     } />
+                    <Route path="/items/new" element={
+                        <NewItem
+                            itemCategories={itemCategories}
+                            rarities={rarities}
+                            getItems={getItems}
+                        />
+                    } />
                     <Route path="/quests" element={
                         <AllQuests
                             quests={quests}
                             formatText={formatText}
                             getQuests={getQuests}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                        />
+                    } />
+                    <Route path="/quests/new" element={
+                        <NewQuest
+                            getQuests={getQuests}
                         />
                     } />
                     <Route path="/spells" element={
