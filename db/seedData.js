@@ -263,22 +263,22 @@ const createInitialItems = async () => {
         const items = [];
         items.push(await createItem({
             name: "Manual of Gainful Exercise",
-            category: "wonderous item",
-            rarity: "very rare",
+            category: "Wonderous Item",
+            rarity: "Very rare",
             description: "This book describes fitness exercises, and it's words are charged with magic."
         }));
         items.push(await createItem({
             name: "Mace of Terror",
-            category: "weapon",
+            category: "Weapon",
             categoryDetails: "mace",
-            rarity: "rare",
+            rarity: "Rare",
             requiresAttunement: true,
             description: "This magic weapon has 3 charges. While holding it..."
         }));
         items.push(await createItem({
             name: "Instrument of the Bards: Cli Lyre",
-            category: "wonderous item",
-            rarity: "rare",
+            category: "Wonderous Item",
+            rarity: "Rare",
             requiresAttunement: true,
             attunementRequirements: "a bard",
             description: "An instrument of the bards is an exquisite example of it's kind..."

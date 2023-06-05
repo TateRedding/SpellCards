@@ -18,6 +18,15 @@ router.get("/", async (req, res, next) => {
     };
 });
 
+router.get("/:itemId", async (req, res, next) => {
+    try {
+        const item = await getItemById(req.params.itemId);
+        res.send(item);
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
 router.post("/", async (req, res, next) => {
     const { name } = req.body;
     try {

@@ -8,6 +8,8 @@ import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
 import AllSpells from "./components/Spells/AllSpells";
 import EditFeature from "./components/Features/EditFeature"
+import EditItem from "./components/Items/EditItem";
+import EditQuest from "./components/Quests/EditQuest";
 import EditSpell from "./components/Spells/EditSpell";
 import Header from "./components/Header";
 import Home from "./components/Home";
@@ -230,6 +232,13 @@ const App = () => {
                             getItems={getItems}
                         />
                     } />
+                    <Route path="/items/edit/:itemId" element={
+                        <EditItem
+                            itemCategories={itemCategories}
+                            rarities={rarities}
+                            getItems={getItems}
+                        />
+                    } />
                     <Route path="/quests" element={
                         <AllQuests
                             quests={quests}
@@ -240,6 +249,11 @@ const App = () => {
                     } />
                     <Route path="/quests/new" element={
                         <NewQuest
+                            getQuests={getQuests}
+                        />
+                    } />
+                    <Route path="/quests/edit/:questId" element={
+                        <EditQuest
                             getQuests={getQuests}
                         />
                     } />
