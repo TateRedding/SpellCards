@@ -19,6 +19,20 @@ const QuestCard = ({ quest, getQuests, formatText }) => {
         };
     };
 
+    const toggleCompleted = async () => {
+        try {
+            const response = await axios.patch(`/api/quests/${quest.id}`,
+                {
+                    completed: !quest.completed
+                });
+            if (response.data) {
+                getQuests();
+            };
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
     return (
         <>
             {
@@ -58,7 +72,15 @@ const QuestCard = ({ quest, getQuests, formatText }) => {
                                         formatText(quest.description)
                                     }
                                     <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/quests/edit/${quest.id}`)}>Edit</button>
-                                    <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
+                                    <button className="btn btn-danger btn-sm me-2" onClick={() => setDeleting(true)}>Delete</button>
+                                    <button className="btn btn-success btn-sm" onClick={() => toggleCompleted()}>
+                                        {
+                                            quest.completed ?
+                                                "Mark as In Progress"
+                                                :
+                                                "Mark as Completed"
+                                        }
+                                    </button>
                                 </div>
                             </div>
                         </div>

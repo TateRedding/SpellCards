@@ -62,11 +62,23 @@ const App = () => {
     const sortingFunctions = [
         {
             name: "A to Z",
-            func: (a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+            func: (a, b) => {
+                if (a.completed === b.completed) {
+                    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+                } else {
+                    return a.completed > b.completed ? 1 : -1
+                };
+            }
         },
         {
             name: "Z to A",
-            func: (a, b) => a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
+            func: (a, b) => {
+                if (a.completed === b.completed) {
+                    return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
+                } else {
+                    return a.completed > b.completed ? 1 : -1
+                }
+            }
         },
         {
             name: "Spell Level: Low to High",
