@@ -5,7 +5,7 @@ import SearchBar from "../SearchBar";
 import SmallFeatureCard from "./SmallFeatureCard";
 import SortSelect from "../SortSelect";
 
-const AllFeatures = ({ features, getFeatures, sortingFunctions }) => {
+const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -13,7 +13,12 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions }) => {
 
     return (
         <>
-            <button className="btn btn-success mb-3" onClick={() => navigate("/features/new")}>New Feature</button>
+            {
+                loggedInPlayer.isAdmin ?
+                    <button className="btn btn-success mb-3" onClick={() => navigate("/features/new")}>New Feature</button>
+                    :
+                    null
+            }
             <div className="d-flex align-items-end mb-3">
                 <SearchBar
                     className="me-3"
@@ -35,6 +40,7 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions }) => {
                             feature={feature}
                             getFeatures={getFeatures}
                             key={feature.id}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     })
             }

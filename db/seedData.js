@@ -333,7 +333,8 @@ const updateDatabase = async () => {
         await client.query(`
             ALTER TABLE players
             ADD IF NOT EXISTS "shortName" VARCHAR(32),
-            ADD IF NOT EXISTS pin INTEGER UNIQUE;
+            ADD IF NOT EXISTS pin INTEGER UNIQUE,
+            ADD IF NOT EXISTS "isAdmin" BOOLEAN DEFAULT FALSE;
 
             UPDATE players
             SET pin=5716, name='Khirun of the S.C.', "shortName"='Khirun'
@@ -354,6 +355,9 @@ const updateDatabase = async () => {
             UPDATE players
             SET pin=8548, "shortName"='Torment'
             WHERE name='Torment';
+
+            INSERT INTO players (name, "shortName", pin, "isAdmin")
+            VALUES ('Tate', 'Tate', 0994, true);
         `);
 
         console.log("Finished updating database!");

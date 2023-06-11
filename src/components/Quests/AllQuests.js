@@ -5,7 +5,7 @@ import QuestCard from "./QuestCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
 
-const AllQuests = ({ quests, formatText, getQuests, sortingFunctions }) => {
+const AllQuests = ({ quests, formatText, getQuests, sortingFunctions, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -13,7 +13,12 @@ const AllQuests = ({ quests, formatText, getQuests, sortingFunctions }) => {
 
     return (
         <>
-            <button className="btn btn-success mb-3" onClick={() => navigate("/quests/new")}>New Quest</button>
+            {
+                loggedInPlayer.isAdmin ?
+                    <button className="btn btn-success mb-3" onClick={() => navigate("/quests/new")}>New Quest</button>
+                    :
+                    null
+            }
             <div className="d-flex align-items-end mb-3">
                 <SearchBar
                     className="me-3"
@@ -35,6 +40,7 @@ const AllQuests = ({ quests, formatText, getQuests, sortingFunctions }) => {
                             quest={quest}
                             formatText={formatText}
                             getQuests={getQuests}
+                            loggedInPlayer={loggedInPlayer}
                             key={quest.id}
                         />
                     })

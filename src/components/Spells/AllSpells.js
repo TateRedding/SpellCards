@@ -6,7 +6,7 @@ import SearchBar from "../SearchBar";
 import SmallSpellCard from "./SmallSpellCard";
 import SortSelect from "../SortSelect";
 
-const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString }) => {
+const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
@@ -15,7 +15,13 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
 
     return (
         <>
-            <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
+            {
+                loggedInPlayer.isAdmin ?
+                    <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
+
+                    :
+                    null
+            }
             <div className="spell-tools d-flex mb-3">
                 <SearchBar
                     className="spell-search"
@@ -51,6 +57,7 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
                             spell={spell}
                             getSpells={getSpells}
                             createLevelString={createLevelString}
+                            loggedInPlayer={loggedInPlayer}
                             key={spell.id}
                         />
                     })

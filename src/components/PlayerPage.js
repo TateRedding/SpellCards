@@ -17,7 +17,8 @@ const PlayerPage = ({
     formatText,
     createComponentsString,
     createDurationString,
-    createLevelString
+    createLevelString,
+    loggedInPlayer
 }) => {
     const [playerData, setPlayerData] = useState({});
     const [selectedSort, setSelectedSort] = useState(0);
@@ -193,38 +194,44 @@ const PlayerPage = ({
                                     null
                             }
                         </div>
-                        <form onSubmit={addSpell} autoComplete="off">
-                            <div className="d-flex">
-                                <button className="btn btn-success me-2" type="submit">Add Spell</button>
+                        {
+                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
+                                <form onSubmit={addSpell} autoComplete="off">
+                                    <div className="d-flex">
+                                        <button className="btn btn-success me-2" type="submit">Add Spell</button>
 
-                                <select
-                                    className={
-                                        (alreadyOnList) ?
-                                            "form-select is-invalid" :
-                                            "form-select"
-                                    }
-                                    aria-labelledby="spell-on-list-text"
-                                    value={selectedSpellId}
-                                    required
-                                    onChange={(event) => setSelectedSpellId(event.target.value)}
-                                >
-                                    <option value="">Select Spell</option>
-                                    {
-                                        allSpells
-                                            .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                            .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-text" id="spell-on-list-text">
-                                {
-                                    (alreadyOnList) ?
-                                        "This spell is already on your list!" :
-                                        null
-                                }
-                            </div>
-                        </form>
-                    </> :
+                                        <select
+                                            className={
+                                                (alreadyOnList) ?
+                                                    "form-select is-invalid" :
+                                                    "form-select"
+                                            }
+                                            aria-labelledby="spell-on-list-text"
+                                            value={selectedSpellId}
+                                            required
+                                            onChange={(event) => setSelectedSpellId(event.target.value)}
+                                        >
+                                            <option value="">Select Spell</option>
+                                            {
+                                                allSpells
+                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+                                                    .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className="form-text" id="spell-on-list-text">
+                                        {
+                                            (alreadyOnList) ?
+                                                "This spell is already on your list!" :
+                                                null
+                                        }
+                                    </div>
+                                </form>
+                                :
+                                null
+                        }
+                    </>
+                    :
                     null
             }
             {
@@ -248,37 +255,43 @@ const PlayerPage = ({
                                     null
                             }
                         </div>
-                        <form onSubmit={addFeature} autoComplete="off">
-                            <div className="d-flex">
-                                <button className="btn btn-success me-2" type="submit">Add Feature</button>
-                                <select
-                                    className={
-                                        (alreadyOnList) ?
-                                            "form-select is-invalid" :
-                                            "form-select"
-                                    }
-                                    aria-labelledby="feature-on-list-text"
-                                    value={selectedFeatureId}
-                                    required
-                                    onChange={(event) => setSelectedFeatureId(event.target.value)}
-                                >
-                                    <option value="">Select Feature</option>
-                                    {
-                                        allFeatures
-                                            .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                            .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
-                                    }
-                                </select>
-                            </div>
-                            <div className="form-text" id="feature-on-list-text">
-                                {
-                                    (alreadyOnList) ?
-                                        "This feature is already on your list!" :
-                                        null
-                                }
-                            </div>
-                        </form>
-                    </> :
+                        {
+                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
+                                <form onSubmit={addFeature} autoComplete="off">
+                                    <div className="d-flex">
+                                        <button className="btn btn-success me-2" type="submit">Add Feature</button>
+                                        <select
+                                            className={
+                                                (alreadyOnList) ?
+                                                    "form-select is-invalid" :
+                                                    "form-select"
+                                            }
+                                            aria-labelledby="feature-on-list-text"
+                                            value={selectedFeatureId}
+                                            required
+                                            onChange={(event) => setSelectedFeatureId(event.target.value)}
+                                        >
+                                            <option value="">Select Feature</option>
+                                            {
+                                                allFeatures
+                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
+                                                    .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
+                                            }
+                                        </select>
+                                    </div>
+                                    <div className="form-text" id="feature-on-list-text">
+                                        {
+                                            (alreadyOnList) ?
+                                                "This feature is already on your list!" :
+                                                null
+                                        }
+                                    </div>
+                                </form>
+                                :
+                                null
+                        }
+                    </>
+                    :
                     null
             }
         </>

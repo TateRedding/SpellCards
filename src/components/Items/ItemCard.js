@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const ItemCard = ({ item, formatText, getItems }) => {
+const ItemCard = ({ item, formatText, getItems, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();
@@ -56,13 +56,21 @@ const ItemCard = ({ item, formatText, getItems }) => {
                                 </button>
                             </h2>
                             <div id={`item-body-${item.id}`} className="accordion-collapse collapse" data-bs-parent={`item-accordion-${item.id}`}>
-                                <div className="accordion-body">
+                                <div className={loggedInPlayer.isAdmin ? "accordion-body" : "accordion-body pb-0"}>
                                     <p><i>{createItemDescriptorsStrings(item)}</i></p>
                                     {
                                         formatText(item.description)
                                     }
-                                    <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/items/edit/${item.id}`)}>Edit</button>
-                                    <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
+                                    {
+                                        loggedInPlayer.isAdmin ?
+                                            <>
+                                                <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/items/edit/${item.id}`)}>Edit</button>
+                                                <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
+                                            </>
+                                            :
+                                            null
+                                    }
+
                                 </div>
                             </div>
                         </div>

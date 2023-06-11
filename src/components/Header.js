@@ -1,7 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Header = ({ players }) => {
+const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) => {
+
+    const navigate = useNavigate();
+
+    const signOut = () => {
+        window.localStorage.removeItem(TOKEN_NAME);
+        setLoginId(null);
+        setLoggedInPlayer(false);
+        navigate("/");
+    };
 
     return (
         <header>
@@ -19,13 +28,15 @@ const Header = ({ players }) => {
                                 <ul className="dropdown-menu">
                                     {
                                         players.map((player) => {
-                                            return (
-                                                <li className="nav-item" key={player.id}>
-                                                    <Link className="nav-link" to={`/${player.shortName.toLowerCase()}`}>
-                                                        <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">{player.name}</span>
-                                                    </Link>
-                                                </li>
-                                            );
+                                            if (!player.isAdmin) {
+                                                return (
+                                                    <li className="nav-item" key={player.id}>
+                                                        <Link className="nav-link" to={`/${player.shortName.toLowerCase()}`}>
+                                                            <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">{player.name}</span>
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            };
                                         })
                                     }
                                 </ul>
@@ -50,6 +61,20 @@ const Header = ({ players }) => {
                                     <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Quests</span>
                                 </Link>
                             </li>
+                            {
+                                loginId ?
+                                    <li className="nav-item">
+                                        <button className="nav-link" onClick={() => signOut()}>
+                                            <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Sign Out</span>
+                                        </button>
+                                    </li>
+                                    :
+                                    <li className="nav-item">
+                                        <Link className="nav-link" to="/">
+                                            <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Sign In</span>
+                                        </Link>
+                                    </li>
+                            }
                         </ul>
                     </div>
                 </div>

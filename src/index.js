@@ -36,11 +36,14 @@ import SingleFeature from "./components/Features/SingleFeature";
 import SingleSpell from "./components/Spells/SingleSpell";
 
 const App = () => {
+    const TOKEN_NAME = "coswtfs-spells-login-id";
     const [features, setFeatures] = useState([]);
     const [items, setItems] = useState([]);
     const [players, setPlayers] = useState([]);
     const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
+    const [loginId, setLoginId] = useState(window.localStorage.getItem(TOKEN_NAME));
+    const [loggedInPlayer, setLoggedInPlayer] = useState({});
 
     const getPlayers = async () => {
         try {
@@ -95,28 +98,47 @@ const App = () => {
         getQuests();
     }, []);
 
+    useEffect(() => {
+        if (players.length && loginId) {
+            setLoggedInPlayer(players.find(player => player.id === Number(loginId)));
+        };
+    }, [players]);
+
     return (
         <>
-            <Header players={players} />
+            <Header
+                players={players}
+                loginId={loginId}
+                setLoginId={setLoginId}
+                setLoggedInPlayer={setLoggedInPlayer}
+                TOKEN_NAME={TOKEN_NAME}
+            />
             <main>
                 <Routes>
                     <Route path="/" element={
                         <Home
                             players={players}
+                            loginId={loginId}
+                            setLoginId={setLoginId}
+                            setLoggedInPlayer={setLoggedInPlayer}
+                            TOKEN_NAME={TOKEN_NAME}
                         />} />
                     <Route path="/features" element={
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/new" element={
                         <NewFeature
                             getFeatures={getFeatures}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/edit/:featureId" element={
                         <EditFeature
                             getFeatures={getFeatures}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/:featureId" element={
                         <SingleFeature
@@ -129,6 +151,7 @@ const App = () => {
                             formatText={formatText}
                             getItems={getItems}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/new" element={
@@ -136,6 +159,7 @@ const App = () => {
                             itemCategories={itemCategories}
                             rarities={rarities}
                             getItems={getItems}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/edit/:itemId" element={
@@ -143,6 +167,7 @@ const App = () => {
                             itemCategories={itemCategories}
                             rarities={rarities}
                             getItems={getItems}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests" element={
@@ -151,16 +176,19 @@ const App = () => {
                             formatText={formatText}
                             getQuests={getQuests}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests/new" element={
                         <NewQuest
                             getQuests={getQuests}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests/edit/:questId" element={
                         <EditQuest
                             getQuests={getQuests}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/spells" element={
@@ -170,16 +198,19 @@ const App = () => {
                             spellLevels={spellLevels}
                             sortingFunctions={sortingFunctions}
                             createLevelString={createLevelString}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell
                             schools={schools}
                             getSpells={getSpells}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
                             schools={schools}
                             getSpells={getSpells}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/:spellId" element={
                         <SingleSpell
@@ -190,23 +221,27 @@ const App = () => {
                         />
                     } />
                     {
-                        players.map(player => <Route
-                            path={`/${player.shortName}`}
-                            element={
-                                <PlayerPage
-                                    player={player}
-                                    allSpells={spells}
-                                    allFeatures={features}
-                                    spellLevels={spellLevels}
-                                    sortingFunctions={sortingFunctions}
-                                    formatText={formatText}
-                                    createComponentsString={createComponentsString}
-                                    createDurationString={createDurationString}
-                                    createLevelString={createLevelString}
-                                />
-                            }
-                            key={player.id} />
-                        )
+                        players.map(player => {
+                            if (!player.isAdmin) {
+                                return <Route
+                                    path={`/${player.shortName}`}
+                                    element={
+                                        <PlayerPage
+                                            player={player}
+                                            allSpells={spells}
+                                            allFeatures={features}
+                                            spellLevels={spellLevels}
+                                            sortingFunctions={sortingFunctions}
+                                            formatText={formatText}
+                                            createComponentsString={createComponentsString}
+                                            createDurationString={createDurationString}
+                                            createLevelString={createLevelString}
+                                            loggedInPlayer={loggedInPlayer}
+                                        />
+                                    }
+                                    key={player.id} />
+                            };
+                        })
                     }
                 </Routes>
             </main>

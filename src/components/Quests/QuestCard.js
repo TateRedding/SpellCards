@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const QuestCard = ({ quest, getQuests, formatText }) => {
+const QuestCard = ({ quest, getQuests, formatText, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();
@@ -67,20 +67,27 @@ const QuestCard = ({ quest, getQuests, formatText }) => {
                                 </button>
                             </h2>
                             <div id={`quest-body-${quest.id}`} className="accordion-collapse collapse" data-bs-parent={`quest-accordion-${quest.id}`}>
-                                <div className="accordion-body">
+                                <div className={loggedInPlayer.isAdmin ? "accordion-body" : "accordion-body pb-0"}>
                                     {
                                         formatText(quest.description)
                                     }
-                                    <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/quests/edit/${quest.id}`)}>Edit</button>
-                                    <button className="btn btn-danger btn-sm me-2" onClick={() => setDeleting(true)}>Delete</button>
-                                    <button className="btn btn-success btn-sm" onClick={() => toggleCompleted()}>
-                                        {
-                                            quest.completed ?
-                                                "Mark as In Progress"
-                                                :
-                                                "Mark as Completed"
-                                        }
-                                    </button>
+                                    {
+                                        loggedInPlayer.isAdmin ?
+                                            <>
+                                                <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/quests/edit/${quest.id}`)}>Edit</button>
+                                                <button className="btn btn-danger btn-sm me-2" onClick={() => setDeleting(true)}>Delete</button>
+                                                <button className="btn btn-success btn-sm" onClick={() => toggleCompleted()}>
+                                                    {
+                                                        quest.completed ?
+                                                            "Mark as In Progress"
+                                                            :
+                                                            "Mark as Completed"
+                                                    }
+                                                </button>
+                                            </>
+                                            :
+                                            null
+                                    }
                                 </div>
                             </div>
                         </div>

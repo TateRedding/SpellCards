@@ -20,4 +20,21 @@ router.get("/:playerId", async (req, res, next) => {
     };
 });
 
+router.post("/signin", async (req, res, next) => {
+    const { id, pin } = req.body;
+    try {
+        const player = await getPlayerById(id);
+        if (Number(pin) === player.pin) {
+            res.send(player);
+        } else {
+            res.send({
+                name: "IncorrectPIN",
+                message: "Incorrect PIN, try again."
+            });
+        };
+    } catch ({ name, message }) {
+        next({ name, message });
+    };
+});
+
 module.exports = router;
