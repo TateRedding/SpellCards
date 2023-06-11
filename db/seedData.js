@@ -369,9 +369,8 @@ const updateDatabase = async () => {
         console.log("Updating database...");
 
         await client.query(`
-            UPDATE players
-            SET pin=1994
-            WHERE name='Tate';
+            DELETE FROM players
+            WHERE id NOT IN (1, 2, 3, 4, 5, 6);
         `);
 
         console.log("Finished updating database!");
