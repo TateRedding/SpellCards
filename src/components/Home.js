@@ -70,7 +70,7 @@ const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) =
                                 </input>
                             </div>
                             <div className="form-text mb-3">
-                                This will be the last four digits of you phone number.
+                                This will be the last four digits of your phone number.
                             </div>
                             <div className="d-flex justify-content-center">
                                 <button type="submit" className="btn btn-primary btn-lg">Sign In</button>
