@@ -3,6 +3,20 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
+import {
+    itemCategories,
+    rarities,
+    schools,
+    sortingFunctions,
+    spellLevels
+} from "./lists";
+import {
+    formatText,
+    createComponentsString,
+    createDurationString,
+    createLevelString
+} from "./utils";
+
 import AllFeatures from "./components/Features/AllFeatures";
 import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
@@ -28,142 +42,6 @@ const App = () => {
     const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
 
-    const schools = [
-        "Abjuration",
-        "Conjuration",
-        "Divination",
-        "Enchantment",
-        "Evocation",
-        "Illusion",
-        "Necromancy",
-        "Transmutation"
-    ];
-
-    const itemCategories = [
-        "Armor",
-        "Potion",
-        "Ring",
-        "Rod",
-        "Scroll",
-        "Staff",
-        "Wand",
-        "Weapon",
-        "Wonderous Item"
-    ];
-
-    const rarities = [
-        "Common",
-        "Uncommon",
-        "Rare",
-        "Very rare",
-        "Legendary"
-    ];
-
-    const sortingFunctions = [
-        {
-            name: "A to Z",
-            func: (a, b) => {
-                if (a.completed === b.completed) {
-                    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-                } else {
-                    return a.completed > b.completed ? 1 : -1
-                };
-            }
-        },
-        {
-            name: "Z to A",
-            func: (a, b) => {
-                if (a.completed === b.completed) {
-                    return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
-                } else {
-                    return a.completed > b.completed ? 1 : -1
-                }
-            }
-        },
-        {
-            name: "Spell Level: Low to High",
-            func: (a, b) => a.level > b.level ? 1 : -1
-        },
-        {
-            name: "Spell Level: High to Low",
-            func: (a, b) => a.level < b.level ? 1 : -1
-        }
-    ];
-
-    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    const formatText = (text) => {
-        const formattedText = text
-            .split('\n')
-            .map((paragraph, idx) => {
-                return <p key={idx}>{
-                    paragraph
-                        .split('**')
-                        .map((segment, idx) => {
-                            if (idx % 2) {
-                                if (idx === paragraph.split('**').length - 1) {
-                                    return `**${segment}`
-                                } else {
-                                    return <b key={idx}>{segment}</b>
-                                };
-                            } else {
-                                return segment
-                            };
-                        })
-                }</p>
-            });
-        return formattedText;
-    };
-
-    const createComponentsString = (spell) => {
-        const componentsArr = [];
-        if (spell.verbal) {
-            componentsArr.push("V");
-        };
-        if (spell.somatic) {
-            componentsArr.push("S");
-        };
-        if (spell.material) {
-            componentsArr.push("M");
-        };
-        let componentsString = componentsArr.join(", ");
-        if (spell.materialComponents) {
-            componentsString = `${componentsString} (${spell.materialComponents})`
-        };
-        return componentsString;
-    };
-
-    const createDurationString = (spell) => {
-        let durationString = "";
-        if (spell.concentration) {
-            durationString = `Concentration, up to ${spell.duration}`;
-        } else {
-            durationString = spell.duration;
-        };
-        return durationString;
-    };
-
-    const createLevelString = (spell) => {
-        let levelString = "";
-        if (spell.level === 0) {
-            levelString = "Cantrip, ";
-        } else {
-            levelString = `${spell.level}`;
-            if (spell.level === 1) {
-                levelString += "st"
-            } else if (spell.level === 2) {
-                levelString += "nd"
-            } else if (spell.level === 3) {
-                levelString += "rd"
-            } else {
-                levelString += "th"
-            }
-            levelString += " level ";
-        }
-        levelString += spell.school.toLowerCase();
-        return levelString;
-    };
-
     const getPlayers = async () => {
         try {
             const response = await axios.get("/api/players");
@@ -174,23 +52,39 @@ const App = () => {
     };
 
     const getSpells = async () => {
-        const response = await axios.get("/api/spells");
-        setSpells(response.data);
+        try {
+            const response = await axios.get("/api/spells");
+            setSpells(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getFeatures = async () => {
-        const response = await axios.get("/api/features");
-        setFeatures(response.data);
+        try {
+            const response = await axios.get("/api/features");
+            setFeatures(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getItems = async () => {
-        const response = await axios.get("/api/items");
-        setItems(response.data);
+        try {
+            const response = await axios.get("/api/items");
+            setItems(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getQuests = async () => {
-        const response = await axios.get("/api/quests");
-        setQuests(response.data);
+        try {
+            const response = await axios.get("/api/quests");
+            setQuests(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     useEffect(() => {
@@ -297,7 +191,7 @@ const App = () => {
                     } />
                     {
                         players.map(player => <Route
-                            path={`/${player.name}`}
+                            path={`/${player.shortName}`}
                             element={
                                 <PlayerPage
                                     player={player}

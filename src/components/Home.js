@@ -13,7 +13,7 @@ const Home = ({ players }) => {
                         <button
                             className="player-button btn btn-outline-primary mb-3"
                             key={player.id}
-                            onClick={() => navigate(`/${player.name.toLowerCase()}`)}>{player.name}</button>
+                            onClick={() => navigate(`/${player.shortName.toLowerCase()}`)}>{player.name}</button>
                     )
                 })
             }

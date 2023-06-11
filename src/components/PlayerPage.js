@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 
 import FeatureDetails from "./Features/FeatureDetails";
@@ -18,7 +19,6 @@ const PlayerPage = ({
     createDurationString,
     createLevelString
 }) => {
-    const [tab, setTab] = useState("spells");
     const [playerData, setPlayerData] = useState({});
     const [selectedSpellSort, setSelectedSpellSort] = useState(0);
     const [maxSpellLevel, setMaxSpellLevel] = useState(0);
@@ -30,6 +30,14 @@ const PlayerPage = ({
     const [featureSearchTerm, setFeatureSearchTerm] = useState('');
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
     const [featureAlreadyOnList, setFeatureAlreadyOnList] = useState(false);
+
+    const useQuery = () => {
+        const { search } = useLocation();
+        return React.useMemo(() => new URLSearchParams(search), [search]);
+    };
+    
+    const query = useQuery();
+    const tab = query.get("tab");
 
     const getPlayerData = async () => {
         try {
@@ -121,26 +129,24 @@ const PlayerPage = ({
             <h2>{playerData.name}</h2>
             <ul className="nav nav-tabs mb-3">
                 <li className="nav-item">
-                    <button
-                        className={
-                            (tab === "spells") ?
-                                "nav-link active" :
-                                "nav-link"
-                        }
-                        onClick={() => setTab("spells")}>Spells</button>
+                    <Link
+                        to={`/${player.shortName.toLowerCase()}?tab=spells`}
+                        className={!tab || tab === 'spells' ? "nav-link active" : "nav-link"}
+                    >
+                        Spells
+                    </Link>
                 </li>
                 <li className="nav-item">
-                    <button
-                        className={
-                            (tab === "features") ?
-                                "nav-link active" :
-                                "nav-link"
-                        }
-                        onClick={() => setTab("features")}>Features</button>
+                    <Link
+                        to={`/${player.shortName.toLowerCase()}?tab=features`}
+                        className={tab === 'features' ? "nav-link active" : "nav-link"}
+                    >
+                        Features
+                    </Link>
                 </li>
             </ul>
             {
-                (tab === "spells") ?
+                (!tab || tab === "spells") ?
                     <>
                         <div className="spell-tools d-flex mb-3">
                             <SearchBar
