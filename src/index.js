@@ -3,6 +3,20 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
+import {
+    itemCategories,
+    rarities,
+    schools,
+    sortingFunctions,
+    spellLevels
+} from "./lists";
+import {
+    formatText,
+    createComponentsString,
+    createDurationString,
+    createLevelString
+} from "./utils";
+
 import AllFeatures from "./components/Features/AllFeatures";
 import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
@@ -22,147 +36,14 @@ import SingleFeature from "./components/Features/SingleFeature";
 import SingleSpell from "./components/Spells/SingleSpell";
 
 const App = () => {
+    const TOKEN_NAME = "coswtfs-spells-login-id";
     const [features, setFeatures] = useState([]);
     const [items, setItems] = useState([]);
     const [players, setPlayers] = useState([]);
     const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
-
-    const schools = [
-        "Abjuration",
-        "Conjuration",
-        "Divination",
-        "Enchantment",
-        "Evocation",
-        "Illusion",
-        "Necromancy",
-        "Transmutation"
-    ];
-
-    const itemCategories = [
-        "Armor",
-        "Potion",
-        "Ring",
-        "Rod",
-        "Scroll",
-        "Staff",
-        "Wand",
-        "Weapon",
-        "Wonderous Item"
-    ];
-
-    const rarities = [
-        "Common",
-        "Uncommon",
-        "Rare",
-        "Very rare",
-        "Legendary"
-    ];
-
-    const sortingFunctions = [
-        {
-            name: "A to Z",
-            func: (a, b) => {
-                if (a.completed === b.completed) {
-                    return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
-                } else {
-                    return a.completed > b.completed ? 1 : -1
-                };
-            }
-        },
-        {
-            name: "Z to A",
-            func: (a, b) => {
-                if (a.completed === b.completed) {
-                    return a.name.toLowerCase() < b.name.toLowerCase() ? 1 : -1
-                } else {
-                    return a.completed > b.completed ? 1 : -1
-                }
-            }
-        },
-        {
-            name: "Spell Level: Low to High",
-            func: (a, b) => a.level > b.level ? 1 : -1
-        },
-        {
-            name: "Spell Level: High to Low",
-            func: (a, b) => a.level < b.level ? 1 : -1
-        }
-    ];
-
-    const spellLevels = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-    const formatText = (text) => {
-        const formattedText = text
-            .split('\n')
-            .map((paragraph, idx) => {
-                return <p key={idx}>{
-                    paragraph
-                        .split('**')
-                        .map((segment, idx) => {
-                            if (idx % 2) {
-                                if (idx === paragraph.split('**').length - 1) {
-                                    return `**${segment}`
-                                } else {
-                                    return <b key={idx}>{segment}</b>
-                                };
-                            } else {
-                                return segment
-                            };
-                        })
-                }</p>
-            });
-        return formattedText;
-    };
-
-    const createComponentsString = (spell) => {
-        const componentsArr = [];
-        if (spell.verbal) {
-            componentsArr.push("V");
-        };
-        if (spell.somatic) {
-            componentsArr.push("S");
-        };
-        if (spell.material) {
-            componentsArr.push("M");
-        };
-        let componentsString = componentsArr.join(", ");
-        if (spell.materialComponents) {
-            componentsString = `${componentsString} (${spell.materialComponents})`
-        };
-        return componentsString;
-    };
-
-    const createDurationString = (spell) => {
-        let durationString = "";
-        if (spell.concentration) {
-            durationString = `Concentration, up to ${spell.duration}`;
-        } else {
-            durationString = spell.duration;
-        };
-        return durationString;
-    };
-
-    const createLevelString = (spell) => {
-        let levelString = "";
-        if (spell.level === 0) {
-            levelString = "Cantrip, ";
-        } else {
-            levelString = `${spell.level}`;
-            if (spell.level === 1) {
-                levelString += "st"
-            } else if (spell.level === 2) {
-                levelString += "nd"
-            } else if (spell.level === 3) {
-                levelString += "rd"
-            } else {
-                levelString += "th"
-            }
-            levelString += " level ";
-        }
-        levelString += spell.school.toLowerCase();
-        return levelString;
-    };
+    const [loginId, setLoginId] = useState(window.localStorage.getItem(TOKEN_NAME));
+    const [loggedInPlayer, setLoggedInPlayer] = useState({});
 
     const getPlayers = async () => {
         try {
@@ -174,23 +55,39 @@ const App = () => {
     };
 
     const getSpells = async () => {
-        const response = await axios.get("/api/spells");
-        setSpells(response.data);
+        try {
+            const response = await axios.get("/api/spells");
+            setSpells(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getFeatures = async () => {
-        const response = await axios.get("/api/features");
-        setFeatures(response.data);
+        try {
+            const response = await axios.get("/api/features");
+            setFeatures(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getItems = async () => {
-        const response = await axios.get("/api/items");
-        setItems(response.data);
+        try {
+            const response = await axios.get("/api/items");
+            setItems(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     const getQuests = async () => {
-        const response = await axios.get("/api/quests");
-        setQuests(response.data);
+        try {
+            const response = await axios.get("/api/quests");
+            setQuests(response.data);
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     useEffect(() => {
@@ -201,28 +98,47 @@ const App = () => {
         getQuests();
     }, []);
 
+    useEffect(() => {
+        if (players.length && loginId) {
+            setLoggedInPlayer(players.find(player => player.id === Number(loginId)));
+        };
+    }, [players]);
+
     return (
         <>
-            <Header players={players} />
+            <Header
+                players={players}
+                loginId={loginId}
+                setLoginId={setLoginId}
+                setLoggedInPlayer={setLoggedInPlayer}
+                TOKEN_NAME={TOKEN_NAME}
+            />
             <main>
                 <Routes>
                     <Route path="/" element={
                         <Home
                             players={players}
+                            loginId={loginId}
+                            setLoginId={setLoginId}
+                            setLoggedInPlayer={setLoggedInPlayer}
+                            TOKEN_NAME={TOKEN_NAME}
                         />} />
                     <Route path="/features" element={
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/new" element={
                         <NewFeature
                             getFeatures={getFeatures}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/edit/:featureId" element={
                         <EditFeature
                             getFeatures={getFeatures}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/:featureId" element={
                         <SingleFeature
@@ -235,6 +151,7 @@ const App = () => {
                             formatText={formatText}
                             getItems={getItems}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/new" element={
@@ -242,6 +159,7 @@ const App = () => {
                             itemCategories={itemCategories}
                             rarities={rarities}
                             getItems={getItems}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/edit/:itemId" element={
@@ -249,6 +167,7 @@ const App = () => {
                             itemCategories={itemCategories}
                             rarities={rarities}
                             getItems={getItems}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests" element={
@@ -257,16 +176,19 @@ const App = () => {
                             formatText={formatText}
                             getQuests={getQuests}
                             sortingFunctions={sortingFunctions.slice(0, 2)}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests/new" element={
                         <NewQuest
                             getQuests={getQuests}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/quests/edit/:questId" element={
                         <EditQuest
                             getQuests={getQuests}
+                            loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/spells" element={
@@ -276,16 +198,19 @@ const App = () => {
                             spellLevels={spellLevels}
                             sortingFunctions={sortingFunctions}
                             createLevelString={createLevelString}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell
                             schools={schools}
                             getSpells={getSpells}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
                             schools={schools}
                             getSpells={getSpells}
+                            loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/:spellId" element={
                         <SingleSpell
@@ -296,23 +221,27 @@ const App = () => {
                         />
                     } />
                     {
-                        players.map(player => <Route
-                            path={`/${player.name}`}
-                            element={
-                                <PlayerPage
-                                    player={player}
-                                    allSpells={spells}
-                                    allFeatures={features}
-                                    spellLevels={spellLevels}
-                                    sortingFunctions={sortingFunctions}
-                                    formatText={formatText}
-                                    createComponentsString={createComponentsString}
-                                    createDurationString={createDurationString}
-                                    createLevelString={createLevelString}
-                                />
-                            }
-                            key={player.id} />
-                        )
+                        players.map(player => {
+                            if (!player.isAdmin) {
+                                return <Route
+                                    path={`/${player.shortName}`}
+                                    element={
+                                        <PlayerPage
+                                            player={player}
+                                            allSpells={spells}
+                                            allFeatures={features}
+                                            spellLevels={spellLevels}
+                                            sortingFunctions={sortingFunctions}
+                                            formatText={formatText}
+                                            createComponentsString={createComponentsString}
+                                            createDurationString={createDurationString}
+                                            createLevelString={createLevelString}
+                                            loggedInPlayer={loggedInPlayer}
+                                        />
+                                    }
+                                    key={player.id} />
+                            };
+                        })
                     }
                 </Routes>
             </main>

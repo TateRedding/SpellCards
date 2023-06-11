@@ -5,7 +5,7 @@ import ItemCard from "./ItemCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
 
-const AllItems = ({ items, formatText, getItems, sortingFunctions }) => {
+const AllItems = ({ items, formatText, getItems, sortingFunctions, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -13,7 +13,12 @@ const AllItems = ({ items, formatText, getItems, sortingFunctions }) => {
 
     return (
         <>
-            <button className="btn btn-success mb-3" onClick={() => navigate("/items/new")}>New Item</button>
+            {
+                loggedInPlayer.isAdmin ?
+                    <button className="btn btn-success mb-3" onClick={() => navigate("/items/new")}>New Item</button>
+                    :
+                    null
+            }
             <div className="d-flex align-items-end mb-3">
                 <SearchBar
                     className="me-3"
@@ -35,6 +40,7 @@ const AllItems = ({ items, formatText, getItems, sortingFunctions }) => {
                             item={item}
                             formatText={formatText}
                             getItems={getItems}
+                            loggedInPlayer={loggedInPlayer}
                             key={item.id}
                         />
                     })

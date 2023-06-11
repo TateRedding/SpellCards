@@ -29,6 +29,7 @@ const dropTables = async () => {
 };
 
 const createTables = async () => {
+    // --- DO NOT CHANGE --- THIS IS USED IN PRODUCTION
     try {
         console.log("Creating tables...");
         await client.query(`
@@ -102,6 +103,7 @@ const createTables = async () => {
 };
 
 const createPlayers = async () => {
+    // --- DO NOT CHANGE --- THIS IS USED IN PRODUCTION
     try {
         console.log("Filling players table...");
 
@@ -116,7 +118,7 @@ const createPlayers = async () => {
             FROM players;
         `);
         console.log(players);
-        
+
         console.log("Finished filling players table!");
     } catch (error) {
         console.log("Error filling players table!");
@@ -322,6 +324,49 @@ const createInitialQuests = async () => {
     };
 };
 
+const updateDatabase = async () => {
+    // --- DO NOT CHANGE ANY QUERIES --- THIS IS USED IN PRODUCTION
+    // Queries may be added AFTER all other queries to update production database
+    try {
+        console.log("Updating database for v1.2 - Security Update...");
+
+        await client.query(`
+            ALTER TABLE players
+            ADD IF NOT EXISTS "shortName" VARCHAR(32),
+            ADD IF NOT EXISTS pin INTEGER UNIQUE,
+            ADD IF NOT EXISTS "isAdmin" BOOLEAN DEFAULT FALSE;
+
+            UPDATE players
+            SET pin=5716, name='Khirun of the S.C.', "shortName"='Khirun'
+            WHERE name='Khirun';
+
+            UPDATE players
+            SET pin=5759, name='Sir Mona Loneleaf', "shortName"='Mona'
+            WHERE name='Mona';
+
+            UPDATE players
+            SET pin=8588, name='Robi Xenon Li', "shortName"='Robi'
+            WHERE name='Robi';
+
+            UPDATE players
+            SET pin=2706, name='Thrall Frostskin', "shortName"='Thrall'
+            WHERE name='Thrall';
+
+            UPDATE players
+            SET pin=8548, "shortName"='Torment'
+            WHERE name='Torment';
+
+            INSERT INTO players (name, "shortName", pin, "isAdmin")
+            VALUES ('Tate', 'Tate', 0994, true);
+        `);
+
+        console.log("Finished updating database!");
+    } catch (error) {
+        console.log("Error updating database!");
+        console.error(error);
+    };
+};
+
 const reseedDB = async () => {
     try {
         client.connect();
@@ -334,6 +379,7 @@ const reseedDB = async () => {
         await createInitialPlayerFeatures();
         await createInitialItems();
         await createInitialQuests();
+        await updateDatabase();
     } catch (error) {
         console.error(error);
     };
@@ -344,6 +390,7 @@ const initializeDB = async () => {
         client.connect();
         await createTables();
         await createPlayers();
+        await updateDatabase();
     } catch (error) {
         console.error(error);
     };
