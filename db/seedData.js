@@ -368,11 +368,6 @@ const updateDatabase = async () => {
     try {
         console.log("Updating database...");
 
-        await client.query(`
-            DELETE FROM players
-            WHERE id NOT IN (1, 2, 3, 4, 5, 6);
-        `);
-
         console.log("Finished updating database!");
     } catch (error) {
         console.log("Error updating database!");
