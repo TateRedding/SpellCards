@@ -360,6 +360,11 @@ const updateDatabase = async () => {
             VALUES ('Tate', 'Tate', 0994, true);
         `);
 
+        // To anyone reading these comments:
+        // I am well aware that each users pin number is right here in plain sight, on a public repo.
+        // This 'security update' is extremely low-level and is mostly just to prevent any
+        // accidental/ unintended database manipulation by the users of the site.
+
         console.log("Finished updating database!");
     } catch (error) {
         console.log("Error updating database!");
