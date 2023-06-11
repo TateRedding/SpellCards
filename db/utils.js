@@ -8,6 +8,7 @@ const createRow = async (table, fields) => {
         const { rows: [row] } = await client.query(`
                 INSERT INTO ${table}(${columnNames})
                 VALUES (${valuesString})
+                ON CONFLICT DO NOTHING
                 RETURNING *;
             `, Object.values(fields));
         return row;

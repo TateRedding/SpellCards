@@ -1,21 +1,15 @@
-const client = require("./client");
 const { getSpellsByPlayerId } = require("./spells");
 const { getFeaturesByPlayerId } = require("./features");
 const {
+    createRow,
     getAllRows,
     getRowById,
     getRowByName
 } = require("./utils");
 
-const createPlayer = async (name) => {
+const createPlayer = async (fields) => {
     try {
-        const { rows: [player] } = await client.query(`
-            INSERT INTO players (name)
-            VALUES ('${name}')
-            ON CONFLICT DO NOTHING
-            RETURNING *;
-        `);
-        return player;
+        return await createRow('players', fields);
     } catch (error) {
         console.error(error);
     };

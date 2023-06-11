@@ -35,7 +35,10 @@ const createTables = async () => {
         await client.query(`
             CREATE TABLE IF NOT EXISTS players (
                 id SERIAL PRIMARY KEY,
-                name VARCHAR(32) UNIQUE NOT NULL
+                name VARCHAR(32) UNIQUE NOT NULL,
+                "shortName" VARCHAR(32),
+                pin INTEGER UNIQUE,
+                "isAdmin" BOOLEAN DEFAULT FALSE
             );
 
             CREATE TABLE IF NOT EXISTS spells (
@@ -107,11 +110,47 @@ const createPlayers = async () => {
     try {
         console.log("Filling players table...");
 
-        await createPlayer("Khirun");
-        await createPlayer("Mona");
-        await createPlayer("Robi");
-        await createPlayer("Thrall");
-        await createPlayer("Torment");
+        await createPlayer({
+            name: 'Khirun of the S.C.',
+            shortName: 'Khirun',
+            pin: 5716,
+            isAdmin: false
+        });
+        await createPlayer({
+            name: 'Sir Mona Loneleaf',
+            shortName: 'Mona',
+            pin: 5759,
+            isAdmin: false
+        });
+        await createPlayer({
+            name: 'Robi Xenon Li',
+            shortName: 'Robi',
+            pin: 8588,
+            isAdmin: false
+        });
+        await createPlayer({
+            name: 'Thrall Frostskin',
+            shortName: 'Thrall',
+            pin: 2706,
+            isAdmin: false
+        });
+        await createPlayer({
+            name: 'Torment',
+            shortName: 'Torment',
+            pin: 8548,
+            isAdmin: false
+        });
+        await createPlayer({
+            name: 'Tate',
+            shortName: 'Tate',
+            pin: 1994,
+            isAdmin: true
+        });
+
+        // To anyone reading these comments:
+        // I am well aware that each users pin number is right here in plain sight, on a public repo.
+        // The security of this site is extremely low-level and is mostly just to prevent any
+        // accidental/ unintended database manipulation by the other users of the site.
 
         const { rows: players } = await client.query(`
             SELECT *
@@ -325,45 +364,15 @@ const createInitialQuests = async () => {
 };
 
 const updateDatabase = async () => {
-    // --- DO NOT CHANGE ANY QUERIES --- THIS IS USED IN PRODUCTION
-    // Queries may be added AFTER all other queries to update production database
+    // DELETE QUERIES AFTER RUN IN PRODUCTION
     try {
-        console.log("Updating database for v1.2 - Security Update...");
+        console.log("Updating database...");
 
         await client.query(`
-            ALTER TABLE players
-            ADD IF NOT EXISTS "shortName" VARCHAR(32),
-            ADD IF NOT EXISTS pin INTEGER UNIQUE,
-            ADD IF NOT EXISTS "isAdmin" BOOLEAN DEFAULT FALSE;
-
             UPDATE players
-            SET pin=5716, name='Khirun of the S.C.', "shortName"='Khirun'
-            WHERE name='Khirun';
-
-            UPDATE players
-            SET pin=5759, name='Sir Mona Loneleaf', "shortName"='Mona'
-            WHERE name='Mona';
-
-            UPDATE players
-            SET pin=8588, name='Robi Xenon Li', "shortName"='Robi'
-            WHERE name='Robi';
-
-            UPDATE players
-            SET pin=2706, name='Thrall Frostskin', "shortName"='Thrall'
-            WHERE name='Thrall';
-
-            UPDATE players
-            SET pin=8548, "shortName"='Torment'
-            WHERE name='Torment';
-
-            INSERT INTO players (name, "shortName", pin, "isAdmin")
-            VALUES ('Tate', 'Tate', 0994, true);
+            SET pin=1994
+            WHERE name='Tate';
         `);
-
-        // To anyone reading these comments:
-        // I am well aware that each users pin number is right here in plain sight, on a public repo.
-        // This 'security update' is extremely low-level and is mostly just to prevent any
-        // accidental/ unintended database manipulation by the users of the site.
 
         console.log("Finished updating database!");
     } catch (error) {
