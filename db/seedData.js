@@ -29,11 +29,10 @@ const dropTables = async () => {
 };
 
 const createTables = async () => {
-    // --- DO NOT CHANGE --- THIS IS USED IN PRODUCTION
     try {
         console.log("Creating tables...");
         await client.query(`
-            CREATE TABLE IF NOT EXISTS players (
+            CREATE TABLE players (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(32) UNIQUE NOT NULL,
                 "shortName" VARCHAR(32),
@@ -41,7 +40,7 @@ const createTables = async () => {
                 "isAdmin" BOOLEAN DEFAULT FALSE
             );
 
-            CREATE TABLE IF NOT EXISTS spells (
+            CREATE TABLE spells (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 level INTEGER NOT NULL,
@@ -57,28 +56,28 @@ const createTables = async () => {
                 description TEXT NOT NULL
             );
 
-            CREATE TABLE IF NOT EXISTS player_spells (
+            CREATE TABLE player_spells (
                 id SERIAL PRIMARY KEY,
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "spellId" INTEGER NOT NULL REFERENCES spells(id),
                 UNIQUE ("playerId", "spellId")
             );
 
-            CREATE TABLE IF NOT EXISTS features (
+            CREATE TABLE features (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 origin VARCHAR(128),
                 description TEXT NOT NULL
             );
 
-            CREATE TABLE IF NOT EXISTS player_features (
+            CREATE TABLE player_features (
                 id SERIAL PRIMARY KEY,
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "featureId" INTEGER NOT NULL REFERENCES features(id),
                 UNIQUE ("playerId", "featureId")
             );
 
-            CREATE TABLE IF NOT EXISTS items (
+            CREATE TABLE items (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 category VARCHAR(32) NOT NULL,
@@ -89,7 +88,7 @@ const createTables = async () => {
                 description TEXT NOT NULL
             );
 
-            CREATE TABLE IF NOT EXISTS quests (
+            CREATE TABLE quests (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 giver VARCHAR(128) NOT NULL,
@@ -106,7 +105,6 @@ const createTables = async () => {
 };
 
 const createPlayers = async () => {
-    // --- DO NOT CHANGE --- THIS IS USED IN PRODUCTION
     try {
         console.log("Filling players table...");
 
@@ -146,11 +144,6 @@ const createPlayers = async () => {
             pin: 1994,
             isAdmin: true
         });
-
-        // To anyone reading these comments:
-        // I am well aware that each users pin number is right here in plain sight, on a public repo.
-        // The security of this site is extremely low-level and is mostly just to prevent any
-        // accidental/ unintended database manipulation by the other users of the site.
 
         const { rows: players } = await client.query(`
             SELECT *
@@ -363,18 +356,6 @@ const createInitialQuests = async () => {
     };
 };
 
-const updateDatabase = async () => {
-    // DELETE QUERIES AFTER RUN IN PRODUCTION
-    try {
-        console.log("Updating database...");
-
-        console.log("Finished updating database!");
-    } catch (error) {
-        console.log("Error updating database!");
-        console.error(error);
-    };
-};
-
 const reseedDB = async () => {
     try {
         client.connect();
@@ -387,24 +368,11 @@ const reseedDB = async () => {
         await createInitialPlayerFeatures();
         await createInitialItems();
         await createInitialQuests();
-        await updateDatabase();
     } catch (error) {
         console.error(error);
     };
 };
 
-const initializeDB = async () => {
-    try {
-        client.connect();
-        await createTables();
-        await createPlayers();
-        await updateDatabase();
-    } catch (error) {
-        console.error(error);
-    };
-}
-
 module.exports = {
-    reseedDB,
-    initializeDB
+    reseedDB
 };
