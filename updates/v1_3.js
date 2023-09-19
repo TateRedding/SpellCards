@@ -47,7 +47,7 @@ const updateSpellList = async () => {
                         subclasses=$2
                     WHERE name=$3
                     RETURNING *;
-                `, [classesArrayString, subclassesArrayString, spellName]);
+                `, [classesArrayString, subclassesArrayString, spell.name]);
             } else {
                 const newData = translateSpellData(spellData);
                 const keys = Object.keys(newData);
@@ -81,8 +81,10 @@ const updateFeatureList = async () => {
             "Action Surge",
             "Bardic Inspiration",
             "Brutal Critical",
+            "Circle of the Land",
             "Destroy Undead",
             "Divine Intervention",
+            "Dragon Ancestor",
             "Favored Enemy",
             "Indomitable",
             "Mystic Arcanum",
@@ -97,13 +99,13 @@ const updateFeatureList = async () => {
             for (const name of similarlyNamedFeatures) {
                 if (featureName.startsWith(name)) {
                     featureName = name;
+                    if (usedSimilarlyNamedFeatures.includes(featureName)) {
+                        continue;
+                    } else {
+                        usedSimilarlyNamedFeatures.push(featureName);
+                    };
                     break;
                 };
-            };
-            if (usedSimilarlyNamedFeatures.includes(featureName)) {
-                continue;
-            } else {
-                usedSimilarlyNamedFeatures.push(featureName);
             };
             if (featureName === "Channel Divinity") featureName = "Channel Divinity: Paladin";
             if (featureName.startsWith("Channel Divinity (")) featureName = "Channel Divinity: Cleric";
@@ -141,6 +143,45 @@ const updateFeatureList = async () => {
         console.error(error);
     };
 };
+
+const addTraitsToFeaturesList = async () => {
+    try {
+        const { data: { results: traits } } = await axios.get(`${apiURL}/api/traits`);
+        for (const trait of traits) {
+            const { data: traitData } = await axios.get(`${apiURL}${trait.url}`);
+            let traitName = trait.name.split("'").join("''");
+            if (traitName.startsWith("Draconic Ancestry")) traitName = "Draconic Ancestry";
+            const { rows: [existingFeature] } = await client.query(`
+                SELECT *
+                FROM features
+                WHERE name='${traitName}';
+            `);
+            if (existingFeature) {
+                const speciesArrayString = `{${traitData.races.map(species => species.name).join((','))}}`;
+                const subspeciesArrayString = `{${traitData.subraces.map(subspecies => subspecies.name).join((','))}}`;
+                await client.query(`
+                    UPDATE features
+                    SET 
+                        species=$1,
+                        subspecies=$2
+                    WHERE name=$3
+                    RETURNING *;
+                `, [speciesArrayString, subspeciesArrayString, trait.name]);
+            } else {
+                const newData = translateTraitData(traitData);
+                const keys = Object.keys(newData);
+                const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
+                const columnNames = keys.map((key) => `"${key}"`).join(', ');
+                await client.query(`
+                    INSERT INTO features (${columnNames})
+                    VALUES (${valuesString});
+                `, Object.values(newData));
+            };
+        };
+    } catch (error) {
+        console.error(error);
+    };
+}
 
 const translateSpellData = (spellData) => {
     let description = "";
@@ -197,30 +238,32 @@ const translateFeatureData = (featureName, featureData) => {
     return newFeatureData;
 };
 
-const testUpdates = async () => {
-    try {
-        const { rows: spells } = await client.query(`
-            SELECT *
-            FROM spells;
-        `);
-        const { rows: features } = await client.query(`
-            SELECT *
-            FROM features;
-        `);
-        console.log(spells);
-        console.log(features);
-    } catch (error) {
-        console.error(error);
+const translateTraitData = (traitData) => {
+    let description = "";
+    traitData.desc.map((par, idx) => {
+        description += par;
+        if (idx + 1 !== traitData.desc.length) {
+            description += "\n"
+        };
+    });
+
+    const newFeatureData = {
+        name: traitData.name,
+        description,
+        species: traitData.races.map(species => species.name),
+        subspecies: traitData.subraces.map(subspecies => subspecies.name)
     };
+
+    return newFeatureData;
 };
 
 const updateDatabase = async () => {
     try {
         client.connect();
         await updateTables();
-        // await updateSpellList();
+        await updateSpellList();
         await updateFeatureList();
-        // await testUpdates();
+        await addTraitsToFeaturesList();
     } catch (error) {
         console.error(error);
     };
