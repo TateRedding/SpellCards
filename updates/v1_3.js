@@ -17,7 +17,9 @@ const updateTables = async () => {
             ALTER TABLE features
             DROP COLUMN IF EXISTS origin,
             ADD COLUMN IF NOT EXISTS class VARCHAR(32),
-            ADD COLUMN IF NOT EXISTS subclass VARCHAR(32);
+            ADD COLUMN IF NOT EXISTS subclass VARCHAR(32),
+            ADD COLUMN IF NOT EXISTS species VARCHAR(32)[],
+            ADD COLUMN IF NOT EXISTS subspecies VARCHAR(32)[];
         `);
     } catch (error) {
         console.error(error);
@@ -30,10 +32,6 @@ const updateSpellList = async () => {
         for (const spell of spells) {
             const { data: spellData } = await axios.get(`${apiURL}${spell.url}`);
             const spellName = spell.name.split("'").join("''");
-            // if (spell.name === "True Strike" || spell.name === "Burning Hands" || spell.name === "Shillelagh") {
-            //     console.log(spellData);
-            //     console.log(translateSpellData(spellName, spellData));
-            // }
             const { rows: [existingSpell] } = await client.query(`
                 SELECT *
                 FROM spells
@@ -49,9 +47,9 @@ const updateSpellList = async () => {
                         subclasses=$2
                     WHERE name=$3
                     RETURNING *;
-                `, [classesArrayString, subclassesArrayString, spellData.name]);
+                `, [classesArrayString, subclassesArrayString, spellName]);
             } else {
-                const newData = translateSpellData(spellName, spellData);
+                const newData = translateSpellData(spellData);
                 const keys = Object.keys(newData);
                 const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
                 const columnNames = keys.map((key) => `"${key}"`).join(', ');
@@ -66,13 +64,91 @@ const updateSpellList = async () => {
     };
 };
 
-const translateSpellData = (spellName, spellData) => {
+const updateFeatureList = async () => {
+    try {
+        const { data: { results: features } } = await axios.get(`${apiURL}/api/features`);
+        const skipList = [
+            "Ability Score Improvement",
+            "Extra Attack (2)",
+            "Extra Attack (3)"
+        ];
+        const addClassName = [
+            "Extra Attack",
+            "Unarmored Defense",
+            "Fighting Style"
+        ];
+        const similarlyNamedFeatures = [
+            "Action Surge",
+            "Bardic Inspiration",
+            "Brutal Critical",
+            "Destroy Undead",
+            "Divine Intervention",
+            "Favored Enemy",
+            "Indomitable",
+            "Mystic Arcanum",
+            "Natural Explorer",
+            "Song of Rest",
+            "Wild Shape"
+        ];
+        const usedSimilarlyNamedFeatures = [];
+        for (const feature of features) {
+            if (skipList.includes(feature.name)) continue;
+            let featureName = feature.name;
+            for (const name of similarlyNamedFeatures) {
+                if (featureName.startsWith(name)) {
+                    featureName = name;
+                    break;
+                };
+            };
+            if (usedSimilarlyNamedFeatures.includes(featureName)) {
+                continue;
+            } else {
+                usedSimilarlyNamedFeatures.push(featureName);
+            };
+            if (featureName === "Channel Divinity") featureName = "Channel Divinity: Paladin";
+            if (featureName.startsWith("Channel Divinity (")) featureName = "Channel Divinity: Cleric";
+            featureName = featureName.split("'").join("''");
+            const { data: featureData } = await axios.get(`${apiURL}${feature.url}`);
+            if (addClassName.includes(featureName)) featureName = `${featureName}: ${featureData.class.name}`
+            const { rows: [existingFeature] } = await client.query(`
+                SELECT *
+                FROM features
+                WHERE name='${featureName}';
+            `);
+            if (existingFeature) {
+                let values = [featureData.class.name];
+                let query = "UPDATE features SET class=$1";
+                if (featureData.subclass) {
+                    query += ", subclass=$2 WHERE name=$3;";
+                    values.push(featureData.subclass.name);
+                } else {
+                    query += " WHERE name=$2;";
+                };
+                values.push(featureName);
+                await client.query(query, values);
+            } else {
+                const newData = translateFeatureData(featureName, featureData);
+                const keys = Object.keys(newData);
+                const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
+                const columnNames = keys.map((key) => `"${key}"`).join(', ');
+                await client.query(`
+                    INSERT INTO features (${columnNames})
+                    VALUES (${valuesString});
+                `, Object.values(newData));
+            };
+        };
+    } catch (error) {
+        console.error(error);
+    };
+};
+
+const translateSpellData = (spellData) => {
     let description = "";
     spellData.desc.map((par, idx) => {
         description += par;
         if (idx + 1 !== spellData.desc.length) {
             description += "\n"
-        }
+        };
     });
     if (spellData.higher_level.length) {
         spellData.higher_level.map(str => {
@@ -81,7 +157,7 @@ const translateSpellData = (spellName, spellData) => {
     };
 
     const newSpellData = {
-        name: spellName,
+        name: spellData.name,
         level: spellData.level,
         school: spellData.school.name,
         castingTime: spellData.casting_time,
@@ -99,6 +175,26 @@ const translateSpellData = (spellName, spellData) => {
     if (spellData.material) newSpellData.materialComponents = spellData.material;
 
     return newSpellData;
+};
+
+const translateFeatureData = (featureName, featureData) => {
+    let description = "";
+    featureData.desc.map((par, idx) => {
+        description += par;
+        if (idx + 1 !== featureData.desc.length) {
+            description += "\n"
+        };
+    });
+
+    const newFeatureData = {
+        name: featureName.split("''").join("'"),
+        class: featureData.class.name,
+        description
+    };
+
+    if (featureData.subclass) newFeatureData.subclass = featureData.subclass.name;
+
+    return newFeatureData;
 };
 
 const testUpdates = async () => {
@@ -122,7 +218,8 @@ const updateDatabase = async () => {
     try {
         client.connect();
         await updateTables();
-        await updateSpellList();
+        // await updateSpellList();
+        await updateFeatureList();
         // await testUpdates();
     } catch (error) {
         console.error(error);
