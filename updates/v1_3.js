@@ -4,8 +4,7 @@ const axios = require("axios");
 // const spellCardsURL = process.env.EXTERNAL_DATABASE_URL;
 const spellCardsURL = "postgres://localhost:5432/spell-cards-dev";
 const client = new Client(spellCardsURL);
-
-const apiURL = "https://www.dnd5eapi.co"
+const API_URL = "https://www.dnd5eapi.co"
 
 const updateTables = async () => {
     try {
@@ -28,14 +27,13 @@ const updateTables = async () => {
 
 const updateSpellList = async () => {
     try {
-        const { data: { results: spells } } = await axios.get(`${apiURL}/api/spells`);
+        const { data: { results: spells } } = await axios.get(`${API_URL}/api/spells`);
         for (const spell of spells) {
-            const { data: spellData } = await axios.get(`${apiURL}${spell.url}`);
-            const spellName = spell.name.split("'").join("''");
+            const { data: spellData } = await axios.get(`${API_URL}${spell.url}`);
             const { rows: [existingSpell] } = await client.query(`
                 SELECT *
                 FROM spells
-                WHERE name='${spellName}';
+                WHERE name='${spell.name.split("'").join("''")}';
             `);
             if (existingSpell) {
                 const classesArrayString = `{${spellData.classes.map(cls => cls.name).join((','))}}`;
@@ -66,7 +64,7 @@ const updateSpellList = async () => {
 
 const updateFeatureList = async () => {
     try {
-        const { data: { results: features } } = await axios.get(`${apiURL}/api/features`);
+        const { data: { results: features } } = await axios.get(`${API_URL}/api/features`);
         const skipList = [
             "Ability Score Improvement",
             "Extra Attack (2)",
@@ -74,8 +72,8 @@ const updateFeatureList = async () => {
         ];
         const addClassName = [
             "Extra Attack",
-            "Unarmored Defense",
-            "Fighting Style"
+            "Fighting Style",
+            "Unarmored Defense"
         ];
         const similarlyNamedFeatures = [
             "Action Surge",
@@ -92,30 +90,28 @@ const updateFeatureList = async () => {
             "Song of Rest",
             "Wild Shape"
         ];
-        const usedSimilarlyNamedFeatures = [];
+        const completedFeatures = [];
         for (const feature of features) {
             if (skipList.includes(feature.name)) continue;
             let featureName = feature.name;
             for (const name of similarlyNamedFeatures) {
                 if (featureName.startsWith(name)) {
                     featureName = name;
-                    if (usedSimilarlyNamedFeatures.includes(featureName)) {
+                    if (completedFeatures.includes(featureName)) {
                         continue;
-                    } else {
-                        usedSimilarlyNamedFeatures.push(featureName);
                     };
                     break;
                 };
             };
             if (featureName === "Channel Divinity") featureName = "Channel Divinity: Paladin";
             if (featureName.startsWith("Channel Divinity (")) featureName = "Channel Divinity: Cleric";
-            featureName = featureName.split("'").join("''");
-            const { data: featureData } = await axios.get(`${apiURL}${feature.url}`);
+            const { data: featureData } = await axios.get(`${API_URL}${feature.url}`);
             if (addClassName.includes(featureName)) featureName = `${featureName}: ${featureData.class.name}`
+            if (completedFeatures.includes(featureName)) continue;
             const { rows: [existingFeature] } = await client.query(`
                 SELECT *
                 FROM features
-                WHERE name='${featureName}';
+                WHERE name='${featureName.split("'").join("''")}';
             `);
             if (existingFeature) {
                 let values = [featureData.class.name];
@@ -138,6 +134,7 @@ const updateFeatureList = async () => {
                     VALUES (${valuesString});
                 `, Object.values(newData));
             };
+            completedFeatures.push(featureName);
         };
     } catch (error) {
         console.error(error);
@@ -146,15 +143,17 @@ const updateFeatureList = async () => {
 
 const addTraitsToFeaturesList = async () => {
     try {
-        const { data: { results: traits } } = await axios.get(`${apiURL}/api/traits`);
+        const { data: { results: traits } } = await axios.get(`${API_URL}/api/traits`);
+        const completedTraits = [];
         for (const trait of traits) {
-            const { data: traitData } = await axios.get(`${apiURL}${trait.url}`);
-            let traitName = trait.name.split("'").join("''");
+            let traitName = trait.name;
             if (traitName.startsWith("Draconic Ancestry")) traitName = "Draconic Ancestry";
+            if (completedTraits.includes(traitName)) continue;
+            const { data: traitData } = await axios.get(`${API_URL}${trait.url}`);
             const { rows: [existingFeature] } = await client.query(`
                 SELECT *
                 FROM features
-                WHERE name='${traitName}';
+                WHERE name='${traitName.split("'").join("''")}';
             `);
             if (existingFeature) {
                 const speciesArrayString = `{${traitData.races.map(species => species.name).join((','))}}`;
@@ -166,7 +165,7 @@ const addTraitsToFeaturesList = async () => {
                         subspecies=$2
                     WHERE name=$3
                     RETURNING *;
-                `, [speciesArrayString, subspeciesArrayString, trait.name]);
+                `, [speciesArrayString, subspeciesArrayString, traitName]);
             } else {
                 const newData = translateTraitData(traitData);
                 const keys = Object.keys(newData);
@@ -177,6 +176,7 @@ const addTraitsToFeaturesList = async () => {
                     VALUES (${valuesString});
                 `, Object.values(newData));
             };
+            completedTraits.push(traitName);
         };
     } catch (error) {
         console.error(error);
@@ -184,19 +184,8 @@ const addTraitsToFeaturesList = async () => {
 }
 
 const translateSpellData = (spellData) => {
-    let description = "";
-    spellData.desc.map((par, idx) => {
-        description += par;
-        if (idx + 1 !== spellData.desc.length) {
-            description += "\n"
-        };
-    });
-    if (spellData.higher_level.length) {
-        spellData.higher_level.map(str => {
-            description += `\n**At Higher Levels:** ${str}`
-        });
-    };
-
+    let description = spellData.desc.join("\n");
+    if (spellData.higher_level.length) description += spellData.higher_level.join("\n**At Higher Levels:**");
     const newSpellData = {
         name: spellData.name,
         level: spellData.level,
@@ -212,48 +201,29 @@ const translateSpellData = (spellData) => {
         classes: spellData.classes.map(cls => cls.name),
         subclasses: spellData.subclasses.map(subcls => subcls.name)
     };
-
     if (spellData.material) newSpellData.materialComponents = spellData.material;
-
     return newSpellData;
 };
 
 const translateFeatureData = (featureName, featureData) => {
-    let description = "";
-    featureData.desc.map((par, idx) => {
-        description += par;
-        if (idx + 1 !== featureData.desc.length) {
-            description += "\n"
-        };
-    });
-
+    const description = featureData.desc.join("\n");
     const newFeatureData = {
-        name: featureName.split("''").join("'"),
+        name: featureName,
         class: featureData.class.name,
         description
     };
-
     if (featureData.subclass) newFeatureData.subclass = featureData.subclass.name;
-
     return newFeatureData;
 };
 
 const translateTraitData = (traitData) => {
-    let description = "";
-    traitData.desc.map((par, idx) => {
-        description += par;
-        if (idx + 1 !== traitData.desc.length) {
-            description += "\n"
-        };
-    });
-
+    const description = traitData.desc.join("\n");
     const newFeatureData = {
         name: traitData.name,
         description,
         species: traitData.races.map(species => species.name),
         subspecies: traitData.subraces.map(subspecies => subspecies.name)
     };
-
     return newFeatureData;
 };
 
