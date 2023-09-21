@@ -32,12 +32,17 @@ const SmallSpellCard = ({ spell, getSpells, loggedInPlayer }) => {
                         </div>
                     </div>
                     :
-                    <div className="link-card card mb-3" onClick={() => navigate(`/spells/${spell.id}`)}>
+                    <div className="card mb-3">
                         <div className="card-body">
-                            <div>
-                                <h5 className="card-title">{spell.name}</h5>
-                                <p className="card-text mb-0"><i>{createLevelString(spell)}</i></p>
-                                <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}>{spell.classes ? spell.classes.join(", ") : null}</p>
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <h5 className="card-title">{spell.name}</h5>
+                                    <p className="card-text mb-0"><i>{createLevelString(spell)}</i></p>
+                                    <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}>{spell.classes ? spell.classes.join(", ") : null}</p>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <button className="btn btn-dark btn-lg" onClick={() => navigate(`/spells/${spell.id}`)}>Details</button>
+                                </div>
                             </div>
                             {
                                 loggedInPlayer.isAdmin ?

@@ -32,11 +32,16 @@ const SmallFeatureCard = ({ feature, getFeatures, loggedInPlayer }) => {
                         </div>
                     </div>
                     :
-                    <div className="link-card card mb-3" onClick={() => navigate(`/features/${feature.id}`)}>
+                    <div className="card mb-3">
                         <div className="card-body">
-                            <div>
-                                <h5 className="card-title">{feature.name}</h5>
-                                <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}><i>{createOriginString(feature)}</i></p>
+                            <div className="d-flex justify-content-between">
+                                <div>
+                                    <h5 className="card-title">{feature.name}</h5>
+                                    <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}><i>{createOriginString(feature)}</i></p>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                    <button className="btn btn-dark btn-lg" onClick={() => navigate(`/features/${feature.id}`)}>Details</button>
+                                </div>
                             </div>
                             {
                                 loggedInPlayer.isAdmin ?
