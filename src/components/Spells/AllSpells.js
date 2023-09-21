@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ClassSelect from "../ClassSelect";
 import LevelSelect from "../LevelSelect";
 import SearchBar from "../SearchBar";
 import SmallSpellCard from "./SmallSpellCard";
@@ -9,6 +10,7 @@ import { allSortingFunctions } from "../../lists";
 const AllSpells = ({ spells, getSpells, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
+    const [selectedClass, setSelectedClass] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
     const navigate = useNavigate();
@@ -21,16 +23,19 @@ const AllSpells = ({ spells, getSpells, loggedInPlayer }) => {
                     :
                     null
             }
-            <div className="spell-tools d-flex mb-3">
-                <SearchBar
-                    className="spell-search"
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                />
+            <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
                 <div className="d-flex">
                     <LevelSelect
                         selectedSpellLevel={selectedSpellLevel}
                         setSelectedSpellLevel={setSelectedSpellLevel}
+                    />
+                    <ClassSelect
+                        selectedClass={selectedClass}
+                        setSelectedClass={setSelectedClass}
                     />
                     <SortSelect
                         sortingFunctions={allSortingFunctions}
@@ -42,13 +47,8 @@ const AllSpells = ({ spells, getSpells, loggedInPlayer }) => {
             {
                 spells
                     .filter(spell => spell.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .filter(spell => {
-                        if (selectedSpellLevel) {
-                            return spell.level === Number(selectedSpellLevel);
-                        } else {
-                            return true;
-                        }
-                    })
+                    .filter(spell => selectedSpellLevel ? spell.level === Number(selectedSpellLevel) : true)
+                    .filter(spell => (selectedClass && spell.classes) ? spell.classes.includes(selectedClass) : true)
                     .sort(allSortingFunctions[selectedSort].func)
                     .map(spell => {
                         return <SmallSpellCard

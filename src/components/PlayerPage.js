@@ -138,12 +138,12 @@ const PlayerPage = ({
                     </Link>
                 </li>
             </ul>
-            <div className="spell-tools d-flex mb-3">
-                <SearchBar
-                    className={tab === "spells" ? "spell-search" : tab === "features" ? "me-3" : null}
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                />
+            <SearchBar
+                className={tab === "spells" ? "spell-search" : tab === "features" ? "me-3" : null}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
                 <div className={tab === "spells" ? "d-flex" : null}>
                     {tab === "spells" ?
                         <LevelSelect

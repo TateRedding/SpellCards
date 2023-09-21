@@ -1,8 +1,8 @@
 import React from "react";
 
-const SearchBar = ({ className, searchTerm, setSearchTerm }) => {
+const SearchBar = ({ searchTerm, setSearchTerm }) => {
     return (
-        <div className={`${className} form-floating`}>
+        <div className="form-floating mb-3">
             <input
                 className="form-control"
                 id="searchInput-spells"
