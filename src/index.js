@@ -7,7 +7,7 @@ import {
     itemCategories,
     rarities,
     schools,
-    sortingFunctions,
+    allSortingFunctions,
     spellLevels
 } from "./lists";
 import {
@@ -127,7 +127,6 @@ const App = () => {
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/new" element={
@@ -141,23 +140,18 @@ const App = () => {
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/:featureId" element={
-                        <SingleFeature
-                            formatText={formatText}
-                        />
+                        <SingleFeature />
                     } />
                     <Route path="/items" element={
                         <AllItems
                             items={items}
-                            formatText={formatText}
                             getItems={getItems}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/new" element={
                         <NewItem
                             itemCategories={itemCategories}
-                            rarities={rarities}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
@@ -165,7 +159,6 @@ const App = () => {
                     <Route path="/items/edit/:itemId" element={
                         <EditItem
                             itemCategories={itemCategories}
-                            rarities={rarities}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
@@ -173,9 +166,7 @@ const App = () => {
                     <Route path="/quests" element={
                         <AllQuests
                             quests={quests}
-                            formatText={formatText}
                             getQuests={getQuests}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
@@ -195,43 +186,33 @@ const App = () => {
                         <AllSpells
                             spells={spells}
                             getSpells={getSpells}
-                            spellLevels={spellLevels}
-                            sortingFunctions={sortingFunctions}
-                            createLevelString={createLevelString}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell
-                            schools={schools}
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
-                            schools={schools}
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/:spellId" element={
-                        <SingleSpell
-                            createComponentsString={createComponentsString}
-                            createDurationString={createDurationString}
-                            createLevelString={createLevelString}
-                            formatText={formatText}
-                        />
+                        <SingleSpell />
                     } />
                     {
                         players.map(player => {
                             if (!player.isAdmin) {
                                 return <Route
-                                    path={`/${player.shortName}`}
+                                    path={`/${player.urlName}`}
                                     element={
                                         <PlayerPage
                                             player={player}
                                             allSpells={spells}
                                             allFeatures={features}
                                             spellLevels={spellLevels}
-                                            sortingFunctions={sortingFunctions}
+                                            sortingFunctions={allSortingFunctions}
                                             formatText={formatText}
                                             createComponentsString={createComponentsString}
                                             createDurationString={createDurationString}

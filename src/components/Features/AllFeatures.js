@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import SearchBar from "../SearchBar";
 import SmallFeatureCard from "./SmallFeatureCard";
 import SortSelect from "../SortSelect";
+import { allSortingFunctions } from "../../lists";
 
-const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }) => {
+const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -26,7 +26,7 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }
                     setSearchTerm={setSearchTerm}
                 />
                 <SortSelect
-                    sortingFunctions={sortingFunctions}
+                    sortingFunctions={allSortingFunctions.slice(0, 2)}
                     selectedSort={selectedSort}
                     setSelectedSort={setSelectedSort}
                 />
@@ -34,7 +34,7 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }
             {
                 features
                     .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .sort(sortingFunctions[selectedSort].func)
+                    .sort(allSortingFunctions[selectedSort].func)
                     .map(feature => {
                         return <SmallFeatureCard
                             feature={feature}

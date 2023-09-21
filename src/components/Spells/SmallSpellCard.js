@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { createLevelString } from "../../utils";
 
-const SmallSpellCard = ({ spell, getSpells, createLevelString, loggedInPlayer }) => {
+const SmallSpellCard = ({ spell, getSpells, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();
@@ -31,13 +32,13 @@ const SmallSpellCard = ({ spell, getSpells, createLevelString, loggedInPlayer })
                         </div>
                     </div>
                     :
-                    <div className="card mb-3">
+                    <div className="link-card card mb-3" onClick={() => navigate(`/spells/${spell.id}`)}>
                         <div className="card-body">
-                            <div className="d-flex">
-                                <h5 className="card-title me-3">{spell.name}</h5>
-                                <p className="card-text"><i>{createLevelString(spell)}</i></p>
+                            <div>
+                                <h5 className="card-title">{spell.name}</h5>
+                                <p className="card-text mb-0"><i>{createLevelString(spell)}</i></p>
+                                <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}>{spell.classes ? spell.classes.join(", ") : null}</p>
                             </div>
-                            <button className="btn btn-success btn-sm me-2" onClick={() => navigate(`/spells/${spell.id}`)}>Details</button>
                             {
                                 loggedInPlayer.isAdmin ?
                                     <>

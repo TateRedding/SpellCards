@@ -3,8 +3,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
+import { rarities } from "../../lists";
 
-const EditItem = ({ itemCategories, rarities, getItems, loggedInPlayer }) => {
+const EditItem = ({ itemCategories, getItems, loggedInPlayer }) => {
     const [item, setItem] = useState({});
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
@@ -33,7 +34,6 @@ const EditItem = ({ itemCategories, rarities, getItems, loggedInPlayer }) => {
         if (Object.keys(item).length) {
             setName(item.name);
             setCategory(item.category);
-            console.log(item.category);
             setRarity(item.rarity);
             setRequiresAttunement(item.requiresAttunement);
             setDescription(item.description);

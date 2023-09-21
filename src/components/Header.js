@@ -31,7 +31,7 @@ const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME })
                                             if (!player.isAdmin) {
                                                 return (
                                                     <li className="nav-item" key={player.id}>
-                                                        <Link className="nav-link" to={`/${player.shortName.toLowerCase()}`}>
+                                                        <Link className="nav-link" to={`/${player.urlName.toLowerCase()}`}>
                                                             <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">{player.name}</span>
                                                         </Link>
                                                     </li>

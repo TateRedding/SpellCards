@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-
 import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
 import SearchBar from "./SearchBar";
@@ -124,7 +123,7 @@ const PlayerPage = ({
             <ul className="nav nav-tabs mb-3">
                 <li className="nav-item">
                     <Link
-                        to={`/${player.shortName.toLowerCase()}?tab=spells`}
+                        to={`/${player.urlName.toLowerCase()}?tab=spells`}
                         className={tab === 'spells' ? "nav-link active" : "nav-link"}
                     >
                         Spells
@@ -132,7 +131,7 @@ const PlayerPage = ({
                 </li>
                 <li className="nav-item">
                     <Link
-                        to={`/${player.shortName.toLowerCase()}?tab=features`}
+                        to={`/${player.urlName.toLowerCase()}?tab=features`}
                         className={tab === 'features' ? "nav-link active" : "nav-link"}
                     >
                         Features

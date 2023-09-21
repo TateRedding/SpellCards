@@ -1,6 +1,7 @@
 import React from "react";
+import { spellLevels } from "../lists";
 
-const LevelSelect = ({ spellLevels, selectedSpellLevel, setSelectedSpellLevel, maxSpellLevel }) => {
+const LevelSelect = ({ selectedSpellLevel, setSelectedSpellLevel, maxSpellLevel }) => {
     return (
         <div className="me-3">
             <label htmlFor="level-filter">Level</label>

@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
 
-const SingleSpell = ({
-    createComponentsString,
-    createDurationString,
-    createLevelString,
-    formatText
-}) => {
+const SingleSpell = () => {
     const [spell, setSpell] = useState({});
 
     const { spellId } = useParams();

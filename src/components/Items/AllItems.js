@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import ItemCard from "./ItemCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
+import { allSortingFunctions } from "../../lists";
 
-const AllItems = ({ items, formatText, getItems, sortingFunctions, loggedInPlayer }) => {
+const AllItems = ({ items, getItems, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -26,7 +26,7 @@ const AllItems = ({ items, formatText, getItems, sortingFunctions, loggedInPlaye
                     setSearchTerm={setSearchTerm}
                 />
                 <SortSelect
-                    sortingFunctions={sortingFunctions}
+                    sortingFunctions={allSortingFunctions.slice(0, 2)}
                     selectedSort={selectedSort}
                     setSelectedSort={setSelectedSort}
                 />
@@ -34,11 +34,10 @@ const AllItems = ({ items, formatText, getItems, sortingFunctions, loggedInPlaye
             {
                 items
                     .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .sort(sortingFunctions[selectedSort].func)
+                    .sort(allSortingFunctions[selectedSort].func)
                     .map(item => {
                         return <ItemCard
                             item={item}
-                            formatText={formatText}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                             key={item.id}

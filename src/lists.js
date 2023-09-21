@@ -29,7 +29,7 @@ export const schools = [
     "Transmutation"
 ];
 
-export const sortingFunctions = [
+export const allSortingFunctions = [
     {
         name: "A to Z",
         func: (a, b) => {

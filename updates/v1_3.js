@@ -9,6 +9,9 @@ const API_URL = "https://www.dnd5eapi.co"
 const updateTables = async () => {
     try {
         await client.query(`
+            ALTER TABLE players
+            RENAME COLUMN "shortName" to "urlName";
+
             ALTER TABLE spells
             ADD COLUMN IF NOT EXISTS classes VARCHAR(32)[],
             ADD COLUMN IF NOT EXISTS subclasses VARCHAR(32)[];

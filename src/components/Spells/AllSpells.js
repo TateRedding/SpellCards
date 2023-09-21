@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import LevelSelect from "../LevelSelect";
 import SearchBar from "../SearchBar";
 import SmallSpellCard from "./SmallSpellCard";
 import SortSelect from "../SortSelect";
+import { allSortingFunctions } from "../../lists";
 
-const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLevelString, loggedInPlayer }) => {
+const AllSpells = ({ spells, getSpells, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
@@ -18,7 +18,6 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
             {
                 loggedInPlayer.isAdmin ?
                     <button className="btn btn-success mb-3" onClick={() => navigate("/spells/new")}>New Spell</button>
-
                     :
                     null
             }
@@ -30,12 +29,11 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
                 />
                 <div className="d-flex">
                     <LevelSelect
-                        spellLevels={spellLevels}
                         selectedSpellLevel={selectedSpellLevel}
                         setSelectedSpellLevel={setSelectedSpellLevel}
                     />
                     <SortSelect
-                        sortingFunctions={sortingFunctions}
+                        sortingFunctions={allSortingFunctions}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
                     />
@@ -51,12 +49,11 @@ const AllSpells = ({ spells, getSpells, spellLevels, sortingFunctions, createLev
                             return true;
                         }
                     })
-                    .sort(sortingFunctions[selectedSort].func)
+                    .sort(allSortingFunctions[selectedSort].func)
                     .map(spell => {
                         return <SmallSpellCard
                             spell={spell}
                             getSpells={getSpells}
-                            createLevelString={createLevelString}
                             loggedInPlayer={loggedInPlayer}
                             key={spell.id}
                         />

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import QuestCard from "./QuestCard";
 import SearchBar from "../SearchBar";
 import SortSelect from "../SortSelect";
+import { allSortingFunctions } from "../../lists";
 
-const AllQuests = ({ quests, formatText, getQuests, sortingFunctions, loggedInPlayer }) => {
+const AllQuests = ({ quests, getQuests, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
 
@@ -26,7 +26,7 @@ const AllQuests = ({ quests, formatText, getQuests, sortingFunctions, loggedInPl
                     setSearchTerm={setSearchTerm}
                 />
                 <SortSelect
-                    sortingFunctions={sortingFunctions}
+                    sortingFunctions={allSortingFunctions.slice(0, 2)}
                     selectedSort={selectedSort}
                     setSelectedSort={setSelectedSort}
                 />
@@ -34,11 +34,10 @@ const AllQuests = ({ quests, formatText, getQuests, sortingFunctions, loggedInPl
             {
                 quests
                     .filter(quest => quest.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .sort(sortingFunctions[selectedSort].func)
+                    .sort(allSortingFunctions[selectedSort].func)
                     .map(quest => {
                         return <QuestCard
                             quest={quest}
-                            formatText={formatText}
                             getQuests={getQuests}
                             loggedInPlayer={loggedInPlayer}
                             key={quest.id}

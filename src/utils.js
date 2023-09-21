@@ -49,6 +49,15 @@ export const createLevelString = (spell) => {
     return levelString;
 };
 
+export const createOriginString = (feature) => {
+    let originString = "";
+    if (feature.subclass) originString += feature.subclass;
+    if (feature.class) originString += ` ${feature.class}`;
+    if (feature.subspecies) originString += feature.subspecies.join(", ");
+    if (feature.species) originString += ` ${feature.species.join(", ")}`;
+    return originString;
+};
+
 export const formatText = (text) => {
     const formattedText = text
         .split('\n')

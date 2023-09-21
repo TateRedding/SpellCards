@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
+import { schools } from "../../lists";
 
-const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
+const NewSpell = ({ getSpells, loggedInPlayer }) => {
     const [name, setName] = useState('');
     const [level, setLevel] = useState(0);
     const [school, setSchool] = useState('');

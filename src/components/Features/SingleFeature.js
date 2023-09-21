@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { formatText } from "../../utils";
 
-const SingleFeature = ({ formatText }) => {
+const SingleFeature = () => {
     const [feature, setFeature] = useState({});
 
     const { featureId } = useParams();
