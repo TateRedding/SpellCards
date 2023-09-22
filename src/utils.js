@@ -58,8 +58,11 @@ export const createClassString = (feature) => {
 
 export const createSpeciesString = (trait) => {
     let speciesString = "";
-    if (trait.subspecies) speciesString += trait.subspecies.join(", ");
-    if (trait.species) speciesString += ` ${trait.species.join(", ")}`;
+    if (trait.subspecies && trait.subspecies.length) speciesString += trait.subspecies.join(", ");
+    if (trait.species && trait.species.length) {
+        if (speciesString) speciesString += ", ";
+        speciesString += ` ${trait.species.join(", ")}`;
+    }
     return speciesString;
 }
 

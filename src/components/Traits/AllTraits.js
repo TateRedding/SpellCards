@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar";
 import SmallTraitCard from "./SmallTraitCard";
 import SortSelect from "../SortSelect";
-import { allSortingFunctions } from "../../lists";
+import { allSortingFunctions, species } from "../../lists";
 import SpeciesSelect from "../SpeciesSelect";
 
 const AllTraits = ({ traits, getTraits, loggedInPlayer }) => {
@@ -12,6 +12,27 @@ const AllTraits = ({ traits, getTraits, loggedInPlayer }) => {
     const [selectedSpecies, setSelectedSpecies] = useState('');
 
     const navigate = useNavigate();
+
+    const matchesSpecies = (trait) => {
+        if (trait.species && trait.species.length) {
+            if (trait.species.includes(selectedSpecies)) {
+                return true;
+            }
+        };
+        if (trait.subspecies && trait.subspecies.length) {
+            for (const spec of species) {
+                if (!(spec.name === selectedSpecies)) continue;
+                for (const subspecies of trait.subspecies) {
+                    if (spec.subspecies.includes(subspecies)) {
+                        return true;
+                    } else {
+                        break;
+                    };
+                };
+            };
+        };
+        return false;
+    };
 
     return (
         <>
@@ -40,7 +61,7 @@ const AllTraits = ({ traits, getTraits, loggedInPlayer }) => {
             {
                 traits
                     .filter(trait => trait.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .filter(trait => (selectedSpecies && trait.species) ? trait.species.includes(selectedSpecies) : true)
+                    .filter(trait => selectedSpecies ? matchesSpecies(trait) : true)
                     .sort(allSortingFunctions[selectedSort].func)
                     .map(trait => {
                         return <SmallTraitCard

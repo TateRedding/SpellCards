@@ -87,43 +87,43 @@ export const species = [
     },
     {
         name: "Dwarf",
-        subclasses: ["Hill", "Mountain"]
+        subspecies: ["Hill Dwarf", "Mountain Dwarf"]
     },
     {
         name: "Elf",
-        subclasses: ["Dark", "High", "Wood"]
+        subspecies: ["Dark Elf", "High Elf", "Wood Elf"]
     },
     {
         name: "Gnome",
-        subclasses: ["Forest", "Rock"]
+        subspecies: ["Forest Gnome", "Rock Gnome"]
     },
     {
         name: "Genasi",
-        subclasses: ["Air", "Earth", "Fire", "Water"]
+        subspecies: ["Air Genasi", "Earth Genasi", "Fire Genasi", "Water Genasi"]
     },
     {
         name: "Half-Elf",
-        subclasses: []
+        subspecies: []
     },
     {
         name: "Half-Orc",
-        subclasses: []
+        subspecies: []
     },
     {
         name: "Halfling",
-        subclasses: ["Lightfoot", "Stout"]
+        subspecies: ["Lightfoot Halfling", "Stout Halfling"]
     },
     {
         name: "Human",
-        subclasses: []
+        subspecies: []
     },
     {
         name: "Kalashtar",
-        subclasses: []
+        subspecies: []
     },
     {
         name: "Tiefling",
-        subclasses: []
+        subspecies: []
     }
 ];
 

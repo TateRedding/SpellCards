@@ -26,15 +26,18 @@ import EditFeature from "./components/Features/EditFeature"
 import EditItem from "./components/Items/EditItem";
 import EditQuest from "./components/Quests/EditQuest";
 import EditSpell from "./components/Spells/EditSpell";
+import EditTrait from "./components/Traits/EditTrait";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
 import NewItem from "./components/Items/NewItem"
 import NewQuest from "./components/Quests/NewQuest";
 import NewSpell from "./components/Spells/NewSpell";
+import NewTrait from "./components/Traits/NewTrait";
 import PlayerPage from "./components/PlayerPage";
 import SingleFeature from "./components/Features/SingleFeature";
 import SingleSpell from "./components/Spells/SingleSpell";
+import SingleTrait from "./components/Traits/SingleTrait";
 
 const App = () => {
     const TOKEN_NAME = "coswtfs-spells-login-id";
@@ -219,6 +222,19 @@ const App = () => {
                             getTraits={getTraits}
                             loggedInPlayer={loggedInPlayer}
                         />
+                    } />
+                    <Route path="/traits/new" element={
+                        <NewTrait
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
+                        />} />
+                    <Route path="/traits/edit/:traitId" element={
+                        <EditTrait
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
+                        />} />
+                    <Route path="/traits/:traitId" element={
+                        <SingleTrait />
                     } />
                     {
                         players.map(player => {

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar";
 import SmallFeatureCard from "./SmallFeatureCard";
 import SortSelect from "../SortSelect";
-import { allSortingFunctions } from "../../lists";
+import { allSortingFunctions, classes } from "../../lists";
 import ClassSelect from "../ClassSelect";
 
 const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
@@ -12,6 +12,22 @@ const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
     const [selectedClass, setSelectedClass] = useState('');
 
     const navigate = useNavigate();
+
+    const matchesClass = (feature) => {
+        if (feature.class === selectedClass) return true;
+
+        if (feature.subclass) {
+            for (const cls of classes) {
+                if (!(cls.name === selectedClass)) continue;
+                if(cls.subclasses.includes(selectedClass)) {
+                    return true;
+                } else {
+                    break;
+                };
+            };
+        };
+        return false;
+    };
 
     return (
         <>
@@ -40,7 +56,7 @@ const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
             {
                 features
                     .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .filter(feature => (selectedClass && feature.class) ? feature.class === selectedClass : true)
+                    .filter(feature => selectedClass ? matchesClass(feature) : true)
                     .sort(allSortingFunctions[selectedSort].func)
                     .map(feature => {
                         return <SmallFeatureCard

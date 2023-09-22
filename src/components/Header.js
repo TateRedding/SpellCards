@@ -52,6 +52,11 @@ const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME })
                                 </Link>
                             </li>
                             <li className="nav-item">
+                                <Link className="nav-link" to="/traits">
+                                    <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Traits</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
                                 <Link className="nav-link" to="/items">
                                     <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Items</span>
                                 </Link>
