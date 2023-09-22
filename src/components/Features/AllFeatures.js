@@ -4,10 +4,12 @@ import SearchBar from "../SearchBar";
 import SmallFeatureCard from "./SmallFeatureCard";
 import SortSelect from "../SortSelect";
 import { allSortingFunctions } from "../../lists";
+import ClassSelect from "../ClassSelect";
 
 const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
+    const [selectedClass, setSelectedClass] = useState('');
 
     const navigate = useNavigate();
 
@@ -19,11 +21,15 @@ const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
                     :
                     null
             }
-            <div className="d-flex align-items-end mb-3">
-                <SearchBar
-                    className="me-3"
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
+
+            <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
+                <ClassSelect
+                    selectedClass={selectedClass}
+                    setSelectedClass={setSelectedClass}
                 />
                 <SortSelect
                     sortingFunctions={allSortingFunctions.slice(0, 2)}
@@ -34,6 +40,7 @@ const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
             {
                 features
                     .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .filter(feature => (selectedClass && feature.class) ? feature.class === selectedClass : true)
                     .sort(allSortingFunctions[selectedSort].func)
                     .map(feature => {
                         return <SmallFeatureCard

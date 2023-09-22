@@ -28,21 +28,19 @@ const AllSpells = ({ spells, getSpells, loggedInPlayer }) => {
                 setSearchTerm={setSearchTerm}
             />
             <div className="d-flex mb-3">
-                <div className="d-flex">
-                    <LevelSelect
-                        selectedSpellLevel={selectedSpellLevel}
-                        setSelectedSpellLevel={setSelectedSpellLevel}
-                    />
-                    <ClassSelect
-                        selectedClass={selectedClass}
-                        setSelectedClass={setSelectedClass}
-                    />
-                    <SortSelect
-                        sortingFunctions={allSortingFunctions}
-                        selectedSort={selectedSort}
-                        setSelectedSort={setSelectedSort}
-                    />
-                </div>
+                <LevelSelect
+                    selectedSpellLevel={selectedSpellLevel}
+                    setSelectedSpellLevel={setSelectedSpellLevel}
+                />
+                <ClassSelect
+                    selectedClass={selectedClass}
+                    setSelectedClass={setSelectedClass}
+                />
+                <SortSelect
+                    sortingFunctions={allSortingFunctions}
+                    selectedSort={selectedSort}
+                    setSelectedSort={setSelectedSort}
+                />
             </div>
             {
                 spells
