@@ -19,9 +19,15 @@ const updateTables = async () => {
             ALTER TABLE features
             DROP COLUMN IF EXISTS origin,
             ADD COLUMN IF NOT EXISTS class VARCHAR(32),
-            ADD COLUMN IF NOT EXISTS subclass VARCHAR(32),
-            ADD COLUMN IF NOT EXISTS species VARCHAR(32)[],
-            ADD COLUMN IF NOT EXISTS subspecies VARCHAR(32)[];
+            ADD COLUMN IF NOT EXISTS subclass VARCHAR(32);
+
+            CREATE TABLE traits (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(128) UNIQUE NOT NULL,
+                species VARCHAR(32)[],
+                subspecies VARCHAR(32)[],
+                description TEXT NOT NULL
+            );
         `);
     } catch (error) {
         console.error(error);
@@ -144,7 +150,7 @@ const updateFeatureList = async () => {
     };
 };
 
-const addTraitsToFeaturesList = async () => {
+const addTraitsToTraitsList = async () => {
     try {
         const { data: { results: traits } } = await axios.get(`${API_URL}/api/traits`);
         const completedTraits = [];
@@ -155,14 +161,14 @@ const addTraitsToFeaturesList = async () => {
             const { data: traitData } = await axios.get(`${API_URL}${trait.url}`);
             const { rows: [existingFeature] } = await client.query(`
                 SELECT *
-                FROM features
+                FROM traits
                 WHERE name='${traitName.split("'").join("''")}';
             `);
             if (existingFeature) {
                 const speciesArrayString = `{${traitData.races.map(species => species.name).join((','))}}`;
                 const subspeciesArrayString = `{${traitData.subraces.map(subspecies => subspecies.name).join((','))}}`;
                 await client.query(`
-                    UPDATE features
+                    UPDATE traits
                     SET 
                         species=$1,
                         subspecies=$2
@@ -175,7 +181,7 @@ const addTraitsToFeaturesList = async () => {
                 const valuesString = keys.map((key, index) => `$${index + 1}`).join(', ');
                 const columnNames = keys.map((key) => `"${key}"`).join(', ');
                 await client.query(`
-                    INSERT INTO features (${columnNames})
+                    INSERT INTO traits (${columnNames})
                     VALUES (${valuesString});
                 `, Object.values(newData));
             };
@@ -221,13 +227,13 @@ const translateFeatureData = (featureName, featureData) => {
 
 const translateTraitData = (traitData) => {
     const description = traitData.desc.join("\n");
-    const newFeatureData = {
+    const newTraitData = {
         name: traitData.name,
         description,
         species: traitData.races.map(species => species.name),
         subspecies: traitData.subraces.map(subspecies => subspecies.name)
     };
-    return newFeatureData;
+    return newTraitData;
 };
 
 const updateDatabase = async () => {
@@ -236,7 +242,7 @@ const updateDatabase = async () => {
         await updateTables();
         await updateSpellList();
         await updateFeatureList();
-        await addTraitsToFeaturesList();
+        await addTraitsToTraitsList();
     } catch (error) {
         console.error(error);
     };

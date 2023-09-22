@@ -8,5 +8,6 @@ router.use('/player_spells', require('./player_spells'));
 router.use('/players', require('./players'));
 router.use('/quests', require('./quests'));
 router.use('/spells', require('./spells'));
+router.use('/traits', require('./traits'));
 
 module.exports = router;
