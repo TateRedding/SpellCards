@@ -21,6 +21,7 @@ import AllFeatures from "./components/Features/AllFeatures";
 import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
 import AllSpells from "./components/Spells/AllSpells";
+import AllTraits from "./components/Traits/AllTraits";
 import EditFeature from "./components/Features/EditFeature"
 import EditItem from "./components/Items/EditItem";
 import EditQuest from "./components/Quests/EditQuest";
@@ -42,6 +43,7 @@ const App = () => {
     const [players, setPlayers] = useState([]);
     const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
+    const [traits, setTraits] = useState([]);
     const [loginId, setLoginId] = useState(window.localStorage.getItem(TOKEN_NAME));
     const [loggedInPlayer, setLoggedInPlayer] = useState({});
 
@@ -90,12 +92,22 @@ const App = () => {
         };
     };
 
+    const getTraits = async () => {
+        try {
+            const response = await axios.get("/api/traits");
+            setTraits(response.data);
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
     useEffect(() => {
         getPlayers();
         getSpells();
         getFeatures();
         getItems();
         getQuests();
+        getTraits();
     }, []);
 
     useEffect(() => {
@@ -200,6 +212,13 @@ const App = () => {
                         />} />
                     <Route path="/spells/:spellId" element={
                         <SingleSpell />
+                    } />
+                    <Route path="/traits" element={
+                        <AllTraits
+                            traits={traits}
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
+                        />
                     } />
                     {
                         players.map(player => {

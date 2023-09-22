@@ -1,21 +1,7 @@
 import React from "react";
+import { classes } from "../lists";
 
 const ClassSelect = ({ selectedClass, setSelectedClass }) => {
-    const classes = [
-        "Barbarian",
-        "Bard",
-        "Cleric",
-        "Druid",
-        "Fighter",
-        "Monk",
-        "Paladin",
-        "Ranger",
-        "Rogue",
-        "Sorcerer",
-        "Warlock",
-        "Wizard"
-    ];
-
     return (
         <div className="me-3">
             <label htmlFor="class-filter">Class</label>
@@ -27,7 +13,7 @@ const ClassSelect = ({ selectedClass, setSelectedClass }) => {
             >
                 <option value="">All</option>
                 {
-                    classes.map((cls, idx) => <option value={cls} key={idx}>{cls}</option>)
+                    classes.map((cls, idx) => <option value={cls.name} key={idx}>{cls.name}</option>)
                 }
             </select>
         </div>

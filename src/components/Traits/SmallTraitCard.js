@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { createClassString } from "../../utils";
+import { createSpeciesString } from "../../utils";
 
-const SmallFeatureCard = ({ feature, getFeatures, loggedInPlayer }) => {
+const SmallTraitCard = ({ trait, getTraits, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();
 
-    const deleteFeature = async () => {
+    const deleteTrait = async () => {
         try {
-            const response = await axios.delete(`/api/features/${feature.id}`);
+            const response = await axios.delete(`/api/traits/${trait.id}`);
             if (response.data) {
                 setDeleting(false);
-                getFeatures();
+                getTraits();
             };
         } catch (error) {
             console.error(error);
@@ -26,9 +26,9 @@ const SmallFeatureCard = ({ feature, getFeatures, loggedInPlayer }) => {
                 (deleting) ?
                     <div className="card mb-3">
                         <div className="card-body">
-                            <h5 className="card-title">Are you sure you want to delete {feature.name}?</h5>
+                            <h5 className="card-title">Are you sure you want to delete {trait.name}?</h5>
                             <button className="btn btn-primary me-2" onClick={() => setDeleting(false)}>No</button>
-                            <button className="btn btn-danger" onClick={deleteFeature}>Yes</button>
+                            <button className="btn btn-danger" onClick={deleteTrait}>Yes</button>
                         </div>
                     </div>
                     :
@@ -36,17 +36,17 @@ const SmallFeatureCard = ({ feature, getFeatures, loggedInPlayer }) => {
                         <div className="card-body">
                             <div className="d-flex justify-content-between">
                                 <div>
-                                    <h5 className="card-title">{feature.name}</h5>
-                                    <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}><i>{createClassString(feature)}</i></p>
+                                    <h5 className="card-title">{trait.name}</h5>
+                                    <p className={`card-text ${loggedInPlayer.isAdmin ? "mb-1" : ""}`}><i>{createSpeciesString(trait)}</i></p>
                                 </div>
                                 <div className="d-flex align-items-center">
-                                    <button className="btn btn-dark btn-lg" onClick={() => navigate(`/features/${feature.id}`)}>Details</button>
+                                    <button className="btn btn-dark btn-lg" onClick={() => navigate(`/traits/${trait.id}`)}>Details</button>
                                 </div>
                             </div>
                             {
                                 loggedInPlayer.isAdmin ?
                                     <>
-                                        <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/features/edit/${feature.id}`)}>Edit</button>
+                                        <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/traits/edit/${trait.id}`)}>Edit</button>
                                         <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
                                     </>
                                     :
@@ -60,4 +60,4 @@ const SmallFeatureCard = ({ feature, getFeatures, loggedInPlayer }) => {
     );
 };
 
-export default SmallFeatureCard;
+export default SmallTraitCard;

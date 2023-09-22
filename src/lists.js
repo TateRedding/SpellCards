@@ -1,3 +1,54 @@
+export const classes = [
+    {
+        name: "Barbarian",
+        subclasses: ["Berserker", "Storm Herald", "Totem Warrior", "Zealot"]
+    },
+    {
+        name: "Bard",
+        subclasses: ["Lore", "Valor"]
+    },
+    {
+        name: "Cleric",
+        subclasses: ["Knowledge", "Life", "Light", "Nature", "Tempest", "Trickery", "War"]
+    },
+    {
+        name: "Druid",
+        subclasses: ["Land", "Moon"]
+    },
+    {
+        name: "Fighter",
+        subclasses: ["Battle Master", "Champion", "Eldritch Knight"]
+    },
+    {
+        name: "Monk",
+        subclasses: ["Four Elements", "Open Hand", "Shadow"]
+    },
+    {
+        name: "Paladin",
+        subclasses: ["Ancients", "Devotion", "Vengeance"]
+    },
+    {
+        name: "Ranger",
+        subclasses: ["Beast Master", "Hunter"]
+    },
+    {
+        name: "Rogue",
+        subclasses: ["Arcane Trickster", "Assassin", "Thief"]
+    },
+    {
+        name: "Sorcerer",
+        subclasses: ["Draconic", "Wild Magic"]
+    },
+    {
+        name: "Warlock",
+        subclasses: ["Archfey", "Fiend", "Great Old One"]
+    },
+    {
+        name: "Wizard",
+        subclasses: ["Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation"]
+    }
+];
+
 export const itemCategories = [
     "Armor",
     "Potion",
@@ -27,6 +78,53 @@ export const schools = [
     "Illusion",
     "Necromancy",
     "Transmutation"
+];
+
+export const species = [
+    {
+        name: "Dragonborn",
+        subspecies: []
+    },
+    {
+        name: "Dwarf",
+        subclasses: ["Hill", "Mountain"]
+    },
+    {
+        name: "Elf",
+        subclasses: ["Dark", "High", "Wood"]
+    },
+    {
+        name: "Gnome",
+        subclasses: ["Forest", "Rock"]
+    },
+    {
+        name: "Genasi",
+        subclasses: ["Air", "Earth", "Fire", "Water"]
+    },
+    {
+        name: "Half-Elf",
+        subclasses: []
+    },
+    {
+        name: "Half-Orc",
+        subclasses: []
+    },
+    {
+        name: "Halfling",
+        subclasses: ["Lightfoot", "Stout"]
+    },
+    {
+        name: "Human",
+        subclasses: []
+    },
+    {
+        name: "Kalashtar",
+        subclasses: []
+    },
+    {
+        name: "Tiefling",
+        subclasses: []
+    }
 ];
 
 export const allSortingFunctions = [

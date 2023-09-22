@@ -49,14 +49,19 @@ export const createLevelString = (spell) => {
     return levelString;
 };
 
-export const createOriginString = (feature) => {
-    let originString = "";
-    if (feature.subclass) originString += feature.subclass;
-    if (feature.class) originString += ` ${feature.class}`;
-    if (feature.subspecies) originString += feature.subspecies.join(", ");
-    if (feature.species) originString += ` ${feature.species.join(", ")}`;
-    return originString;
+export const createClassString = (feature) => {
+    let classString = "";
+    if (feature.subclass) classString += feature.subclass;
+    if (feature.class) classString += ` ${feature.class}`;
+    return classString;
 };
+
+export const createSpeciesString = (trait) => {
+    let speciesString = "";
+    if (trait.subspecies) speciesString += trait.subspecies.join(", ");
+    if (trait.species) speciesString += ` ${trait.species.join(", ")}`;
+    return speciesString;
+}
 
 export const formatText = (text) => {
     const formattedText = text
