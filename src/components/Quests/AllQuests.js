@@ -19,12 +19,12 @@ const AllQuests = ({ quests, getQuests, loggedInPlayer }) => {
                     :
                     null
             }
-            <div className="d-flex align-items-end mb-3">
-                <SearchBar
-                    className="me-3"
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                />
+            <SearchBar
+                className="me-3"
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
                 <SortSelect
                     sortingFunctions={allSortingFunctions.slice(0, 2)}
                     selectedSort={selectedSort}
