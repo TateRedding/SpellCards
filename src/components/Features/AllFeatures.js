@@ -17,13 +17,9 @@ const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
         if (feature.class === selectedClass) return true;
 
         if (feature.subclass) {
-            for (const cls of classes) {
-                if (!(cls.name === selectedClass)) continue;
-                if(cls.subclasses.includes(selectedClass)) {
-                    return true;
-                } else {
-                    break;
-                };
+            const parentclass = classes.filter(cls => cls.name === selectedClass)[0]
+            if (parentclass.subclasses.includes(selectedClass)) {
+                return true;
             };
         };
         return false;

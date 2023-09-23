@@ -20,14 +20,10 @@ const AllTraits = ({ traits, getTraits, loggedInPlayer }) => {
             }
         };
         if (trait.subspecies && trait.subspecies.length) {
-            for (const spec of species) {
-                if (!(spec.name === selectedSpecies)) continue;
-                for (const subspecies of trait.subspecies) {
-                    if (spec.subspecies.includes(subspecies)) {
-                        return true;
-                    } else {
-                        break;
-                    };
+            const parentSpec = species.filter(spec => spec.name === selectedSpecies)[0]
+            for (const subspecies of trait.subspecies) {
+                if (parentSpec.subspecies.includes(subspecies)) {
+                    return true;
                 };
             };
         };
