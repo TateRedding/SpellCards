@@ -123,56 +123,60 @@ const EditTrait = ({ getTraits, loggedInPlayer }) => {
                                         null
                                 }
                             </div>
-                            <div className="d-flex mb-3" aria-labelledby="edit-choose-species">
+                            <div className="d-flex justify-content-between flex-wrap" aria-labelledby="edit-choose-species">
                                 {
                                     species.map((species, idx) => (
-                                        <div className="me-3" key={idx}>
-                                            <div className="form-check">
-                                                <input
-                                                    className="form-check-input"
-                                                    type="checkbox"
-                                                    checked={speciesList ? speciesList.includes(species.name) : false}
-                                                    onChange={(event) => event.target.checked ? setSpeciesList([...speciesList, species.name]) : removeSpecies(species.name)}
-                                                    id={`edit-trait-${species.name}-check`}
-                                                />
-                                                <label className="form-check-label" htmlFor={`edit-trait-${species.name}-check`}>
-                                                    {species.name}
-                                                </label>
+                                        <div key={idx}>
+                                            <div className="p-3 mb-3 border rounded">
+                                                <div className="form-check">
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        checked={speciesList ? speciesList.includes(species.name) : false}
+                                                        onChange={(event) => event.target.checked ? setSpeciesList([...speciesList, species.name]) : removeSpecies(species.name)}
+                                                        id={`edit-trait-${species.name}-check`}
+                                                    />
+                                                    <label className="form-check-label" htmlFor={`edit-trait-${species.name}-check`}>
+                                                        {species.name}
+                                                    </label>
+                                                </div>
+                                                {
+                                                    species.subspecies.length ?
+                                                        <>
+                                                            {
+                                                                species.subspecies.map((subspecies, idx) => (
+                                                                    <div className="form-check ms-2" key={idx}>
+                                                                        <input
+                                                                            className="form-check-input"
+                                                                            type="checkbox"
+                                                                            checked={subspeciesList ? subspeciesList.includes(subspecies) : false}
+                                                                            onChange={(event) => event.target.checked ? setSubspeciesList([...subspeciesList, subspecies]) : removeSubspecies(subspecies)}
+                                                                            id={`edit-trait-${subspecies}-check`}
+                                                                        />
+                                                                        <label className="form-check-label" htmlFor={`edit-trait-${subspecies}-check`}>
+                                                                            {subspecies.split(" ")[0]}
+                                                                        </label>
+                                                                    </div>
+                                                                ))
+                                                            }
+                                                        </>
+                                                        :
+                                                        null
+                                                }
                                             </div>
-                                            {
-                                                species.subspecies.length ?
-                                                    <>
-                                                        {
-                                                            species.subspecies.map((subspecies, idx) => (
-                                                                <div className="form-check" key={idx}>
-                                                                    <input
-                                                                        className="form-check-input"
-                                                                        type="checkbox"
-                                                                        checked={subspeciesList ? subspeciesList.includes(subspecies) : false}
-                                                                        onChange={(event) => event.target.checked ? setSubspeciesList([...subspeciesList, subspecies]) : removeSubspecies(subspecies)}
-                                                                        id={`edit-trait-${subspecies}-check`}
-                                                                    />
-                                                                    <label className="form-check-label" htmlFor={`edit-trait-${subspecies}-check`}>
-                                                                        {subspecies.split(" ")[0]}
-                                                                    </label>
-                                                                </div>
-                                                            ))
-                                                        }
-                                                    </>
-                                                    :
-                                                    null
-                                            }
                                         </div>
                                     ))
                                 }
                             </div>
-                            <div className="form-text text-danger mb-3" id="edit-choose-species">
-                                {
-                                    (chooseSpecies) ?
-                                        "You must choose at least one species or subspecies!" :
-                                        null
-                                }
-                            </div>
+
+                            {
+                                (chooseSpecies) ?
+                                    <div className="form-text text-danger mb-3" id="edit-choose-species">
+                                        "You must choose at least one species or subspecies!"
+                                    </div>
+                                    :
+                                    null
+                            }
                             <div className="form-floating">
                                 <textarea
                                     className="form-control"
