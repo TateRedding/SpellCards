@@ -27,11 +27,10 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
 
         const newTraitData = {
             name,
-            description
+            description,
+            species: speciesList,
+            subspecies: subspeciesList
         };
-
-        if (speciesList.length) newTraitData.species = speciesList;
-        if (subspeciesList.length) newTraitData.subspecies = subspeciesList;
 
         try {
             const response = await axios.post("/api/traits", newTraitData);
@@ -82,23 +81,23 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                             <div className="form-floating">
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
-                                    id="trait-name"
-                                    aria-labelledby="name-taken"
+                                    id="new-trait-name"
+                                    aria-labelledby="new-trait-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
                                     onChange={(event) => setName(event.target.value)}
                                 />
-                                <label htmlFor="trait-name">Name</label>
+                                <label htmlFor="new-trait-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="new-trait-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that trait already exists!` :
                                         null
                                 }
                             </div>
-                            <div className="d-flex mb-3" aria-labelledby="choose-species">
+                            <div className="d-flex mb-3" aria-labelledby="new-trait-choose-species">
                                 {
                                     species.map((species, idx) => (
                                         <div className="me-3" key={idx}>
@@ -106,11 +105,10 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                                                 <input
                                                     className="form-check-input"
                                                     type="checkbox"
-                                                    value=""
                                                     onChange={(event) => event.target.checked ? setSpeciesList([...speciesList, species.name]) : removeSpecies(species.name)}
-                                                    id={`${species.name}-check`}
+                                                    id={`new-trait-${species.name}-check`}
                                                 />
-                                                <label className="form-check-label" htmlFor={`${species.name}-check`}>
+                                                <label className="form-check-label" htmlFor={`new-trait-${species.name}-check`}>
                                                     {species.name}
                                                 </label>
                                             </div>
@@ -123,11 +121,10 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                                                                     <input
                                                                         className="form-check-input"
                                                                         type="checkbox"
-                                                                        value=""
                                                                         onChange={(event) => event.target.checked ? setSubspeciesList([...subspeciesList, subspecies]) : removeSubspecies(subspecies)}
-                                                                        id={`${subspecies}-check`}
+                                                                        id={`new-trait-${subspecies}-check`}
                                                                     />
-                                                                    <label className="form-check-label" htmlFor={`${subspecies}-check`}>
+                                                                    <label className="form-check-label" htmlFor={`new-trait-${subspecies}-check`}>
                                                                         {subspecies.split(" ")[0]}
                                                                     </label>
                                                                 </div>
@@ -141,7 +138,7 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                                     ))
                                 }
                             </div>
-                            <div className="form-text text-danger mb-3" id="choose-species">
+                            <div className="form-text text-danger mb-3" id="new-trait-choose-species">
                                 {
                                     (chooseSpecies) ?
                                         "You must choose at least one species or subspecies!" :
@@ -151,7 +148,7 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                             <div className="form-floating">
                                 <textarea
                                     className="form-control"
-                                    id="trait-description"
+                                    id="new-trait-description"
                                     aria-labelledby="description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
@@ -159,9 +156,9 @@ const NewTrait = ({ getTraits, loggedInPlayer }) => {
                                     placeholder="Description"
                                     onChange={(event) => setDescription(event.target.value)}
                                 />
-                                <label htmlFor="trait-description">Description</label>
+                                <label htmlFor="new-trait-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="new-trait-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Add</button>

@@ -61,7 +61,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="feature-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="new-feature-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -69,7 +69,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="new-feature-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that feature already exists!` :
@@ -95,7 +95,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="feature-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="new-feature-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -104,7 +104,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="new-feature-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Add</button>

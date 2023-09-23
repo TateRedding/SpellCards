@@ -88,7 +88,7 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="feature-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="edit-feature-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -96,7 +96,7 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="edit-feature-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that feature already exists!` :
@@ -122,7 +122,7 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="feature-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="edit-feature-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -131,7 +131,7 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="edit-feature-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success">Update</button>

@@ -80,7 +80,7 @@ const NewItem = ({ itemCategories, getItems, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="item-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="new-item-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -88,7 +88,7 @@ const NewItem = ({ itemCategories, getItems, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="item-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="new-item-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that item already exists!` :
@@ -174,7 +174,7 @@ const NewItem = ({ itemCategories, getItems, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="item-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="new-item-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -183,7 +183,7 @@ const NewItem = ({ itemCategories, getItems, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="item-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="new-item-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Add</button>

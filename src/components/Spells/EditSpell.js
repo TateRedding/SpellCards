@@ -122,7 +122,7 @@ const EditSpell = ({ getSpells, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="spell-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="edit-spell-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -130,7 +130,7 @@ const EditSpell = ({ getSpells, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="spell-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="edit-spell-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't change the name ${name}, that spell already exists!` :
@@ -256,7 +256,7 @@ const EditSpell = ({ getSpells, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="spell-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="edit-spell-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -265,7 +265,7 @@ const EditSpell = ({ getSpells, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="spell-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="edit-spell-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success">Update</button>
