@@ -3,20 +3,6 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
-import {
-    itemCategories,
-    rarities,
-    schools,
-    allSortingFunctions,
-    spellLevels
-} from "./lists";
-import {
-    formatText,
-    createComponentsString,
-    createDurationString,
-    createLevelString
-} from "./utils";
-
 import AllFeatures from "./components/Features/AllFeatures";
 import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
@@ -166,14 +152,12 @@ const App = () => {
                     } />
                     <Route path="/items/new" element={
                         <NewItem
-                            itemCategories={itemCategories}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/edit/:itemId" element={
                         <EditItem
-                            itemCategories={itemCategories}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
@@ -246,12 +230,6 @@ const App = () => {
                                             player={player}
                                             allSpells={spells}
                                             allFeatures={features}
-                                            spellLevels={spellLevels}
-                                            sortingFunctions={allSortingFunctions}
-                                            formatText={formatText}
-                                            createComponentsString={createComponentsString}
-                                            createDurationString={createDurationString}
-                                            createLevelString={createLevelString}
                                             loggedInPlayer={loggedInPlayer}
                                         />
                                     }

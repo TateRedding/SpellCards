@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
 
-const SpellDetails = ({
-    spell,
-    getPlayerData,
-    formatText,
-    createComponentsString,
-    createDurationString,
-    createLevelString
-}) => {
+const SpellDetails = ({ spell, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeSpell = async () => {

@@ -6,13 +6,12 @@ import LevelSelect from "./LevelSelect";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
 import SpellDetails from "./Spells/SpellDetails";
+import { allSortingFunctions } from "../lists";
 
 const PlayerPage = ({
     player,
     allSpells,
     allFeatures,
-    spellLevels,
-    sortingFunctions,
     formatText,
     createComponentsString,
     createDurationString,
@@ -147,7 +146,6 @@ const PlayerPage = ({
                 <div className={tab === "spells" ? "d-flex" : null}>
                     {tab === "spells" ?
                         <LevelSelect
-                            spellLevels={spellLevels}
                             selectedSpellLevel={selectedSpellLevel}
                             setSelectedSpellLevel={setSelectedSpellLevel}
                             maxSpellLevel={maxSpellLevel}
@@ -156,7 +154,7 @@ const PlayerPage = ({
                         null
                     }
                     <SortSelect
-                        sortingFunctions={tab === "spells" ? sortingFunctions : tab === "features" ? sortingFunctions.slice(0, 2) : null}
+                        sortingFunctions={tab === "spells" ? allSortingFunctions: tab === "features" ? allSortingFunctions.slice(0, 2) : null}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
                     />
@@ -177,15 +175,11 @@ const PlayerPage = ({
                                                 return true;
                                             }
                                         })
-                                        .sort(sortingFunctions[selectedSort].func)
+                                        .sort(allSortingFunctions[selectedSort].func)
                                         .map(spell => {
                                             return <SpellDetails
                                                 spell={spell}
                                                 getPlayerData={getPlayerData}
-                                                formatText={formatText}
-                                                createComponentsString={createComponentsString}
-                                                createDurationString={createDurationString}
-                                                createLevelString={createLevelString}
                                                 key={spell.id}
                                             />
                                         })
@@ -241,12 +235,11 @@ const PlayerPage = ({
                                 (playerData.features) ?
                                     playerData.features
                                         .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        .sort(sortingFunctions[selectedSort].func)
+                                        .sort(allSortingFunctions[selectedSort].func)
                                         .map(feature => {
                                             return <FeatureDetails
                                                 feature={feature}
                                                 getPlayerData={getPlayerData}
-                                                formatText={formatText}
                                                 key={feature.id}
                                             />
                                         })

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
-import { rarities } from "../../lists";
+import { itemCategories, rarities } from "../../lists";
 
-const NewItem = ({ itemCategories, getItems, loggedInPlayer }) => {
+const NewItem = ({ getItems, loggedInPlayer }) => {
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
     const [categoryDetails, setCategoryDetails] = useState('');

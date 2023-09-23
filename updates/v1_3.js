@@ -21,12 +21,19 @@ const updateTables = async () => {
             ADD COLUMN IF NOT EXISTS class VARCHAR(32),
             ADD COLUMN IF NOT EXISTS subclass VARCHAR(32);
 
-            CREATE TABLE traits (
+            CREATE TABLE IF NOT EXISTS traits (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
                 species VARCHAR(32)[],
                 subspecies VARCHAR(32)[],
                 description TEXT NOT NULL
+            );
+
+            CREATE TABLE IF NOT EXISTS player_traits (
+                id SERIAL PRIMARY KEY,
+                "playerId" INTEGER NOT NULL REFERENCES players(id),
+                "traitId" INTEGER NOT NULL REFERENCES traits(id),
+                UNIQUE ("playerId", "traitId")
             );
         `);
     } catch (error) {

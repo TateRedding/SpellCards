@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { formatText } from "../../utils";
 
-const FeatureDetails = ({ feature, getPlayerData, formatText }) => {
+const FeatureDetails = ({ feature, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeFeature = async () => {
