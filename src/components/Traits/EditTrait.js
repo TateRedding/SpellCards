@@ -172,7 +172,7 @@ const EditTrait = ({ getTraits, loggedInPlayer }) => {
                             {
                                 (chooseSpecies) ?
                                     <div className="form-text text-danger mb-3" id="edit-choose-species">
-                                        "You must choose at least one species or subspecies!"
+                                        You must choose at least one species or subspecies!
                                     </div>
                                     :
                                     null

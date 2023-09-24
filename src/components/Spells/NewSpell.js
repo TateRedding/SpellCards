@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
-import { schools } from "../../lists";
+import { classes, schools } from "../../lists";
 
 const NewSpell = ({ getSpells, loggedInPlayer }) => {
     const [name, setName] = useState('');
@@ -18,7 +18,9 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
     const [concentration, setConcentration] = useState(false);
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
+    const [classList, setClassList] = useState([]);
     const [nameTaken, setNameTaken] = useState(false);
+    const [chooseClasses, setChooseClasses] = useState(false);
     const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
@@ -26,6 +28,12 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
     const createNewSpell = async (event) => {
         event.preventDefault();
         setNameTaken(false);
+        setChooseClasses(false);
+        if (!classList.length) {
+            setChooseClasses(true);
+            return;
+        };
+
         const newSpellData = {
             name,
             level,
@@ -37,7 +45,8 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
             material,
             concentration,
             duration,
-            description
+            description,
+            classes: classList
         };
 
         if (materialComponents) {
@@ -62,6 +71,7 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
                     setConcentration(false);
                     setDuration('');
                     setDescription('');
+                    setClassList([]);
                     getSpells();
                     setSuccess(true);
                 };
@@ -69,6 +79,11 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
         } catch (error) {
             console.error(error);
         };
+    };
+
+    const removeClass = (clsName) => {
+        const newList = classList.filter(cls => !(cls === clsName));
+        setClassList(newList);
     };
 
     useEffect(() => {
@@ -122,6 +137,31 @@ const NewSpell = ({ getSpells, loggedInPlayer }) => {
                             <div className="form-text mb-3" id="cantrip-help-text">
                                 Enter 0 for cantrip
                             </div>
+                            <div className="d-flex mb-3 flex-wrap" aria-labelledby="new-spell-choose-classes">
+                                {
+                                    classes.map((cls, idx) => (
+                                        <div className="form-check me-3" key={idx}>
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                onChange={(event) => event.target.checked ? setClassList([...classList, cls.name]) : removeClass(cls.name)}
+                                                id={`new-spell-${cls.name}-check`}
+                                            />
+                                            <label htmlFor={`new-spell-${cls.name}-check`}>
+                                                {cls.name}
+                                            </label>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            {
+                                (chooseClasses) ?
+                                    <div className="form-text text-danger mb-3" id="new-spell-choose-class">
+                                        You must choose at least one class!
+                                    </div>
+                                    :
+                                    null
+                            }
                             <div className="form-floating mb-3">
                                 <select
                                     className="form-select"

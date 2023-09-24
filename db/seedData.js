@@ -13,8 +13,10 @@ const dropTables = async () => {
     try {
         console.log("Dropping tables...");
         await client.query(`
+            DROP TABLE IF EXISTS player_traits;
             DROP TABLE IF EXISTS player_spells;
             DROP TABLE IF EXISTS player_features;
+            DROP TABLE IF EXISTS traits;
             DROP TABLE IF EXISTS spells;
             DROP TABLE IF EXISTS features;
             DROP TABLE IF EXISTS items;

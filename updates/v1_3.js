@@ -13,8 +13,7 @@ const updateTables = async () => {
             RENAME COLUMN "shortName" to "urlName";
 
             ALTER TABLE spells
-            ADD COLUMN IF NOT EXISTS classes VARCHAR(32)[],
-            ADD COLUMN IF NOT EXISTS subclasses VARCHAR(32)[];
+            ADD COLUMN IF NOT EXISTS classes VARCHAR(32)[];
 
             ALTER TABLE features
             DROP COLUMN IF EXISTS origin,
@@ -53,15 +52,12 @@ const updateSpellList = async () => {
             `);
             if (existingSpell) {
                 const classesArrayString = `{${spellData.classes.map(cls => cls.name).join((','))}}`;
-                const subclassesArrayString = `{${spellData.subclasses.map(subcls => subcls.name).join((','))}}`;
                 await client.query(`
                     UPDATE spells
-                    SET 
-                        classes=$1,
-                        subclasses=$2
-                    WHERE name=$3
+                    SET classes=$1
+                    WHERE name=$2
                     RETURNING *;
-                `, [classesArrayString, subclassesArrayString, spell.name]);
+                `, [classesArrayString, spell.name]);
             } else {
                 const newData = translateSpellData(spellData);
                 const keys = Object.keys(newData);
@@ -215,7 +211,6 @@ const translateSpellData = (spellData) => {
         duration: spellData.duration,
         description,
         classes: spellData.classes.map(cls => cls.name),
-        subclasses: spellData.subclasses.map(subcls => subcls.name)
     };
     if (spellData.material) newSpellData.materialComponents = spellData.material;
     return newSpellData;

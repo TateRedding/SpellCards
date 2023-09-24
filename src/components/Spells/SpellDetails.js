@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
+import { createClassString, createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
 
 const SpellDetails = ({ spell, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
@@ -43,7 +43,8 @@ const SpellDetails = ({ spell, getPlayerData }) => {
                                     <p className="mb-0"><b>Casting Time: </b>{spell.castingTime}</p>
                                     <p className="mb-0"><b>Range: </b>{spell.range}</p>
                                     <p className="mb-0"><b>Components: </b>{createComponentsString(spell)}</p>
-                                    <p className="mb-2"><b>Duration: </b>{createDurationString(spell)}</p>
+                                    <p className="mb-0"><b>Duration: </b>{createDurationString(spell)}</p>
+                                    <p className="mb-2"><b>Classes: </b>{spell.classes ? spell.classes.join(", ") : null}</p>
                                     {
                                         formatText(spell.description)
                                     }
