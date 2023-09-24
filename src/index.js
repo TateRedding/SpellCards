@@ -227,10 +227,11 @@ const App = () => {
                                     path={`/${player.urlName}`}
                                     element={
                                         <PlayerPage
-                                            player={player}
-                                            allSpells={spells}
                                             allFeatures={features}
+                                            allSpells={spells}
+                                            allTraits={traits}
                                             loggedInPlayer={loggedInPlayer}
+                                            player={player}
                                         />
                                     }
                                     key={player.id} />

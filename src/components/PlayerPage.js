@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
+import { allSortingFunctions } from "../lists";
 import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
+import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
 import SpellDetails from "./Spells/SpellDetails";
-import { allSortingFunctions } from "../lists";
-import PlayerPageTab from "./PlayerPageTab";
+import TraitDetails from "./Traits/TraitDeatils";
 
 const PlayerPage = ({
-    player,
-    allSpells,
     allFeatures,
-    loggedInPlayer
+    allSpells,
+    allTraits,
+    loggedInPlayer,
+    player
 }) => {
-    const [playerData, setPlayerData] = useState({});
-    const [selectedSort, setSelectedSort] = useState(0);
-    const [maxSpellLevel, setMaxSpellLevel] = useState(0);
-    const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedSpellId, setSelectedSpellId] = useState('');
     const [alreadyOnList, setAlreadyOnList] = useState(false);
+    const [maxSpellLevel, setMaxSpellLevel] = useState(0);
+    const [playerData, setPlayerData] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
+    const [selectedSort, setSelectedSort] = useState(0);
+    const [selectedSpellId, setSelectedSpellId] = useState('');
+    const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
+    const [selectedTraitId, setSelectedTraitId] = useState('');
 
     const useQuery = () => {
         const { search } = useLocation();
@@ -83,6 +86,27 @@ const PlayerPage = ({
         };
     };
 
+    const addTrait = async (event) => {
+        event.preventDefault();
+        setAlreadyOnList(false);
+        try {
+            const response = await axios.post("/api/player_traits", {
+                playerId: playerData.id,
+                traitId: selectedTraitId
+            });
+            if (response.data) {
+                if (response.data.name === "PlayerTraitAlreadyExists") {
+                    setAlreadyOnList(true);
+                } else {
+                    setSelectedTraitId('');
+                    getPlayerData();
+                };
+            };
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
     const renderDetails = (listItem) => {
         if (tab === "spells") {
             return (
@@ -99,8 +123,16 @@ const PlayerPage = ({
                     getPlayerData={getPlayerData}
                     key={listItem.id}
                 />
-            )
-        }
+            );
+        } else if (tab === "traits") {
+            return (
+                <TraitDetails
+                    trait={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            );
+        };
     };
 
     useEffect(() => {
@@ -131,7 +163,7 @@ const PlayerPage = ({
 
     useEffect(() => {
         setAlreadyOnList(false);
-    }, [selectedSpellId, selectedFeatureId]);
+    }, [selectedSpellId, selectedFeatureId, selectedTraitId]);
 
     return (
         <>
@@ -153,6 +185,14 @@ const PlayerPage = ({
                         Features
                     </Link>
                 </li>
+                <li className="nav-item">
+                    <Link
+                        to={`/${player.urlName.toLowerCase()}?tab=traits`}
+                        className={tab === 'traits' ? "nav-link active" : "nav-link"}
+                    >
+                        Traits
+                    </Link>
+                </li>
             </ul>
             <SearchBar
                 className={tab === "spells" ? "spell-search" : tab === "features" ? "me-3" : null}
@@ -171,7 +211,7 @@ const PlayerPage = ({
                         null
                     }
                     <SortSelect
-                        sortingFunctions={tab === "spells" ? allSortingFunctions : tab === "features" ? allSortingFunctions.slice(0, 2) : null}
+                        sortingFunctions={tab === "spells" ? allSortingFunctions : allSortingFunctions.slice(0, 2)}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
                     />
@@ -212,6 +252,25 @@ const PlayerPage = ({
                         selectedSort={selectedSort}
                         setSelectedId={setSelectedFeatureId}
                         type={"feature"}
+                    />
+                    :
+                    null
+            }
+            {
+                (tab === "traits") ?
+                    <PlayerPageTab
+                        addFunc={addTrait}
+                        allList={allTraits}
+                        alreadyOnList={alreadyOnList}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.traits}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedTraitId}
+                        selectedSort={selectedSort}
+                        setSelectedId={setSelectedTraitId}
+                        type={"trait"}
                     />
                     :
                     null
