@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { classes } from "../../lists";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
 
 const NewFeature = ({ getFeatures, loggedInPlayer }) => {
     const [name, setName] = useState('');
-    const [origin, setOrigin] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedClass, setSelectedClass] = useState('');
+    const [subclassList, setSubclassList] = useState([]);
+    const [selectedSubclass, setSelectedSubclass] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
     const [success, setSuccess] = useState(false);
 
@@ -18,9 +21,10 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
         setNameTaken(false);
         const newFeatureData = {
             name,
-            origin,
+            class: selectedClass,
             description
         };
+        if (selectedSubclass) newFeatureData.subclass = selectedSubclass;
 
         try {
             const response = await axios.post("/api/features", newFeatureData);
@@ -30,7 +34,8 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                 } else {
                     setSuccess(true);
                     setName('');
-                    setOrigin('');
+                    setSelectedClass('');
+                    setSelectedSubclass('');
                     setDescription('');
                     getFeatures();
                 };
@@ -39,6 +44,10 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
             console.error(error);
         };
     };
+
+    useEffect(() => {
+        (selectedClass) ? setSubclassList(classes.filter(cls => cls.name === selectedClass)[0].subclasses) : setSubclassList([]);
+    }, [selectedClass]);
 
     useEffect(() => {
         if (success) {
@@ -61,7 +70,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="feature-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="new-feature-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -69,33 +78,54 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="new-feature-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that feature already exists!` :
                                         null
                                 }
                             </div>
-                            <div className="form-floating">
-                                <input
-                                    className="form-control"
-                                    id="feature-origin"
-                                    aria-labelledby="origin-help-text"
-                                    value={origin}
-                                    required
-                                    placeholder="Origin"
-                                    onChange={(event) => setOrigin(event.target.value)}
-                                />
-                                <label htmlFor="feature-origin">Origin</label>
-                            </div>
-                            <div className="form-text mb-3" id="orign-help-text">
-                                Species, class, sub-class, feat, etc...
+                            <div className=" d-flex mb-3">
+                                <div className="form-floating me-3">
+                                    <select
+                                        className="form-select"
+                                        id="new-feature-class-select"
+                                        value={selectedClass}
+                                        required
+                                        onChange={(event) => setSelectedClass(event.target.value)}
+                                    >
+                                        <option value="">Choose a Class</option>
+                                        {
+                                            classes.map((cls, idx) => <option value={cls.name} key={idx}>{cls.name}</option>)
+                                        }
+                                    </select>
+                                    <label htmlFor="new-feature-class-select">Class</label>
+                                </div>
+                                {
+                                    subclassList.length ?
+                                        <div className="form-floating">
+                                            <select
+                                                className="form-select"
+                                                id="new-feature-subclass-select"
+                                                value={selectedSubclass}
+                                                onChange={(event) => setSelectedSubclass(event.target.value)}
+                                            >
+                                                <option value="">Choose a Subclass</option>
+                                                {
+                                                    subclassList.map((subcls, idx) => <option value={subcls} key={idx}>{subcls}</option>)
+                                                }
+                                            </select>
+                                            <label htmlFor="new-feature-subclass-select">Subclass (optional)</label>
+                                        </div>
+                                        :
+                                        null
+                                }
                             </div>
                             <div className="form-floating">
                                 <textarea
                                     className="form-control"
                                     id="feature-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="new-feature-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -104,7 +134,7 @@ const NewFeature = ({ getFeatures, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="feature-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="new-feature-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Add</button>

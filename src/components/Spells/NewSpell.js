@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
+import { classes, schools } from "../../lists";
 
-const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
+const NewSpell = ({ getSpells, loggedInPlayer }) => {
     const [name, setName] = useState('');
     const [level, setLevel] = useState(0);
     const [school, setSchool] = useState('');
@@ -17,7 +18,9 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
     const [concentration, setConcentration] = useState(false);
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
+    const [classList, setClassList] = useState([]);
     const [nameTaken, setNameTaken] = useState(false);
+    const [chooseClasses, setChooseClasses] = useState(false);
     const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
@@ -25,6 +28,12 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
     const createNewSpell = async (event) => {
         event.preventDefault();
         setNameTaken(false);
+        setChooseClasses(false);
+        if (!classList.length) {
+            setChooseClasses(true);
+            return;
+        };
+
         const newSpellData = {
             name,
             level,
@@ -36,7 +45,8 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
             material,
             concentration,
             duration,
-            description
+            description,
+            classes: classList
         };
 
         if (materialComponents) {
@@ -61,6 +71,7 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                     setConcentration(false);
                     setDuration('');
                     setDescription('');
+                    setClassList([]);
                     getSpells();
                     setSuccess(true);
                 };
@@ -68,6 +79,11 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
         } catch (error) {
             console.error(error);
         };
+    };
+
+    const removeClass = (clsName) => {
+        const newList = classList.filter(cls => !(cls === clsName));
+        setClassList(newList);
     };
 
     useEffect(() => {
@@ -91,7 +107,7 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="spell-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="new-spell-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -99,7 +115,7 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="spell-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="new-spell-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that spell already exists!` :
@@ -121,6 +137,31 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                             <div className="form-text mb-3" id="cantrip-help-text">
                                 Enter 0 for cantrip
                             </div>
+                            <div className="d-flex mb-3 flex-wrap" aria-labelledby="new-spell-choose-classes">
+                                {
+                                    classes.map((cls, idx) => (
+                                        <div className="form-check me-3" key={idx}>
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                onChange={(event) => event.target.checked ? setClassList([...classList, cls.name]) : removeClass(cls.name)}
+                                                id={`new-spell-${cls.name}-check`}
+                                            />
+                                            <label htmlFor={`new-spell-${cls.name}-check`}>
+                                                {cls.name}
+                                            </label>
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                            {
+                                (chooseClasses) ?
+                                    <div className="form-text text-danger mb-3" id="new-spell-choose-class">
+                                        You must choose at least one class!
+                                    </div>
+                                    :
+                                    null
+                            }
                             <div className="form-floating mb-3">
                                 <select
                                     className="form-select"
@@ -225,7 +266,7 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="spell-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="new-spell-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -234,7 +275,7 @@ const NewSpell = ({ schools, getSpells, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="spell-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="new-spell-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Add</button>

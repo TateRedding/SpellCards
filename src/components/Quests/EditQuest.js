@@ -88,7 +88,7 @@ const EditQuest = ({ getQuests, loggedInPlayer }) => {
                                 <input
                                     className={(nameTaken) ? "form-control is-invalid" : "form-control"}
                                     id="quest-name"
-                                    aria-labelledby="name-taken"
+                                    aria-labelledby="edit-quest-name-taken"
                                     value={name}
                                     required
                                     placeholder="Name"
@@ -96,7 +96,7 @@ const EditQuest = ({ getQuests, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="quest-name">Name</label>
                             </div>
-                            <div className="form-text mb-3" id="name-taken">
+                            <div className="form-text mb-3" id="edit-quest-name-taken">
                                 {
                                     (nameTaken) ?
                                         `Can't use the name ${name}, that quest already exists!` :
@@ -118,7 +118,7 @@ const EditQuest = ({ getQuests, loggedInPlayer }) => {
                                 <textarea
                                     className="form-control"
                                     id="quest-description"
-                                    aria-labelledby="description-help-text"
+                                    aria-labelledby="edit-quest-description-help-text"
                                     style={{ height: "100px" }}
                                     value={description}
                                     required
@@ -127,7 +127,7 @@ const EditQuest = ({ getQuests, loggedInPlayer }) => {
                                 />
                                 <label htmlFor="quest-description">Description</label>
                             </div>
-                            <div className="form-text mb-3" id="description-help-text">
+                            <div className="form-text mb-3" id="edit-quest-description-help-text">
                                 Surround text with double asterisks for bold: "**bold text**"
                             </div>
                             <button type="submit" className="btn btn-success mb-3">Update</button>

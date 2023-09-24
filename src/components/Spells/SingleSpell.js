@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
 
-const SingleSpell = ({
-    createComponentsString,
-    createDurationString,
-    createLevelString,
-    formatText
-}) => {
+const SingleSpell = () => {
     const [spell, setSpell] = useState({});
 
     const { spellId } = useParams();
@@ -41,7 +37,8 @@ const SingleSpell = ({
                                 <p className="mb-0"><b>Casting Time: </b>{spell.castingTime}</p>
                                 <p className="mb-0"><b>Range: </b>{spell.range}</p>
                                 <p className="mb-0"><b>Components: </b>{createComponentsString(spell)}</p>
-                                <p className="mb-2"><b>Duration: </b>{createDurationString(spell)}</p>
+                                <p className="mb-0"><b>Duration: </b>{createDurationString(spell)}</p>
+                                <p className="mb-2"><b>Classes: </b>{spell.classes ? spell.classes.join(", ") : null}</p>
                                 {
                                     formatText(spell.description)
                                 }

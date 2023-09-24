@@ -6,6 +6,7 @@ const {
     getRowById,
     getRowByName
 } = require("./utils");
+const { getTraitsByPlayerId } = require("./traits");
 
 const createPlayer = async (fields) => {
     try {
@@ -28,7 +29,8 @@ const getPlayerById = async (id) => {
         const player = await getRowById('players', id);
         if (player) {
             player.spells = await getSpellsByPlayerId(player.id);
-            player.features = await getFeaturesByPlayerId(player.id)
+            player.features = await getFeaturesByPlayerId(player.id);
+            player.traits = await getTraitsByPlayerId(player.id);
         };
         return player;
     } catch (error) {

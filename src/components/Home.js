@@ -86,7 +86,7 @@ const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) =
                             <button
                                 className="player-button btn btn-outline-primary mb-3"
                                 key={player.id}
-                                onClick={() => navigate(`/${player.shortName.toLowerCase()}`)}>{player.name}</button>
+                                onClick={() => navigate(`/${player.urlName.toLowerCase()}`)}>{player.name}</button>
                         );
                     };
                 })

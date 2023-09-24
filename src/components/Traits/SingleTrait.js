@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { createClassString, formatText } from "../../utils";
+import { createSpeciesString, formatText } from "../../utils";
 
-const SingleFeature = () => {
-    const [feature, setFeature] = useState({});
+const SingleTrait = () => {
+    const [trait, setTrait] = useState({});
 
-    const { featureId } = useParams();
+    const { traitId } = useParams();
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getFeatureData = async () => {
+        const getTraitData = async () => {
             try {
-                const response = await axios.get(`/api/features/${featureId}`);
-                setFeature(response.data);
+                const response = await axios.get(`/api/traits/${traitId}`);
+                setTrait(response.data);
             } catch (error) {
                 console.error(error);
             };
         };
-        getFeatureData();
+        getTraitData();
     }, []);
 
     return (
         <>
             {
-                (Object.keys(feature).length) ?
+                (Object.keys(trait).length) ?
                     <>
                         <div className="d-flex align-items-center mb-2">
-                            <h2 className="me-3 mb-0">{feature.name}</h2>
+                            <h2 className="me-3 mb-0">{trait.name}</h2>
                             <button className="btn btn-outline-primary" onClick={() => navigate(-1)}>Back</button>
                         </div>
                         <div className="card">
                             <div className="card-body pb-0">
-                                <p className="mb-2"><i>{createClassString(feature)}</i></p>
+                                <p className="mb-2"><i>{createSpeciesString(trait)}</i></p>
                                 {
-                                    formatText(feature.description)
+                                    formatText(trait.description)
                                 }
                             </div>
                         </div>
@@ -48,4 +48,4 @@ const SingleFeature = () => {
 
 };
 
-export default SingleFeature;
+export default SingleTrait;

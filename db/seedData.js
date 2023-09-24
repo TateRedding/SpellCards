@@ -6,15 +6,19 @@ const {
     createFeature,
     createPlayerFeature,
     createItem,
-    createQuest
+    createQuest,
+    createTrait,
+    createPlayerTrait
 } = require(".");
 
 const dropTables = async () => {
     try {
         console.log("Dropping tables...");
         await client.query(`
+            DROP TABLE IF EXISTS player_traits;
             DROP TABLE IF EXISTS player_spells;
             DROP TABLE IF EXISTS player_features;
+            DROP TABLE IF EXISTS traits;
             DROP TABLE IF EXISTS spells;
             DROP TABLE IF EXISTS features;
             DROP TABLE IF EXISTS items;
@@ -35,7 +39,7 @@ const createTables = async () => {
             CREATE TABLE players (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(32) UNIQUE NOT NULL,
-                "shortName" VARCHAR(32),
+                "urlName" VARCHAR(32),
                 pin INTEGER UNIQUE,
                 "isAdmin" BOOLEAN DEFAULT FALSE
             );
@@ -53,7 +57,8 @@ const createTables = async () => {
                 "materialComponents" TEXT,
                 concentration BOOLEAN DEFAULT false,
                 duration TEXT,
-                description TEXT NOT NULL
+                description TEXT NOT NULL,
+                classes VARCHAR(32)[]
             );
 
             CREATE TABLE player_spells (
@@ -66,8 +71,9 @@ const createTables = async () => {
             CREATE TABLE features (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(128) UNIQUE NOT NULL,
-                origin VARCHAR(128),
-                description TEXT NOT NULL
+                description TEXT NOT NULL,
+                class VARCHAR(32),
+                subclass VARCHAR(32)
             );
 
             CREATE TABLE player_features (
@@ -75,6 +81,21 @@ const createTables = async () => {
                 "playerId" INTEGER NOT NULL REFERENCES players(id),
                 "featureId" INTEGER NOT NULL REFERENCES features(id),
                 UNIQUE ("playerId", "featureId")
+            );
+
+            CREATE TABLE traits (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(128) UNIQUE NOT NULL,
+                species VARCHAR(32)[],
+                subspecies VARCHAR(32)[],
+                description TEXT NOT NULL
+            );
+
+            CREATE TABLE player_traits (
+                id SERIAL PRIMARY KEY,
+                "playerId" INTEGER NOT NULL REFERENCES players(id),
+                "traitId" INTEGER NOT NULL REFERENCES traits(id),
+                UNIQUE ("playerId", "traitId")
             );
 
             CREATE TABLE items (
@@ -110,37 +131,37 @@ const createPlayers = async () => {
 
         await createPlayer({
             name: 'Khirun of the S.C.',
-            shortName: 'Khirun',
+            urlName: 'Khirun',
             pin: 5716,
             isAdmin: false
         });
         await createPlayer({
             name: 'Sir Mona Loneleaf',
-            shortName: 'Mona',
+            urlName: 'Mona',
             pin: 5759,
             isAdmin: false
         });
         await createPlayer({
             name: 'Robi Xenon Li',
-            shortName: 'Robi',
+            urlName: 'Robi',
             pin: 8588,
             isAdmin: false
         });
         await createPlayer({
             name: 'Thrall Frostskin',
-            shortName: 'Thrall',
+            urlName: 'Thrall',
             pin: 2706,
             isAdmin: false
         });
         await createPlayer({
             name: 'Torment',
-            shortName: 'Torment',
+            urlName: 'Torment',
             pin: 8548,
             isAdmin: false
         });
         await createPlayer({
             name: 'Tate',
-            shortName: 'Tate',
+            urlName: 'Tate',
             pin: 1994,
             isAdmin: true
         });
@@ -172,7 +193,8 @@ const createInitialSpells = async () => {
             verbal: true,
             somatic: true,
             duration: "Instantaneous",
-            description: "You point your finger, and the creature that damaged you..."
+            description: "You point your finger, and the creature that damaged you...",
+            classes: ["Warlock"]
         }));
 
         spells.push(await createSpell({
@@ -187,7 +209,8 @@ const createInitialSpells = async () => {
             materialComponents: "a bit of fleece",
             concentration: true,
             duration: "1 minute",
-            description: "You craft an illusion that takes root in the mind of a creature you can see within range..."
+            description: "You craft an illusion that takes root in the mind of a creature you can see within range...",
+            classes: ["Bard", "Sorcerer", "Wizard"]
         }));
 
         spells.push(await createSpell({
@@ -202,7 +225,8 @@ const createInitialSpells = async () => {
             materialComponents: "a magnifying glass",
             concentration: true,
             duration: "1 minute",
-            description: "A beam of brilliant light flashes out from your hand..."
+            description: "A beam of brilliant light flashes out from your hand...",
+            classes: ["Druid", "Sorcerer", "Wizard"]
         }));
         console.log(spells);
 
@@ -243,23 +267,30 @@ const createInitialFeatures = async () => {
         const features = [];
         features.push(await createFeature({
             name: "Channel Divinity: Turn Undead",
-            origin: "Cleric",
+            class: "Cleric",
             description: "As an action, you present your holy symbol...",
         }));
         features.push(await createFeature({
-            name: "Darkvision",
-            origin: "Species",
-            description: "You have superior vision in dark and dim condictions.",
+            name: "Lay On Hands",
+            class: "Paladin",
+            description: "Your blessed touch can heal wounds.",
         }));
         features.push(await createFeature({
+            name: "Hunter's Prey: Colossus Slayer",
+            class: "Ranger",
+            subclass: "Hunter",
+            description: "Your tenacity can wear down the most potent foes.",
+        }));
+
+        features.push(await createFeature({
             name: "Reckless Attack",
-            origin: "Barbarian",
+            class: "Barbarian",
             description: "Starting at 2nd level, you can throw aside all concern for defense...",
         }));
         features.push(await createFeature({
-            name: "Lay On Hands",
-            origin: "Paladin",
-            description: "Your blessed touch can heal wounds.",
+            name: "Wild Shape",
+            class: "Druid",
+            description: "Starting at 2nd level, you can use your action to magically assume the shape of a beast",
         }));
         console.log(features);
 
@@ -276,16 +307,62 @@ const createInitialPlayerFeatures = async () => {
 
         const playerFeatures = [];
         playerFeatures.push(await createPlayerFeature(1, 1));
-        playerFeatures.push(await createPlayerFeature(1, 2));
-        playerFeatures.push(await createPlayerFeature(2, 4));
-        playerFeatures.push(await createPlayerFeature(3, 2));
-        playerFeatures.push(await createPlayerFeature(4, 3));
-        playerFeatures.push(await createPlayerFeature(5, 2));
+        playerFeatures.push(await createPlayerFeature(2, 2));
+        playerFeatures.push(await createPlayerFeature(3, 3));
+        playerFeatures.push(await createPlayerFeature(4, 4));
+        playerFeatures.push(await createPlayerFeature(5, 5));
         console.log(playerFeatures);
 
         console.log("Finished creating initial player_features!");
     } catch (error) {
         console.log("Error creating initial player_features!");
+        console.error(error);
+    };
+};
+
+const createInitialTraits = async () => {
+    try {
+        console.log("Creating initial traits...");
+
+        const traits = [];
+        traits.push(await createTrait({
+            name: "Darkvision",
+            species: ["Dwarf", "Elf", "Gnome", "Half-Elf", "Half-Orc", "Tiefling"],
+            description: "You have superior vision in dark and dim conditions."
+        }));
+        traits.push(await createTrait({
+            name: "Unending Breath",
+            subspecies: ["Air Genasi"],
+            description: "You can hold your breath indefinitely while you’re not incapacitated."
+        }));
+        traits.push(await createTrait({
+            name: "Severed From Dreams",
+            species: ["Kalashtar"],
+            description: "Kalashtar sleep, but they don’t connect to the plane of dreams as other creatures do."
+        }));
+        console.log(traits);
+
+        console.log("Finished creating initial traits!");
+    } catch (error) {
+        console.log("Error creating initial traits!");
+        console.error(error);
+    };
+};
+
+const createInitialPlayerTraits = async () => {
+    try {
+        console.log("Creating initial player_traits...");
+
+        const playerTraits = [];
+        playerTraits.push(await createPlayerTrait(3, 1));
+        playerTraits.push(await createPlayerTrait(4, 1));
+        playerTraits.push(await createPlayerTrait(5, 1));
+        playerTraits.push(await createPlayerTrait(3, 2));
+        playerTraits.push(await createPlayerTrait(1, 3));
+
+        console.log("Finished creating initial player_traits!");
+    } catch (error) {
+        console.log("Error creating initial player_traits!");
         console.error(error);
     };
 };
@@ -366,6 +443,8 @@ const reseedDB = async () => {
         await createInitialPlayerSpells();
         await createInitialFeatures();
         await createInitialPlayerFeatures();
+        await createInitialTraits();
+        await createInitialPlayerTraits();
         await createInitialItems();
         await createInitialQuests();
     } catch (error) {

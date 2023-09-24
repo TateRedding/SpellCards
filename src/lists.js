@@ -1,3 +1,54 @@
+export const classes = [
+    {
+        name: "Barbarian",
+        subclasses: ["Berserker", "Storm Herald", "Totem Warrior", "Zealot"]
+    },
+    {
+        name: "Bard",
+        subclasses: ["Lore", "Valor"]
+    },
+    {
+        name: "Cleric",
+        subclasses: ["Knowledge", "Life", "Light", "Nature", "Tempest", "Trickery", "War"]
+    },
+    {
+        name: "Druid",
+        subclasses: ["Land", "Moon"]
+    },
+    {
+        name: "Fighter",
+        subclasses: ["Battle Master", "Champion", "Eldritch Knight"]
+    },
+    {
+        name: "Monk",
+        subclasses: ["Four Elements", "Open Hand", "Shadow"]
+    },
+    {
+        name: "Paladin",
+        subclasses: ["Ancients", "Devotion", "Vengeance"]
+    },
+    {
+        name: "Ranger",
+        subclasses: ["Beast Master", "Hunter"]
+    },
+    {
+        name: "Rogue",
+        subclasses: ["Arcane Trickster", "Assassin", "Thief"]
+    },
+    {
+        name: "Sorcerer",
+        subclasses: ["Draconic", "Wild Magic"]
+    },
+    {
+        name: "Warlock",
+        subclasses: ["Archfey", "Fiend", "Great Old One"]
+    },
+    {
+        name: "Wizard",
+        subclasses: ["Abjuration", "Conjuration", "Divination", "Enchantment", "Evocation", "Illusion", "Necromancy", "Transmutation"]
+    }
+];
+
 export const itemCategories = [
     "Armor",
     "Potion",
@@ -29,7 +80,54 @@ export const schools = [
     "Transmutation"
 ];
 
-export const sortingFunctions = [
+export const species = [
+    {
+        name: "Dragonborn",
+        subspecies: []
+    },
+    {
+        name: "Dwarf",
+        subspecies: ["Hill Dwarf", "Mountain Dwarf"]
+    },
+    {
+        name: "Elf",
+        subspecies: ["Dark Elf", "High Elf", "Wood Elf"]
+    },
+    {
+        name: "Gnome",
+        subspecies: ["Forest Gnome", "Rock Gnome"]
+    },
+    {
+        name: "Genasi",
+        subspecies: ["Air Genasi", "Earth Genasi", "Fire Genasi", "Water Genasi"]
+    },
+    {
+        name: "Half-Elf",
+        subspecies: []
+    },
+    {
+        name: "Half-Orc",
+        subspecies: []
+    },
+    {
+        name: "Halfling",
+        subspecies: ["Lightfoot Halfling", "Stout Halfling"]
+    },
+    {
+        name: "Human",
+        subspecies: []
+    },
+    {
+        name: "Kalashtar",
+        subspecies: []
+    },
+    {
+        name: "Tiefling",
+        subspecies: []
+    }
+];
+
+export const allSortingFunctions = [
     {
         name: "A to Z",
         func: (a, b) => {

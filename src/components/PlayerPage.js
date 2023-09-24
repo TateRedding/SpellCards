@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-
+import { allSortingFunctions } from "../lists";
 import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
+import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
 import SpellDetails from "./Spells/SpellDetails";
+import TraitDetails from "./Traits/TraitDeatils";
 
 const PlayerPage = ({
-    player,
-    allSpells,
     allFeatures,
-    spellLevels,
-    sortingFunctions,
-    formatText,
-    createComponentsString,
-    createDurationString,
-    createLevelString,
-    loggedInPlayer
+    allSpells,
+    allTraits,
+    loggedInPlayer,
+    player
 }) => {
-    const [playerData, setPlayerData] = useState({});
-    const [selectedSort, setSelectedSort] = useState(0);
-    const [maxSpellLevel, setMaxSpellLevel] = useState(0);
-    const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedSpellId, setSelectedSpellId] = useState('');
+    const [adding, setAdding] = useState(false);
     const [alreadyOnList, setAlreadyOnList] = useState(false);
+    const [maxSpellLevel, setMaxSpellLevel] = useState(0);
+    const [playerData, setPlayerData] = useState({});
+    const [searchTerm, setSearchTerm] = useState('');
     const [selectedFeatureId, setSelectedFeatureId] = useState('');
+    const [selectedSort, setSelectedSort] = useState(0);
+    const [selectedSpellId, setSelectedSpellId] = useState('');
+    const [selectedSpellLevel, setSelectedSpellLevel] = useState('');
+    const [selectedTraitId, setSelectedTraitId] = useState('');
 
     const useQuery = () => {
         const { search } = useLocation();
@@ -46,45 +45,31 @@ const PlayerPage = ({
         };
     };
 
-    const addSpell = async (event) => {
-        event.preventDefault();
-        setAlreadyOnList(false);
-        try {
-            const response = await axios.post("/api/player_spells", {
-                playerId: playerData.id,
-                spellId: selectedSpellId
-            });
-            if (response.data) {
-                if (response.data.name === "PlayerSpellAlreadyExists") {
-                    setAlreadyOnList(true);
-                } else {
-                    setSelectedSpellId('');
-                    getPlayerData();
-                };
-            };
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
-    const addFeature = async (event) => {
-        event.preventDefault();
-        setAlreadyOnList(false);
-        try {
-            const response = await axios.post("/api/player_features", {
-                playerId: playerData.id,
-                featureId: selectedFeatureId
-            });
-            if (response.data) {
-                if (response.data.name === "PlayerFeatureAlreadyExists") {
-                    setAlreadyOnList(true);
-                } else {
-                    setSelectedFeatureId('');
-                    getPlayerData();
-                };
-            };
-        } catch (error) {
-            console.error(error);
+    const renderDetails = (listItem) => {
+        if (tab === "spells") {
+            return (
+                <SpellDetails
+                    spell={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            );
+        } else if (tab === "features") {
+            return (
+                <FeatureDetails
+                    feature={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            );
+        } else if (tab === "traits") {
+            return (
+                <TraitDetails
+                    trait={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            );
         };
     };
 
@@ -97,6 +82,7 @@ const PlayerPage = ({
         setSelectedSpellId('');
         setSelectedFeatureId('');
         setSelectedSpellLevel('');
+        setAdding(false);
         setAlreadyOnList(false);
         setSearchTerm('');
     }, [player]);
@@ -112,11 +98,12 @@ const PlayerPage = ({
         setSelectedSort(0);
         setSelectedSpellLevel('');
         setAlreadyOnList(false);
+        setAdding(false);
     }, [tab]);
 
     useEffect(() => {
         setAlreadyOnList(false);
-    }, [selectedSpellId, selectedFeatureId]);
+    }, [selectedSpellId, selectedFeatureId, selectedTraitId]);
 
     return (
         <>
@@ -124,7 +111,7 @@ const PlayerPage = ({
             <ul className="nav nav-tabs mb-3">
                 <li className="nav-item">
                     <Link
-                        to={`/${player.shortName.toLowerCase()}?tab=spells`}
+                        to={`/${player.urlName.toLowerCase()}?tab=spells`}
                         className={tab === 'spells' ? "nav-link active" : "nav-link"}
                     >
                         Spells
@@ -132,23 +119,30 @@ const PlayerPage = ({
                 </li>
                 <li className="nav-item">
                     <Link
-                        to={`/${player.shortName.toLowerCase()}?tab=features`}
+                        to={`/${player.urlName.toLowerCase()}?tab=features`}
                         className={tab === 'features' ? "nav-link active" : "nav-link"}
                     >
                         Features
                     </Link>
                 </li>
+                <li className="nav-item">
+                    <Link
+                        to={`/${player.urlName.toLowerCase()}?tab=traits`}
+                        className={tab === 'traits' ? "nav-link active" : "nav-link"}
+                    >
+                        Traits
+                    </Link>
+                </li>
             </ul>
-            <div className="spell-tools d-flex mb-3">
-                <SearchBar
-                    className={tab === "spells" ? "spell-search" : tab === "features" ? "me-3" : null}
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                />
+            <SearchBar
+                className={tab === "spells" ? "spell-search" : tab === "features" ? "me-3" : null}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
                 <div className={tab === "spells" ? "d-flex" : null}>
                     {tab === "spells" ?
                         <LevelSelect
-                            spellLevels={spellLevels}
                             selectedSpellLevel={selectedSpellLevel}
                             setSelectedSpellLevel={setSelectedSpellLevel}
                             maxSpellLevel={maxSpellLevel}
@@ -157,7 +151,7 @@ const PlayerPage = ({
                         null
                     }
                     <SortSelect
-                        sortingFunctions={tab === "spells" ? sortingFunctions : tab === "features" ? sortingFunctions.slice(0, 2) : null}
+                        sortingFunctions={tab === "spells" ? allSortingFunctions : allSortingFunctions.slice(0, 2)}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
                     />
@@ -165,132 +159,68 @@ const PlayerPage = ({
             </div>
             {
                 (tab === "spells") ?
-                    <>
-                        <div>
-                            {
-                                (playerData.spells) ?
-                                    playerData.spells
-                                        .filter(spell => spell.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        .filter(spell => {
-                                            if (selectedSpellLevel) {
-                                                return spell.level === Number(selectedSpellLevel);
-                                            } else {
-                                                return true;
-                                            }
-                                        })
-                                        .sort(sortingFunctions[selectedSort].func)
-                                        .map(spell => {
-                                            return <SpellDetails
-                                                spell={spell}
-                                                getPlayerData={getPlayerData}
-                                                formatText={formatText}
-                                                createComponentsString={createComponentsString}
-                                                createDurationString={createDurationString}
-                                                createLevelString={createLevelString}
-                                                key={spell.id}
-                                            />
-                                        })
-                                    :
-                                    null
-                            }
-                        </div>
-                        {
-                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
-                                <form onSubmit={addSpell} autoComplete="off">
-                                    <div className="d-flex">
-                                        <button className="btn btn-success me-2" type="submit">Add Spell</button>
-
-                                        <select
-                                            className={
-                                                (alreadyOnList) ?
-                                                    "form-select is-invalid" :
-                                                    "form-select"
-                                            }
-                                            aria-labelledby="spell-on-list-text"
-                                            value={selectedSpellId}
-                                            required
-                                            onChange={(event) => setSelectedSpellId(event.target.value)}
-                                        >
-                                            <option value="">Select Spell</option>
-                                            {
-                                                allSpells
-                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                                    .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="form-text" id="spell-on-list-text">
-                                        {
-                                            (alreadyOnList) ?
-                                                "This spell is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form>
-                                :
-                                null
-                        }
-                    </>
+                    <PlayerPageTab
+                        adding={adding}
+                        allList={allSpells}
+                        alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.spells}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedSpellId}
+                        selectedSort={selectedSort}
+                        selectedSpellLevel={selectedSpellLevel}
+                        setSelectedId={setSelectedSpellId}
+                        setAdding={setAdding}
+                        setAlreadyOnList={setAlreadyOnList}
+                        type={"spell"}
+                    />
                     :
                     null
             }
             {
                 (tab === "features") ?
-                    <>
-                        <div>
-                            {
-                                (playerData.features) ?
-                                    playerData.features
-                                        .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        .sort(sortingFunctions[selectedSort].func)
-                                        .map(feature => {
-                                            return <FeatureDetails
-                                                feature={feature}
-                                                getPlayerData={getPlayerData}
-                                                formatText={formatText}
-                                                key={feature.id}
-                                            />
-                                        })
-                                    :
-                                    null
-                            }
-                        </div>
-                        {
-                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
-                                <form onSubmit={addFeature} autoComplete="off">
-                                    <div className="d-flex">
-                                        <button className="btn btn-success me-2" type="submit">Add Feature</button>
-                                        <select
-                                            className={
-                                                (alreadyOnList) ?
-                                                    "form-select is-invalid" :
-                                                    "form-select"
-                                            }
-                                            aria-labelledby="feature-on-list-text"
-                                            value={selectedFeatureId}
-                                            required
-                                            onChange={(event) => setSelectedFeatureId(event.target.value)}
-                                        >
-                                            <option value="">Select Feature</option>
-                                            {
-                                                allFeatures
-                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                                    .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="form-text" id="feature-on-list-text">
-                                        {
-                                            (alreadyOnList) ?
-                                                "This feature is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form>
-                                :
-                                null
-                        }
-                    </>
+                    <PlayerPageTab
+                        adding={adding}
+                        allList={allFeatures}
+                        alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.features}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedFeatureId}
+                        selectedSort={selectedSort}
+                        setSelectedId={setSelectedFeatureId}
+                        setAdding={setAdding}
+                        setAlreadyOnList={setAlreadyOnList}
+                        type={"feature"}
+                    />
+                    :
+                    null
+            }
+            {
+                (tab === "traits") ?
+                    <PlayerPageTab
+                        adding={adding}
+                        allList={allTraits}
+                        alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.traits}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedTraitId}
+                        selectedSort={selectedSort}
+                        setSelectedId={setSelectedTraitId}
+                        setAdding={setAdding}
+                        setAlreadyOnList={setAlreadyOnList}
+                        type={"trait"}
+                    />
                     :
                     null
             }

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { formatText } from "../../utils";
 
-const ItemCard = ({ item, formatText, getItems, loggedInPlayer }) => {
+const ItemCard = ({ item, getItems, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();

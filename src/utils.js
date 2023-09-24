@@ -49,6 +49,23 @@ export const createLevelString = (spell) => {
     return levelString;
 };
 
+export const createClassString = (feature) => {
+    let classString = "";
+    if (feature.subclass) classString += feature.subclass;
+    if (feature.class) classString += ` ${feature.class}`;
+    return classString;
+};
+
+export const createSpeciesString = (trait) => {
+    let speciesString = "";
+    if (trait.subspecies && trait.subspecies.length) speciesString += trait.subspecies.join(", ");
+    if (trait.species && trait.species.length) {
+        if (speciesString) speciesString += ", ";
+        speciesString += ` ${trait.species.join(", ")}`;
+    }
+    return speciesString;
+}
+
 export const formatText = (text) => {
     const formattedText = text
         .split('\n')

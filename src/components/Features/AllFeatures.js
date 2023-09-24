@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import SearchBar from "../SearchBar";
 import SmallFeatureCard from "./SmallFeatureCard";
 import SortSelect from "../SortSelect";
+import { allSortingFunctions, classes } from "../../lists";
+import ClassSelect from "../ClassSelect";
 
-const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }) => {
+const AllFeatures = ({ features, getFeatures, loggedInPlayer }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedSort, setSelectedSort] = useState(0);
+    const [selectedClass, setSelectedClass] = useState('');
 
     const navigate = useNavigate();
+
+    const matchesClass = (feature) => {
+        if (feature.class === selectedClass) return true;
+
+        if (feature.subclass) {
+            const parentclass = classes.filter(cls => cls.name === selectedClass)[0]
+            if (parentclass.subclasses.includes(selectedClass)) {
+                return true;
+            };
+        };
+        return false;
+    };
 
     return (
         <>
@@ -19,14 +33,18 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }
                     :
                     null
             }
-            <div className="d-flex align-items-end mb-3">
-                <SearchBar
-                    className="me-3"
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
+
+            <SearchBar
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+            />
+            <div className="d-flex mb-3">
+                <ClassSelect
+                    selectedClass={selectedClass}
+                    setSelectedClass={setSelectedClass}
                 />
                 <SortSelect
-                    sortingFunctions={sortingFunctions}
+                    sortingFunctions={allSortingFunctions.slice(0, 2)}
                     selectedSort={selectedSort}
                     setSelectedSort={setSelectedSort}
                 />
@@ -34,7 +52,8 @@ const AllFeatures = ({ features, getFeatures, sortingFunctions, loggedInPlayer }
             {
                 features
                     .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                    .sort(sortingFunctions[selectedSort].func)
+                    .filter(feature => selectedClass ? matchesClass(feature) : true)
+                    .sort(allSortingFunctions[selectedSort].func)
                     .map(feature => {
                         return <SmallFeatureCard
                             feature={feature}

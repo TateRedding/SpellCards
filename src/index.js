@@ -3,37 +3,27 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
-import {
-    itemCategories,
-    rarities,
-    schools,
-    sortingFunctions,
-    spellLevels
-} from "./lists";
-import {
-    formatText,
-    createComponentsString,
-    createDurationString,
-    createLevelString
-} from "./utils";
-
 import AllFeatures from "./components/Features/AllFeatures";
 import AllItems from "./components/Items/AllItems";
 import AllQuests from "./components/Quests/AllQuests";
 import AllSpells from "./components/Spells/AllSpells";
+import AllTraits from "./components/Traits/AllTraits";
 import EditFeature from "./components/Features/EditFeature"
 import EditItem from "./components/Items/EditItem";
 import EditQuest from "./components/Quests/EditQuest";
 import EditSpell from "./components/Spells/EditSpell";
+import EditTrait from "./components/Traits/EditTrait";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import NewFeature from "./components/Features/NewFeature";
 import NewItem from "./components/Items/NewItem"
 import NewQuest from "./components/Quests/NewQuest";
 import NewSpell from "./components/Spells/NewSpell";
+import NewTrait from "./components/Traits/NewTrait";
 import PlayerPage from "./components/PlayerPage";
 import SingleFeature from "./components/Features/SingleFeature";
 import SingleSpell from "./components/Spells/SingleSpell";
+import SingleTrait from "./components/Traits/SingleTrait";
 
 const App = () => {
     const TOKEN_NAME = "coswtfs-spells-login-id";
@@ -42,6 +32,7 @@ const App = () => {
     const [players, setPlayers] = useState([]);
     const [quests, setQuests] = useState([]);
     const [spells, setSpells] = useState([]);
+    const [traits, setTraits] = useState([]);
     const [loginId, setLoginId] = useState(window.localStorage.getItem(TOKEN_NAME));
     const [loggedInPlayer, setLoggedInPlayer] = useState({});
 
@@ -90,12 +81,22 @@ const App = () => {
         };
     };
 
+    const getTraits = async () => {
+        try {
+            const response = await axios.get("/api/traits");
+            setTraits(response.data);
+        } catch (error) {
+            console.error(error);
+        };
+    };
+
     useEffect(() => {
         getPlayers();
         getSpells();
         getFeatures();
         getItems();
         getQuests();
+        getTraits();
     }, []);
 
     useEffect(() => {
@@ -127,7 +128,6 @@ const App = () => {
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/new" element={
@@ -141,31 +141,23 @@ const App = () => {
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/features/:featureId" element={
-                        <SingleFeature
-                            formatText={formatText}
-                        />
+                        <SingleFeature />
                     } />
                     <Route path="/items" element={
                         <AllItems
                             items={items}
-                            formatText={formatText}
                             getItems={getItems}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/new" element={
                         <NewItem
-                            itemCategories={itemCategories}
-                            rarities={rarities}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
                     <Route path="/items/edit/:itemId" element={
                         <EditItem
-                            itemCategories={itemCategories}
-                            rarities={rarities}
                             getItems={getItems}
                             loggedInPlayer={loggedInPlayer}
                         />
@@ -173,9 +165,7 @@ const App = () => {
                     <Route path="/quests" element={
                         <AllQuests
                             quests={quests}
-                            formatText={formatText}
                             getQuests={getQuests}
-                            sortingFunctions={sortingFunctions.slice(0, 2)}
                             loggedInPlayer={loggedInPlayer}
                         />
                     } />
@@ -195,48 +185,53 @@ const App = () => {
                         <AllSpells
                             spells={spells}
                             getSpells={getSpells}
-                            spellLevels={spellLevels}
-                            sortingFunctions={sortingFunctions}
-                            createLevelString={createLevelString}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/new" element={
                         <NewSpell
-                            schools={schools}
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
-                            schools={schools}
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
                         />} />
                     <Route path="/spells/:spellId" element={
-                        <SingleSpell
-                            createComponentsString={createComponentsString}
-                            createDurationString={createDurationString}
-                            createLevelString={createLevelString}
-                            formatText={formatText}
+                        <SingleSpell />
+                    } />
+                    <Route path="/traits" element={
+                        <AllTraits
+                            traits={traits}
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
                         />
+                    } />
+                    <Route path="/traits/new" element={
+                        <NewTrait
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
+                        />} />
+                    <Route path="/traits/edit/:traitId" element={
+                        <EditTrait
+                            getTraits={getTraits}
+                            loggedInPlayer={loggedInPlayer}
+                        />} />
+                    <Route path="/traits/:traitId" element={
+                        <SingleTrait />
                     } />
                     {
                         players.map(player => {
                             if (!player.isAdmin) {
                                 return <Route
-                                    path={`/${player.shortName}`}
+                                    path={`/${player.urlName}`}
                                     element={
                                         <PlayerPage
-                                            player={player}
-                                            allSpells={spells}
                                             allFeatures={features}
-                                            spellLevels={spellLevels}
-                                            sortingFunctions={sortingFunctions}
-                                            formatText={formatText}
-                                            createComponentsString={createComponentsString}
-                                            createDurationString={createDurationString}
-                                            createLevelString={createLevelString}
+                                            allSpells={spells}
+                                            allTraits={traits}
                                             loggedInPlayer={loggedInPlayer}
+                                            player={player}
                                         />
                                     }
                                     key={player.id} />
