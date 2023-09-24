@@ -7,15 +7,12 @@ import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
 import SpellDetails from "./Spells/SpellDetails";
 import { allSortingFunctions } from "../lists";
+import PlayerPageTab from "./PlayerPageTab";
 
 const PlayerPage = ({
     player,
     allSpells,
     allFeatures,
-    formatText,
-    createComponentsString,
-    createDurationString,
-    createLevelString,
     loggedInPlayer
 }) => {
     const [playerData, setPlayerData] = useState({});
@@ -86,6 +83,26 @@ const PlayerPage = ({
         };
     };
 
+    const renderDetails = (listItem) => {
+        if (tab === "spells") {
+            return (
+                <SpellDetails
+                    spell={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            );
+        } else if (tab === "features") {
+            return (
+                <FeatureDetails
+                    feature={listItem}
+                    getPlayerData={getPlayerData}
+                    key={listItem.id}
+                />
+            )
+        }
+    };
+
     useEffect(() => {
         getPlayerData();
     }, []);
@@ -154,7 +171,7 @@ const PlayerPage = ({
                         null
                     }
                     <SortSelect
-                        sortingFunctions={tab === "spells" ? allSortingFunctions: tab === "features" ? allSortingFunctions.slice(0, 2) : null}
+                        sortingFunctions={tab === "spells" ? allSortingFunctions : tab === "features" ? allSortingFunctions.slice(0, 2) : null}
                         selectedSort={selectedSort}
                         setSelectedSort={setSelectedSort}
                     />
@@ -162,127 +179,40 @@ const PlayerPage = ({
             </div>
             {
                 (tab === "spells") ?
-                    <>
-                        <div>
-                            {
-                                (playerData.spells) ?
-                                    playerData.spells
-                                        .filter(spell => spell.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        .filter(spell => {
-                                            if (selectedSpellLevel) {
-                                                return spell.level === Number(selectedSpellLevel);
-                                            } else {
-                                                return true;
-                                            }
-                                        })
-                                        .sort(allSortingFunctions[selectedSort].func)
-                                        .map(spell => {
-                                            return <SpellDetails
-                                                spell={spell}
-                                                getPlayerData={getPlayerData}
-                                                key={spell.id}
-                                            />
-                                        })
-                                    :
-                                    null
-                            }
-                        </div>
-                        {
-                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
-                                <form onSubmit={addSpell} autoComplete="off">
-                                    <div className="d-flex">
-                                        <button className="btn btn-success me-2" type="submit">Add Spell</button>
-
-                                        <select
-                                            className={
-                                                (alreadyOnList) ?
-                                                    "form-select is-invalid" :
-                                                    "form-select"
-                                            }
-                                            aria-labelledby="spell-on-list-text"
-                                            value={selectedSpellId}
-                                            required
-                                            onChange={(event) => setSelectedSpellId(event.target.value)}
-                                        >
-                                            <option value="">Select Spell</option>
-                                            {
-                                                allSpells
-                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                                    .map(spell => <option value={`${spell.id}`} key={spell.id}>{spell.name}</option>)
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="form-text" id="spell-on-list-text">
-                                        {
-                                            (alreadyOnList) ?
-                                                "This spell is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form>
-                                :
-                                null
-                        }
-                    </>
+                    <PlayerPageTab
+                        addFunc={addSpell}
+                        allList={allSpells}
+                        alreadyOnList={alreadyOnList}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.spells}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedSpellId}
+                        selectedSort={selectedSort}
+                        selectedSpellLevel={selectedSpellLevel}
+                        setSelectedId={setSelectedSpellId}
+                        type={"spell"}
+                    />
                     :
                     null
             }
             {
                 (tab === "features") ?
-                    <>
-                        <div>
-                            {
-                                (playerData.features) ?
-                                    playerData.features
-                                        .filter(feature => feature.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                                        .sort(allSortingFunctions[selectedSort].func)
-                                        .map(feature => {
-                                            return <FeatureDetails
-                                                feature={feature}
-                                                getPlayerData={getPlayerData}
-                                                key={feature.id}
-                                            />
-                                        })
-                                    :
-                                    null
-                            }
-                        </div>
-                        {
-                            loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
-                                <form onSubmit={addFeature} autoComplete="off">
-                                    <div className="d-flex">
-                                        <button className="btn btn-success me-2" type="submit">Add Feature</button>
-                                        <select
-                                            className={
-                                                (alreadyOnList) ?
-                                                    "form-select is-invalid" :
-                                                    "form-select"
-                                            }
-                                            aria-labelledby="feature-on-list-text"
-                                            value={selectedFeatureId}
-                                            required
-                                            onChange={(event) => setSelectedFeatureId(event.target.value)}
-                                        >
-                                            <option value="">Select Feature</option>
-                                            {
-                                                allFeatures
-                                                    .sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
-                                                    .map(feature => <option value={`${feature.id}`} key={feature.id}>{feature.name}</option>)
-                                            }
-                                        </select>
-                                    </div>
-                                    <div className="form-text" id="feature-on-list-text">
-                                        {
-                                            (alreadyOnList) ?
-                                                "This feature is already on your list!" :
-                                                null
-                                        }
-                                    </div>
-                                </form>
-                                :
-                                null
-                        }
-                    </>
+                    <PlayerPageTab
+                        addFunc={addFeature}
+                        allList={allFeatures}
+                        alreadyOnList={alreadyOnList}
+                        loggedInPlayer={loggedInPlayer}
+                        playerData={playerData}
+                        playerList={playerData.features}
+                        renderDetails={renderDetails}
+                        searchTerm={searchTerm}
+                        selectedId={selectedFeatureId}
+                        selectedSort={selectedSort}
+                        setSelectedId={setSelectedFeatureId}
+                        type={"feature"}
+                    />
                     :
                     null
             }
