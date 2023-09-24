@@ -1,10 +1,11 @@
 import React from "react";
 import { allSortingFunctions } from "../lists";
+import axios from "axios";
 
 const PlayerPageTab = ({
-    addFunc,
     allList,
     alreadyOnList,
+    getPlayerData,
     loggedInPlayer,
     playerData,
     playerList,
@@ -13,6 +14,7 @@ const PlayerPageTab = ({
     selectedId,
     selectedSort,
     selectedSpellLevel,
+    setAlreadyOnList,
     setSelectedId,
     type
 }) => {
@@ -26,6 +28,29 @@ const PlayerPageTab = ({
             };
         };
         return false;
+    };
+
+    const handleAdd = async (event) => {
+        event.preventDefault();
+        setAlreadyOnList(false);
+        try {
+            const newData = {
+                playerId: playerData.id
+            };
+            const keyName = `${type}Id`;
+            newData[keyName] = selectedId;
+            const response = await axios.post(`/api/player_${type}s`, newData);
+            if (response.data) {
+                if (response.data.name === `Player${type[0].toUpperCase() + type.slice(1)}AlreadyExists`) {
+                    setAlreadyOnList(true);
+                } else {
+                    setSelectedId('');
+                    getPlayerData();
+                };
+            };
+        } catch (error) {
+            console.error(error);
+        };
     };
 
     return (
@@ -43,7 +68,7 @@ const PlayerPageTab = ({
             </div>
             {
                 loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
-                    <form onSubmit={addFunc} autoComplete="off">
+                    <form onSubmit={handleAdd} autoComplete="off">
                         <div className="d-flex">
                             <button className="btn btn-success me-2" type="submit">{`Add ${type[0].toUpperCase() + type.slice(1)}`}</button>
                             <select

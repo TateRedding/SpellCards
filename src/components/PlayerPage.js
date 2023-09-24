@@ -44,69 +44,6 @@ const PlayerPage = ({
         };
     };
 
-    const addSpell = async (event) => {
-        event.preventDefault();
-        setAlreadyOnList(false);
-        try {
-            const response = await axios.post("/api/player_spells", {
-                playerId: playerData.id,
-                spellId: selectedSpellId
-            });
-            if (response.data) {
-                if (response.data.name === "PlayerSpellAlreadyExists") {
-                    setAlreadyOnList(true);
-                } else {
-                    setSelectedSpellId('');
-                    getPlayerData();
-                };
-            };
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
-    const addFeature = async (event) => {
-        event.preventDefault();
-        setAlreadyOnList(false);
-        try {
-            const response = await axios.post("/api/player_features", {
-                playerId: playerData.id,
-                featureId: selectedFeatureId
-            });
-            if (response.data) {
-                if (response.data.name === "PlayerFeatureAlreadyExists") {
-                    setAlreadyOnList(true);
-                } else {
-                    setSelectedFeatureId('');
-                    getPlayerData();
-                };
-            };
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
-    const addTrait = async (event) => {
-        event.preventDefault();
-        setAlreadyOnList(false);
-        try {
-            const response = await axios.post("/api/player_traits", {
-                playerId: playerData.id,
-                traitId: selectedTraitId
-            });
-            if (response.data) {
-                if (response.data.name === "PlayerTraitAlreadyExists") {
-                    setAlreadyOnList(true);
-                } else {
-                    setSelectedTraitId('');
-                    getPlayerData();
-                };
-            };
-        } catch (error) {
-            console.error(error);
-        };
-    };
-
     const renderDetails = (listItem) => {
         if (tab === "spells") {
             return (
@@ -220,9 +157,9 @@ const PlayerPage = ({
             {
                 (tab === "spells") ?
                     <PlayerPageTab
-                        addFunc={addSpell}
                         allList={allSpells}
                         alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
                         loggedInPlayer={loggedInPlayer}
                         playerData={playerData}
                         playerList={playerData.spells}
@@ -232,6 +169,7 @@ const PlayerPage = ({
                         selectedSort={selectedSort}
                         selectedSpellLevel={selectedSpellLevel}
                         setSelectedId={setSelectedSpellId}
+                        setAlreadyOnList={setAlreadyOnList}
                         type={"spell"}
                     />
                     :
@@ -240,9 +178,9 @@ const PlayerPage = ({
             {
                 (tab === "features") ?
                     <PlayerPageTab
-                        addFunc={addFeature}
                         allList={allFeatures}
                         alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
                         loggedInPlayer={loggedInPlayer}
                         playerData={playerData}
                         playerList={playerData.features}
@@ -251,6 +189,7 @@ const PlayerPage = ({
                         selectedId={selectedFeatureId}
                         selectedSort={selectedSort}
                         setSelectedId={setSelectedFeatureId}
+                        setAlreadyOnList={setAlreadyOnList}
                         type={"feature"}
                     />
                     :
@@ -259,9 +198,9 @@ const PlayerPage = ({
             {
                 (tab === "traits") ?
                     <PlayerPageTab
-                        addFunc={addTrait}
                         allList={allTraits}
                         alreadyOnList={alreadyOnList}
+                        getPlayerData={getPlayerData}
                         loggedInPlayer={loggedInPlayer}
                         playerData={playerData}
                         playerList={playerData.traits}
@@ -270,6 +209,7 @@ const PlayerPage = ({
                         selectedId={selectedTraitId}
                         selectedSort={selectedSort}
                         setSelectedId={setSelectedTraitId}
+                        setAlreadyOnList={setAlreadyOnList}
                         type={"trait"}
                     />
                     :
