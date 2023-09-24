@@ -17,6 +17,7 @@ const PlayerPage = ({
     loggedInPlayer,
     player
 }) => {
+    const [adding, setAdding] = useState(false);
     const [alreadyOnList, setAlreadyOnList] = useState(false);
     const [maxSpellLevel, setMaxSpellLevel] = useState(0);
     const [playerData, setPlayerData] = useState({});
@@ -81,6 +82,7 @@ const PlayerPage = ({
         setSelectedSpellId('');
         setSelectedFeatureId('');
         setSelectedSpellLevel('');
+        setAdding(false);
         setAlreadyOnList(false);
         setSearchTerm('');
     }, [player]);
@@ -96,6 +98,7 @@ const PlayerPage = ({
         setSelectedSort(0);
         setSelectedSpellLevel('');
         setAlreadyOnList(false);
+        setAdding(false);
     }, [tab]);
 
     useEffect(() => {
@@ -157,6 +160,7 @@ const PlayerPage = ({
             {
                 (tab === "spells") ?
                     <PlayerPageTab
+                        adding={adding}
                         allList={allSpells}
                         alreadyOnList={alreadyOnList}
                         getPlayerData={getPlayerData}
@@ -169,6 +173,7 @@ const PlayerPage = ({
                         selectedSort={selectedSort}
                         selectedSpellLevel={selectedSpellLevel}
                         setSelectedId={setSelectedSpellId}
+                        setAdding={setAdding}
                         setAlreadyOnList={setAlreadyOnList}
                         type={"spell"}
                     />
@@ -178,6 +183,7 @@ const PlayerPage = ({
             {
                 (tab === "features") ?
                     <PlayerPageTab
+                        adding={adding}
                         allList={allFeatures}
                         alreadyOnList={alreadyOnList}
                         getPlayerData={getPlayerData}
@@ -189,6 +195,7 @@ const PlayerPage = ({
                         selectedId={selectedFeatureId}
                         selectedSort={selectedSort}
                         setSelectedId={setSelectedFeatureId}
+                        setAdding={setAdding}
                         setAlreadyOnList={setAlreadyOnList}
                         type={"feature"}
                     />
@@ -198,6 +205,7 @@ const PlayerPage = ({
             {
                 (tab === "traits") ?
                     <PlayerPageTab
+                        adding={adding}
                         allList={allTraits}
                         alreadyOnList={alreadyOnList}
                         getPlayerData={getPlayerData}
@@ -209,6 +217,7 @@ const PlayerPage = ({
                         selectedId={selectedTraitId}
                         selectedSort={selectedSort}
                         setSelectedId={setSelectedTraitId}
+                        setAdding={setAdding}
                         setAlreadyOnList={setAlreadyOnList}
                         type={"trait"}
                     />
