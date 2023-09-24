@@ -3,12 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import SuccessCard from "../SuccessCard";
 import UnauthorizedMessage from "../UnauthorizedMessage";
+import { classes } from "../../lists";
 
 const EditFeature = ({ getFeatures, loggedInPlayer }) => {
     const [feature, setFeature] = useState({});
     const [name, setName] = useState('');
-    const [origin, setOrigin] = useState('');
-    const [description, setDescription] = useState('');
+    const [selectedClass, setSelectedClass] = useState('');
+    const [subclassList, setSubclassList] = useState([]);
+    const [selectedSubclass, setSelectedSubclass] = useState('');    const [description, setDescription] = useState('');
     const [nameTaken, setNameTaken] = useState(false);
     const [success, setSuccess] = useState(false);
 
@@ -28,7 +30,8 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
     const setValues = () => {
         if (Object.keys(feature).length) {
             setName(feature.name);
-            setOrigin(feature.origin);
+            setSelectedClass(feature.class);
+            setSelectedSubclass(feature.subclass ? feature.subclass : '');
             setDescription(feature.description);
         };
     };
@@ -38,9 +41,10 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
         setNameTaken(false);
         const updatedFeatureData = {
             name,
-            origin,
+            class: selectedClass,
             description
         };
+        if (selectedSubclass) updatedFeatureData.subclass = selectedSubclass;
 
         try {
             const response = await axios.patch(`/api/features/${featureId}`, updatedFeatureData);
@@ -58,6 +62,10 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
             console.error(error);
         };
     };
+
+    useEffect(() => {
+        (selectedClass) ? setSubclassList(classes.filter(cls => cls.name === selectedClass)[0].subclasses) : setSubclassList([]);
+    }, [selectedClass]);
 
     useEffect(() => {
         getFeatureData();
@@ -103,20 +111,41 @@ const EditFeature = ({ getFeatures, loggedInPlayer }) => {
                                         null
                                 }
                             </div>
-                            <div className="form-floating">
-                                <input
-                                    className="form-control"
-                                    id="feature-origin"
-                                    aria-labelledby="origin-help-text"
-                                    value={origin}
-                                    required
-                                    placeholder="Origin"
-                                    onChange={(event) => setOrigin(event.target.value)}
-                                />
-                                <label htmlFor="feature-origin">Origin</label>
-                            </div>
-                            <div className="form-text mb-3" id="orign-help-text">
-                                Species, class, sub-class, feat, etc...
+                            <div className=" d-flex mb-3">
+                                <div className="form-floating me-3">
+                                    <select
+                                        className="form-select"
+                                        id="edit-feature-class-select"
+                                        value={selectedClass}
+                                        required
+                                        onChange={(event) => setSelectedClass(event.target.value)}
+                                    >
+                                        <option value="">Choose a Class</option>
+                                        {
+                                            classes.map((cls, idx) => <option value={cls.name} key={idx}>{cls.name}</option>)
+                                        }
+                                    </select>
+                                    <label htmlFor="edit-feature-class-select">Class</label>
+                                </div>
+                                {
+                                    subclassList.length ?
+                                        <div className="form-floating">
+                                            <select
+                                                className="form-select"
+                                                id="edit-feature-subclass-select"
+                                                value={selectedSubclass}
+                                                onChange={(event) => setSelectedSubclass(event.target.value)}
+                                            >
+                                                <option value="">Choose a Subclass</option>
+                                                {
+                                                    subclassList.map((subcls, idx) => <option value={subcls} key={idx}>{subcls}</option>)
+                                                }
+                                            </select>
+                                            <label htmlFor="edit-feature-subclass-select">Subclass (optional)</label>
+                                        </div>
+                                        :
+                                        null
+                                }
                             </div>
                             <div className="form-floating">
                                 <textarea

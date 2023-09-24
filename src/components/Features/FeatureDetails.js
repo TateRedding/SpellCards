@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { formatText } from "../../utils";
+import { createClassString, formatText } from "../../utils";
 
 const FeatureDetails = ({ feature, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
@@ -35,7 +35,7 @@ const FeatureDetails = ({ feature, getPlayerData }) => {
                             <h2 className="accordion-header">
                                 <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>
                                 <span className="me-3">{feature.name}</span>
-                                    <span><i>{feature.origin}</i></span>
+                                    <span><i>{createClassString(feature)}</i></span>
                                 </button>
                             </h2>
                             <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>

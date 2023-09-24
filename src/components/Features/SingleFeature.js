@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { formatText } from "../../utils";
+import { createClassString, formatText } from "../../utils";
 
 const SingleFeature = () => {
     const [feature, setFeature] = useState({});
@@ -33,7 +33,7 @@ const SingleFeature = () => {
                         </div>
                         <div className="card">
                             <div className="card-body pb-0">
-                                <p className="mb-2"><i>{feature.origin}</i></p>
+                                <p className="mb-2"><i>{createClassString(feature)}</i></p>
                                 {
                                     formatText(feature.description)
                                 }
