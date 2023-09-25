@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import SpellDetails from "./SpellDetails";
 
-const PlayerPageSpell = ({ getPlayerData, spell }) => {
+const PlayerPageSpell = ({ getPlayerData, loggedInPlayer, spell }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeSpell = async () => {
@@ -32,6 +32,7 @@ const PlayerPageSpell = ({ getPlayerData, spell }) => {
                     :
                     <>
                         <SpellDetails
+                            loggedInPlayer={loggedInPlayer}
                             setRemoving={setRemoving}
                             spell={spell}
                         />

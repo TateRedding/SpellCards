@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import TraitDetails from "./TraitDetails";
 
-const PlayerPageTrait = ({ trait, getPlayerData }) => {
+const PlayerPageTrait = ({ trait, getPlayerData, loggedInPlayer }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeTrait = async () => {
@@ -31,6 +31,7 @@ const PlayerPageTrait = ({ trait, getPlayerData }) => {
                     </div>
                     :
                     <TraitDetails
+                        loggedInPlayer={loggedInPlayer}
                         setRemoving={setRemoving}
                         trait={trait}
                     />

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import FeatureDetails from "./FeatureDetails";
 
-const PlayerPageFeatures = ({ feature, getPlayerData }) => {
+const PlayerPageFeatures = ({ feature, getPlayerData, loggedInPlayer }) => {
     const [removing, setRemoving] = useState(false);
 
     const removeFeature = async () => {
@@ -31,8 +31,9 @@ const PlayerPageFeatures = ({ feature, getPlayerData }) => {
                     </div>
                     :
                     <FeatureDetails
-                        setRemoving={setRemoving}
                         feature={feature}
+                        loggedInPlayer={loggedInPlayer}
+                        setRemoving={setRemoving}
                     />
             }
         </>

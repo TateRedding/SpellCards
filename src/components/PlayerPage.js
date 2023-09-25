@@ -50,6 +50,7 @@ const PlayerPage = ({
             return (
                 <PlayerPageSpell
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
                     spell={listItem}
                     key={listItem.id}
                 />
@@ -59,6 +60,7 @@ const PlayerPage = ({
                 <PlayerPageFeatures
                     feature={listItem}
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
                     key={listItem.id}
                 />
             );
@@ -66,6 +68,7 @@ const PlayerPage = ({
             return (
                 <PlayerPageTrait
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
                     trait={listItem}
                     key={listItem.id}
                 />

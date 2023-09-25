@@ -1,9 +1,12 @@
 import React from "react";
 import { createComponentsString, createDurationString, createLevelString, formatText } from "../../utils";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SpellDetails = ({ loggedInPlayer, setDeleting, setRemoving, spell }) => {
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+
+    console.log(loggedInPlayer);
 
     return (
         <div className="accordion mb-3" id={`spell-accordion-${spell.id}`}>
@@ -25,7 +28,7 @@ const SpellDetails = ({ loggedInPlayer, setDeleting, setRemoving, spell }) => {
                             formatText(spell.description)
                         }
                         {
-                            setRemoving ?
+                            setRemoving && (loggedInPlayer.isAdmin || pathname.toLowerCase().includes(loggedInPlayer.urlName.toLowerCase())) ?
                                 <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
                                 :
                                 null
