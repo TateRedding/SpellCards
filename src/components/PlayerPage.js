@@ -8,7 +8,7 @@ import PlayerPageSpell from "./Spells/PlayerPageSpell";
 import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
-import TraitDetails from "./Traits/TraitDeatils";
+import PlayerPageTrait from "./Traits/PlayerPageTrait";
 
 const PlayerPage = ({
     allFeatures,
@@ -49,8 +49,8 @@ const PlayerPage = ({
         if (tab === "spells") {
             return (
                 <PlayerPageSpell
-                    spell={listItem}
                     getPlayerData={getPlayerData}
+                    spell={listItem}
                     key={listItem.id}
                 />
             );
@@ -64,9 +64,9 @@ const PlayerPage = ({
             );
         } else if (tab === "traits") {
             return (
-                <TraitDetails
-                    trait={listItem}
+                <PlayerPageTrait
                     getPlayerData={getPlayerData}
+                    trait={listItem}
                     key={listItem.id}
                 />
             );
