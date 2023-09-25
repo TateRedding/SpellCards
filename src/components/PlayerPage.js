@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { allSortingFunctions } from "../lists";
-import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
+import PlayerPageFeatures from "./Features/PlayerPageFeatures";
 import PlayerPageSpell from "./Spells/PlayerPageSpell";
 import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
@@ -49,7 +49,6 @@ const PlayerPage = ({
         if (tab === "spells") {
             return (
                 <PlayerPageSpell
-                    loggedInPlayer={loggedInPlayer}
                     spell={listItem}
                     getPlayerData={getPlayerData}
                     key={listItem.id}
@@ -57,7 +56,7 @@ const PlayerPage = ({
             );
         } else if (tab === "features") {
             return (
-                <FeatureDetails
+                <PlayerPageFeatures
                     feature={listItem}
                     getPlayerData={getPlayerData}
                     key={listItem.id}

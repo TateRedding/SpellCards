@@ -3,7 +3,6 @@ import { createComponentsString, createDurationString, createLevelString, format
 import { useNavigate } from "react-router-dom";
 
 const SpellDetails = ({ loggedInPlayer, setDeleting, setRemoving, spell }) => {
-
     const navigate = useNavigate();
 
     return (

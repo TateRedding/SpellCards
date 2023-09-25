@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { createLevelString } from "../../utils";
 import SpellDetails from "./SpellDetails";
 
 const SmallSpellCard = ({ spell, getSpells, loggedInPlayer }) => {

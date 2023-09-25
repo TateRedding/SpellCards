@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import SpellDetails from "./SpellDetails";
+import FeatureDetails from "./FeatureDetails";
 
-const PlayerPageSpell = ({ spell, getPlayerData }) => {
+const PlayerPageFeatures = ({ feature, getPlayerData }) => {
     const [removing, setRemoving] = useState(false);
 
-    const removeSpell = async () => {
+    const removeFeature = async () => {
         try {
-            const response = await axios.delete(`/api/player_spells/${spell.playerSpellId}`);
+            const response = await axios.delete(`/api/player_features/${feature.playerFeatureId}`);
             if (response.data) {
                 getPlayerData();
             };
@@ -22,23 +22,22 @@ const PlayerPageSpell = ({ spell, getPlayerData }) => {
                 (removing) ?
                     <div className="card mb-3">
                         <div className="card-body">
-                            <h5 className="card-title">Are you sure you want to remove {spell.name}?</h5>
+                            <h5 className="card-title">Are you sure you want to remove {feature.name}?</h5>
                             <div className="d-flex">
                                 <button className="btn btn-primary me-2" onClick={() => setRemoving(false)}>No</button>
-                                <button className="btn btn-danger" onClick={removeSpell}>Yes</button>
+                                <button className="btn btn-danger" onClick={removeFeature}>Yes</button>
                             </div>
                         </div>
                     </div>
                     :
-                    <>
-                        <SpellDetails
-                            setRemoving={setRemoving}
-                            spell={spell}
-                        />
-                    </>
+                    <FeatureDetails
+                        setRemoving={setRemoving}
+                        feature={feature}
+                    />
             }
         </>
+
     );
 };
 
-export default PlayerPageSpell;
+export default PlayerPageFeatures;
