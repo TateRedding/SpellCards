@@ -1,10 +1,9 @@
 import React from "react";
-import { createSpeciesString, formatText } from "../../utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { canUserRemove, createSpeciesString, formatText } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const TraitDetails = ({ loggedInPlayer, setDeleting, setRemoving, trait }) => {
     const navigate = useNavigate();
-    const { pathname } = useLocation();
 
     return (
         <div className="accordion mb-3" id={`trait-accordion-${trait.id}`}>
@@ -21,7 +20,7 @@ const TraitDetails = ({ loggedInPlayer, setDeleting, setRemoving, trait }) => {
                             formatText(trait.description)
                         }
                         {
-                            setRemoving && (loggedInPlayer.isAdmin || pathname.toLowerCase().includes(loggedInPlayer.urlName.toLowerCase())) ?
+                            setRemoving && canUserRemove(loggedInPlayer) ?
                                 <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
                                 :
                                 null

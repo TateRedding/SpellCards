@@ -1,10 +1,9 @@
 import React from "react";
-import { createClassString, formatText } from "../../utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import { canUserRemove, createClassString, formatText } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const FeatureDetails = ({ feature, loggedInPlayer, setDeleting, setRemoving }) => {
     const navigate = useNavigate();
-    const { pathname } = useLocation();
 
     return (
         <div className="accordion mb-3" id={`feature-accordion-${feature.id}`}>
@@ -21,7 +20,7 @@ const FeatureDetails = ({ feature, loggedInPlayer, setDeleting, setRemoving }) =
                             formatText(feature.description)
                         }
                         {
-                            setRemoving && (loggedInPlayer.isAdmin || pathname.toLowerCase().includes(loggedInPlayer.urlName.toLowerCase())) ?
+                            setRemoving && canUserRemove(loggedInPlayer) ?
                                 <button className="btn btn-danger" onClick={() => setRemoving(true)}>Remove</button>
                                 :
                                 null

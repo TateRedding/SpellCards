@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import SpellDetails from "./SpellDetails";
 
 const SmallSpellCard = ({ spell, getSpells, loggedInPlayer }) => {
     const [deleting, setDeleting] = useState(false);
-
-    const navigate = useNavigate();
 
     const deleteSpell = async () => {
         try {

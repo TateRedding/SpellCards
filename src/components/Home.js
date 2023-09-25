@@ -48,7 +48,9 @@ const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) =
                             >
                                 <option value={0}>Select Your Character</option>
                                 {
-                                    players.map(player => <option value={player.id} key={player.id}>{player.name}</option>)
+                                    players
+                                        .filter(player => activePlayers.includes(player.name) || player.isAdmin)
+                                        .map(player => <option value={player.id} key={player.id}>{player.name}</option>)
                                 }
                             </select>
                             {
@@ -79,7 +81,7 @@ const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) =
                         </form>
                     </div>
             }
-            <h5 className="text-center mb-3">Pick a character to view their spells and features.</h5>
+            <h5 className="text-center mb-3">Pick a character to view their spells, features, and traits.</h5>
             {
                 players.map(player => {
                     if (activePlayers.includes(player.name)) {
