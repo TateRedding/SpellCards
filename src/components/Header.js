@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { activePlayers } from "../lists";
 
 const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) => {
 
@@ -28,7 +29,7 @@ const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME })
                                 <ul className="dropdown-menu">
                                     {
                                         players.map((player) => {
-                                            if (!player.isAdmin) {
+                                            if (activePlayers.includes(player.name)) {
                                                 return (
                                                     <li className="nav-item" key={player.id}>
                                                         <Link className="nav-link" to={`/${player.urlName.toLowerCase()}`}>

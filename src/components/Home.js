@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { activePlayers } from "../lists";
 
 const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) => {
     const [selectedId, setSelectedId] = useState(0);
@@ -81,7 +82,7 @@ const Home = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME }) =
             <h5 className="text-center mb-3">Pick a character to view their spells and features.</h5>
             {
                 players.map(player => {
-                    if (!player.isAdmin) {
+                    if (activePlayers.includes(player.name)) {
                         return (
                             <button
                                 className="player-button btn btn-outline-primary mb-3"

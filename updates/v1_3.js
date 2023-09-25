@@ -1,4 +1,5 @@
 const { Client } = require("pg");
+require("dotenv").config();
 const axios = require("axios");
 // DO NOT UNCOMMENT THE NEXT LINE UNTIL READY FOR PRODUCTION
 // const spellCardsURL = process.env.EXTERNAL_DATABASE_URL;
