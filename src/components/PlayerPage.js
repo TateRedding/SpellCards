@@ -4,10 +4,10 @@ import axios from "axios";
 import { allSortingFunctions } from "../lists";
 import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
+import PlayerPageSpell from "./Spells/PlayerPageSpell";
 import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
-import SpellDetails from "./Spells/SpellDetails";
 import TraitDetails from "./Traits/TraitDeatils";
 
 const PlayerPage = ({
@@ -48,7 +48,8 @@ const PlayerPage = ({
     const renderDetails = (listItem) => {
         if (tab === "spells") {
             return (
-                <SpellDetails
+                <PlayerPageSpell
+                    loggedInPlayer={loggedInPlayer}
                     spell={listItem}
                     getPlayerData={getPlayerData}
                     key={listItem.id}

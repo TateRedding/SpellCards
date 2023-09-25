@@ -22,7 +22,6 @@ import NewSpell from "./components/Spells/NewSpell";
 import NewTrait from "./components/Traits/NewTrait";
 import PlayerPage from "./components/PlayerPage";
 import SingleFeature from "./components/Features/SingleFeature";
-import SingleSpell from "./components/Spells/SingleSpell";
 import SingleTrait from "./components/Traits/SingleTrait";
 
 const App = () => {
@@ -197,9 +196,6 @@ const App = () => {
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
                         />} />
-                    <Route path="/spells/:spellId" element={
-                        <SingleSpell />
-                    } />
                     <Route path="/traits" element={
                         <AllTraits
                             traits={traits}
