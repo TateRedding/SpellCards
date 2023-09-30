@@ -22,6 +22,8 @@ import NewSpell from "./components/Spells/NewSpell";
 import NewTrait from "./components/Traits/NewTrait";
 import PlayerPage from "./components/PlayerPage";
 import SingleTrait from "./components/Traits/SingleTrait";
+import SignIn from "./components/SignIn";
+import { activePlayers } from "./lists";
 
 const App = () => {
     const TOKEN_NAME = "coswtfs-spells-login-id";
@@ -114,10 +116,10 @@ const App = () => {
             />
             <main>
                 <Routes>
-                    <Route path="/" element={
-                        <Home
+                    <Route path="/" element={<Home players={players} />} />
+                    <Route path="/signin" element={
+                        <SignIn
                             players={players}
-                            loginId={loginId}
                             setLoginId={setLoginId}
                             setLoggedInPlayer={setLoggedInPlayer}
                             TOKEN_NAME={TOKEN_NAME}
@@ -220,7 +222,7 @@ const App = () => {
                     } />
                     {
                         players.map(player => {
-                            if (!player.isAdmin) {
+                            if (activePlayers.includes(player.name)) {
                                 return <Route
                                     path={`/${player.urlName}`}
                                     element={

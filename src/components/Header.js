@@ -76,7 +76,7 @@ const Header = ({ players, loginId, setLoginId, setLoggedInPlayer, TOKEN_NAME })
                                     </li>
                                     :
                                     <li className="nav-item">
-                                        <Link className="nav-link" to="/">
+                                        <Link className="nav-link" to="/signin">
                                             <span data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Sign In</span>
                                         </Link>
                                     </li>
