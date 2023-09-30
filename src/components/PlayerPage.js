@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import { allSortingFunctions } from "../lists";
-import FeatureDetails from "./Features/FeatureDetails";
 import LevelSelect from "./LevelSelect";
+import PlayerPageFeatures from "./Features/PlayerPageFeatures";
+import PlayerPageSpell from "./Spells/PlayerPageSpell";
 import PlayerPageTab from "./PlayerPageTab";
 import SearchBar from "./SearchBar";
 import SortSelect from "./SortSelect";
-import SpellDetails from "./Spells/SpellDetails";
-import TraitDetails from "./Traits/TraitDeatils";
+import PlayerPageTrait from "./Traits/PlayerPageTrait";
 
 const PlayerPage = ({
     allFeatures,
@@ -48,25 +48,28 @@ const PlayerPage = ({
     const renderDetails = (listItem) => {
         if (tab === "spells") {
             return (
-                <SpellDetails
-                    spell={listItem}
+                <PlayerPageSpell
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
+                    spell={listItem}
                     key={listItem.id}
                 />
             );
         } else if (tab === "features") {
             return (
-                <FeatureDetails
+                <PlayerPageFeatures
                     feature={listItem}
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
                     key={listItem.id}
                 />
             );
         } else if (tab === "traits") {
             return (
-                <TraitDetails
-                    trait={listItem}
+                <PlayerPageTrait
                     getPlayerData={getPlayerData}
+                    loggedInPlayer={loggedInPlayer}
+                    trait={listItem}
                     key={listItem.id}
                 />
             );

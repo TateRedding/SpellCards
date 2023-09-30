@@ -1,4 +1,16 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+
+export const canUserRemove = (loggedInPlayer) => {
+    const { pathname } = useLocation();
+    if (loggedInPlayer.isAdmin) return true;
+    if (loggedInPlayer.urlName) {
+        if (pathname.toLowerCase().includes(loggedInPlayer.urlName.toLowerCase())) {
+            return true;
+        };
+    };
+    return false;
+};
 
 export const createComponentsString = (spell) => {
     const componentsArr = [];

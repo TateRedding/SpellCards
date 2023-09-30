@@ -1,3 +1,10 @@
+export const activePlayers = [
+    "Khirun of the S.C.",
+    "Robi Xenon Li",
+    "Thrall Frostskin",
+    "Torment"
+];
+
 export const classes = [
     {
         name: "Barbarian",

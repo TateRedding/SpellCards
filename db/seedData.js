@@ -156,7 +156,7 @@ const createPlayers = async () => {
         await createPlayer({
             name: 'Torment',
             urlName: 'Torment',
-            pin: 8548,
+            pin: 9472,
             isAdmin: false
         });
         await createPlayer({

@@ -1,23 +1,23 @@
 import React from "react";
-import { canUserRemove, createClassString, formatText } from "../../utils";
+import { canUserRemove, createSpeciesString, formatText } from "../../utils";
 import { useNavigate } from "react-router-dom";
 
-const FeatureDetails = ({ feature, loggedInPlayer, setDeleting, setRemoving }) => {
+const TraitDetails = ({ loggedInPlayer, setDeleting, setRemoving, trait }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="accordion mb-3" id={`feature-accordion-${feature.id}`}>
+        <div className="accordion mb-3" id={`trait-accordion-${trait.id}`}>
             <div className="accordion-item">
                 <h2 className="accordion-header">
-                    <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#feature-body-${feature.id}`}>
-                        <span className="me-3">{feature.name}</span>
-                        <span><i>{createClassString(feature)}</i></span>
+                    <button className="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target={`#trait-body-${trait.id}`}>
+                        <span className="me-3">{trait.name}</span>
+                        <span><i>{createSpeciesString(trait)}</i></span>
                     </button>
                 </h2>
-                <div id={`feature-body-${feature.id}`} className="accordion-collapse collapse" data-bs-parent={`feature-accordion-${feature.id}`}>
+                <div id={`trait-body-${trait.id}`} className="accordion-collapse collapse" data-bs-parent={`trait-accordion-${trait.id}`}>
                     <div className="accordion-body">
                         {
-                            formatText(feature.description)
+                            formatText(trait.description)
                         }
                         {
                             setRemoving && canUserRemove(loggedInPlayer) ?
@@ -28,7 +28,7 @@ const FeatureDetails = ({ feature, loggedInPlayer, setDeleting, setRemoving }) =
                         {
                             setDeleting && loggedInPlayer.isAdmin ?
                                 <>
-                                    <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/features/edit/${feature.id}`)}>Edit</button>
+                                    <button className="btn btn-primary btn-sm me-2" onClick={() => navigate(`/traits/edit/${trait.id}`)}>Edit</button>
                                     <button className="btn btn-danger btn-sm" onClick={() => setDeleting(true)}>Delete</button>
                                 </>
                                 :
@@ -41,4 +41,4 @@ const FeatureDetails = ({ feature, loggedInPlayer, setDeleting, setRemoving }) =
     );
 };
 
-export default FeatureDetails;
+export default TraitDetails;

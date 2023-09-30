@@ -3,7 +3,7 @@ import { allSortingFunctions } from "../lists";
 import axios from "axios";
 
 const PlayerPageTab = ({
-    adding, 
+    adding,
     allList,
     alreadyOnList,
     getPlayerData,
@@ -79,7 +79,10 @@ const PlayerPageTab = ({
                 loggedInPlayer.id === playerData.id || loggedInPlayer.isAdmin ?
                     adding ?
                         <form onSubmit={handleAdd} autoComplete="off">
-                            <button className="btn btn-success mb-2" type="submit">Confirm</button>
+                            <div className="d-flex mb-2 align-items-center">
+                                <button className="btn btn-success me-2" type="submit">Confirm</button>
+                                <span>Selected {type}: {selectedId ? allList.find(listItem => listItem.id === Number(selectedId)).name : "None"}</span>
+                            </div>
                             <input
                                 className="form-control mb-2"
                                 value={addSearchTerm}

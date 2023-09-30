@@ -21,9 +21,9 @@ import NewQuest from "./components/Quests/NewQuest";
 import NewSpell from "./components/Spells/NewSpell";
 import NewTrait from "./components/Traits/NewTrait";
 import PlayerPage from "./components/PlayerPage";
-import SingleFeature from "./components/Features/SingleFeature";
-import SingleSpell from "./components/Spells/SingleSpell";
 import SingleTrait from "./components/Traits/SingleTrait";
+import SignIn from "./components/SignIn";
+import { activePlayers } from "./lists";
 
 const App = () => {
     const TOKEN_NAME = "coswtfs-spells-login-id";
@@ -116,32 +116,33 @@ const App = () => {
             />
             <main>
                 <Routes>
-                    <Route path="/" element={
-                        <Home
+                    <Route path="/" element={<Home players={players} />} />
+                    <Route path="/signin" element={
+                        <SignIn
                             players={players}
-                            loginId={loginId}
                             setLoginId={setLoginId}
                             setLoggedInPlayer={setLoggedInPlayer}
                             TOKEN_NAME={TOKEN_NAME}
-                        />} />
+                        />
+                    } />
                     <Route path="/features" element={
                         <AllFeatures
                             features={features}
                             getFeatures={getFeatures}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
+                        />
+                    } />
                     <Route path="/features/new" element={
                         <NewFeature
                             getFeatures={getFeatures}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
+                        />
+                    } />
                     <Route path="/features/edit/:featureId" element={
                         <EditFeature
                             getFeatures={getFeatures}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
-                    <Route path="/features/:featureId" element={
-                        <SingleFeature />
+                        />
                     } />
                     <Route path="/items" element={
                         <AllItems
@@ -186,19 +187,19 @@ const App = () => {
                             spells={spells}
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
+                        />
+                    } />
                     <Route path="/spells/new" element={
                         <NewSpell
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
+                        />
+                    } />
                     <Route path="/spells/edit/:spellId" element={
                         <EditSpell
                             getSpells={getSpells}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
-                    <Route path="/spells/:spellId" element={
-                        <SingleSpell />
+                        />
                     } />
                     <Route path="/traits" element={
                         <AllTraits
@@ -211,18 +212,17 @@ const App = () => {
                         <NewTrait
                             getTraits={getTraits}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
+                        />
+                    } />
                     <Route path="/traits/edit/:traitId" element={
                         <EditTrait
                             getTraits={getTraits}
                             loggedInPlayer={loggedInPlayer}
-                        />} />
-                    <Route path="/traits/:traitId" element={
-                        <SingleTrait />
+                        />
                     } />
                     {
                         players.map(player => {
-                            if (!player.isAdmin) {
+                            if (activePlayers.includes(player.name)) {
                                 return <Route
                                     path={`/${player.urlName}`}
                                     element={
